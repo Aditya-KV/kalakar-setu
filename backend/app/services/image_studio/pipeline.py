@@ -102,37 +102,41 @@ class StudioEnhancementPipeline:
         elif coverage_ratio > 0.95:
             warnings.append("Almost the entire photo was detected as the product — check the segmentation result.")
 
+        # A single reused name from here on, not a new one per stage — each
+        # stage's predecessor array is dropped (and freed immediately by
+        # CPython's refcounting) as soon as the next stage's output replaces
+        # it, instead of all six full-resolution copies staying alive at
+        # once until the function returns. Real memory savings, confirmed
+        # necessary after production OOM kills on Railway.
         t0 = time.perf_counter()
-        rgb_array = np.array(normalized)
-        decontaminated_rgb = decontaminate_edges(
-            rgb_array, mask_refined, band_px=self.config.edge_decontaminate_band_px
+        rgb = decontaminate_edges(
+            np.array(normalized), mask_refined, band_px=self.config.edge_decontaminate_band_px
         )
         timings["edge_decontamination"] = self._ms(t0)
 
         if apply_lighting:
             t0 = time.perf_counter()
-            wb_rgb = correct_white_balance(decontaminated_rgb, mask_refined, strength=self.config.white_balance_strength)
-            exposure_rgb = correct_exposure(wb_rgb, mask_refined, strength=self.config.exposure_strength)
-            enhanced_rgb = enhance_subject(
-                exposure_rgb, mask_refined,
+            rgb = correct_white_balance(rgb, mask_refined, strength=self.config.white_balance_strength)
+            rgb = correct_exposure(rgb, mask_refined, strength=self.config.exposure_strength)
+            rgb = enhance_subject(
+                rgb, mask_refined,
                 saturation_strength=self.config.saturation_strength,
                 contrast_strength=self.config.contrast_strength,
             )
             timings["lighting"] = self._ms(t0)
 
             t0 = time.perf_counter()
-            lit_rgb = apply_studio_light(
-                enhanced_rgb, mask_refined,
+            rgb = apply_studio_light(
+                rgb, mask_refined,
                 strength=self.config.studio_light_strength,
                 direction=self.config.studio_light_direction,
                 fill_strength=self.config.fill_light_strength,
             )
             timings["studio_light"] = self._ms(t0)
-        else:
-            lit_rgb = decontaminated_rgb
 
-        transparent = Image.fromarray(lit_rgb, mode="RGB").convert("RGBA")
+        transparent = Image.fromarray(rgb, mode="RGB").convert("RGBA")
         transparent.putalpha(Image.fromarray(mask_refined, mode="L"))
+        del rgb
 
         t0 = time.perf_counter()
         bounds = calculate_product_bounds(mask_refined)
