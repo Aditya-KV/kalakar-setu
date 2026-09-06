@@ -5,7 +5,6 @@ Main application setup with CORS, routing, startup events, and health checks.
 
 import os
 import uuid
-import asyncio
 import logging
 from contextlib import asynccontextmanager
 
@@ -18,7 +17,6 @@ from app.db.session import init_db, async_session_factory
 from app.api.routes import auth, profile, reference, media, catalog, listing, address, marketplace, order, pricing
 from app.integrations.ondc.router import router as ondc_router
 from app.services.reference_service import seed_reference_data
-from app.services.image_studio.segmentation import get_session as get_segmentation_session
 
 # Configure logging
 logging.basicConfig(
@@ -45,19 +43,18 @@ async def lifespan(app: FastAPI):
         await session.commit()
     logger.info("✅ Reference data seeded")
 
-    # Pre-warm the Virtual Product Studio's segmentation model. Even though
-    # it's baked into the Docker image at build time (no network download),
-    # a fresh container still pays a real one-time cost (~60s observed)
-    # reading that ~170MB file off disk for the first time. Doing it here
-    # keeps that cost inside startup — before the app accepts traffic —
-    # instead of risking a timeout/crash on whichever user's enhance
-    # request happens to be first against a newly-started container.
-    try:
-        await asyncio.to_thread(get_segmentation_session)
-        logger.info("✅ Segmentation model warmed up")
-    except Exception as e:
-        logger.warning(f"Segmentation model warm-up failed, will lazy-load on first use instead: {e}")
-
+    # The segmentation model (isnet-general-use, ~170MB) is deliberately
+    # NOT pre-warmed here anymore. Doing so kept the model resident in
+    # every container's memory from the moment it started, whether or not
+    # anyone ever used Photo Studio — measured at ~325MB extra idle RSS,
+    # which is why Railway's memory graph jumped from ~50MB to 500-600MB
+    # baseline right after that change shipped. It now lazy-loads on the
+    # first real call to remove_background() instead (see
+    # app/services/image_studio/segmentation.py's cached singleton) — the
+    # model stays baked into the Docker image (no network download either
+    # way), so the only trade-off is that whichever request is first to
+    # need it after a fresh deploy pays a one-time ~60-80s cold-disk-read
+    # cost instead of that cost happening at startup.
     yield
 
     # Shutdown
