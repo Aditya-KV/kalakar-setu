@@ -53,6 +53,12 @@ def _upload_to_supabase(file_bytes: bytes, filename: str, content_type: str) -> 
     try:
         url = f"{settings.SUPABASE_URL}/storage/v1/object/{settings.SUPABASE_STORAGE_BUCKET}/{filename}"
         headers = {
+            # Supabase's gateway requires BOTH headers — `apikey` alone
+            # identifies the caller to Kong (routing/rate-limiting), while
+            # `Authorization: Bearer` is what the Storage service itself
+            # checks for the actual role (service_role bypasses RLS).
+            # Missing `apikey` here was causing every upload to fail.
+            "apikey": settings.SUPABASE_SERVICE_KEY,
             "Authorization": f"Bearer {settings.SUPABASE_SERVICE_KEY}",
             "Content-Type": content_type,
             "x-upsert": "true",
@@ -60,6 +66,11 @@ def _upload_to_supabase(file_bytes: bytes, filename: str, content_type: str) -> 
         response = httpx.post(url, headers=headers, content=file_bytes, timeout=30.0)
         response.raise_for_status()
         return f"{settings.SUPABASE_URL}/storage/v1/object/public/{settings.SUPABASE_STORAGE_BUCKET}/{filename}"
+    except httpx.HTTPStatusError as e:
+        # Log the actual response body — the status code alone ("400 Bad
+        # Request") hides the real reason (bad bucket, bad key, RLS, etc.).
+        logger.warning(f"Supabase Storage upload error: {e.response.status_code} {e.response.text}")
+        return None
     except Exception as e:
         logger.warning(f"Supabase Storage upload error: {e}")
         return None

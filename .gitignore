@@ -11,6 +11,8 @@ backend/venv/
 backend/.pytest_cache/
 backend/uploads/
 backend/*.db
+backend/*.log
+backend/output/
 backend/**/__pycache__/
 *.py[cod]
 
@@ -31,6 +33,7 @@ frontend/*.p12
 frontend/*.key
 frontend/*.mobileprovision
 frontend/*.tsbuildinfo
+frontend/*.log
 
 # Operating-system files
 .DS_Store
