@@ -127,15 +127,25 @@ def enhance_photo(image_bytes: bytes) -> bytes:
 def remove_background(image_bytes: bytes) -> bytes:
     """
     Isolates product subject and replaces background with a pure white
-    studio background, highlighting the product (FR-3.4). Free local
-    fallback used when Qwen-Image-Edit isn't configured/available — uses
-    the rembg library if installed, or returns the enhanced original.
+    studio background, highlighting the product (FR-3.4). Uses the rembg
+    library if installed, or returns the enhanced original.
+
+    Explicitly uses the same small, cached, memory-arena-disabled session
+    as app/services/image_studio/segmentation.py (isnet-general-use,
+    ~178MB) rather than calling rembg's bare remove() with no session —
+    that silently defaults to rembg's own default model, "bria-rmbg",
+    a ~1GB file, reloaded from scratch on every single call with none of
+    the memory fixes applied here. That mismatch was discovered causing a
+    1.85GB memory spike in production after reverting away from the
+    Virtual Product Studio pipeline; it's not a hypothetical concern.
     """
     try:
         from rembg import remove
+        from app.services.image_studio.segmentation import get_session
+
         input_image = Image.open(io.BytesIO(image_bytes)).convert("RGBA")
         # Remove background -> RGBA with transparent background
-        transparent = remove(input_image)
+        transparent = remove(input_image, session=get_session())
 
         # Pure white studio background, matching real product-photography convention.
         studio_bg = Image.new("RGBA", transparent.size, (255, 255, 255, 255))
