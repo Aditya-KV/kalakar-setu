@@ -23,9 +23,14 @@ DEFAULT_BACKGROUND = "WARM_WHITE"
 
 # Longest-edge cap for the working copy of the image — large phone photos
 # (12-108MP sensors) are downscaled to this before any processing to bound
-# memory/CPU use. The final catalog export is generated from this working
-# resolution, which is already well above typical e-commerce image sizes.
-MAX_WORKING_DIMENSION = 2400
+# memory/CPU use. Lowered from 2400 after a production OOM kill on Railway
+# during a real enhance request (segmentation + several full-resolution
+# float32 intermediate arrays across white balance/exposure/studio-light
+# stages, all alive at once, on a memory-constrained instance) — 1600
+# still exceeds the final 1600px canvas size, so it costs no visible
+# quality, while cutting peak memory for that phase to roughly 44% of what
+# 2400 needed (memory scales with the square of the dimension).
+MAX_WORKING_DIMENSION = 1600
 
 
 @dataclass
