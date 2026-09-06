@@ -36,9 +36,28 @@ def get_session():
     if _session is None:
         with _session_lock:
             if _session is None:
+                import onnxruntime as ort
                 from rembg import new_session
+
                 logger.info(f"[Studio] Loading segmentation model '{MODEL_NAME}' (first use, cached for process lifetime)...")
-                _session = new_session(MODEL_NAME)
+
+                # ONNX Runtime's default CPU arena allocator grows to fit
+                # the largest input it's ever seen and never returns that
+                # memory to the OS — on a low-traffic, memory-constrained
+                # host this shows up as RSS climbing higher across a
+                # session's worth of requests (confirmed in production:
+                # Railway memory peaking at 1.52GB against a 1GB limit,
+                # well past what a single inference should need) rather
+                # than a leak in our own code. Disabling both the arena and
+                # the related memory-pattern cache makes it allocate and
+                # free per call instead of hoarding a growing pool —
+                # somewhat slower per call, but bounded, which matters far
+                # more than speed on a container this size.
+                sess_opts = ort.SessionOptions()
+                sess_opts.enable_cpu_mem_arena = False
+                sess_opts.enable_mem_pattern = False
+
+                _session = new_session(MODEL_NAME, sess_opts=sess_opts)
                 logger.info("[Studio] Segmentation model ready.")
     return _session
 
