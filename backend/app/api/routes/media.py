@@ -1,8 +1,14 @@
 """
-Kalakar Setu — Media & Virtual Product Studio Routes
-Endpoints for photo upload, quality checking, and the deterministic local
-image-processing studio pipeline (background isolation, lighting, contact
-shadow, multi-format export). No generative AI / external image API.
+Kalakar Setu — Media & AI Photo Studio Routes
+Endpoints for photo upload, quality checking, and AI enhancement.
+
+The route below deliberately uses the lightweight image_service.py
+pipeline (PIL contrast/color enhance + rembg background removal), not the
+newer app/services/image_studio/ Virtual Product Studio pipeline — that
+pipeline's segmentation model was crashing the Railway deployment (OOM),
+so this was reverted to the earlier, already-proven implementation while
+that gets sorted out. image_studio/ is untouched on disk and can be wired
+back in here once it's stable on the current hosting plan.
 """
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, status
@@ -15,9 +21,6 @@ from app.api.deps import get_current_user_id
 from app.schemas.media import MediaResponse, MediaEnhanceRequest
 from app.models.media import ProductImage
 from app.services import image_service, storage_service
-from app.services.image_studio.pipeline import StudioEnhancementPipeline
-from app.services.image_studio.config import StudioConfig, BACKGROUND_PRESETS
-from app.services.image_studio import export as studio_export
 
 router = APIRouter(prefix="/media", tags=["AI Photo Studio"])
 
@@ -118,12 +121,10 @@ async def enhance_product_photo(
     db: AsyncSession = Depends(get_db),
 ):
     """
-    Runs the Virtual Product Studio pipeline: local foreground segmentation,
-    mask refinement, edge decontamination, white balance / exposure /
-    subject enhancement, studio light simulation, contact shadow, and
-    multi-format export (studio square/portrait JPEGs + transparent PNG).
-    Entirely deterministic local image processing — no generative AI, no
-    external image API (FR-3.4, FR-3.5, FR-3.6).
+    Triggers AI background removal, lighting correction, and variant
+    cropping (FR-3.4, FR-3.5, FR-3.6) via the lightweight local pipeline:
+    PIL contrast/color enhance + rembg background removal (pure-white
+    composite) + aspect-ratio variants + a detail crop.
     """
     result = await db.execute(
         select(ProductImage).where(
@@ -137,77 +138,56 @@ async def enhance_product_photo(
     media.enhancement_status = "processing"
     await db.flush()
 
-    background = body.background if body.background in BACKGROUND_PRESETS else "WARM_WHITE"
-
     try:
+        # Load original image bytes — works whether it was saved locally or to Supabase Storage.
         raw_bytes = storage_service.read_file(media.original_url)
 
-        if not body.remove_background:
-            # Legacy no-op path — skip the studio pipeline entirely and
-            # just keep the original photo for every variant field.
-            media.enhanced_url = media.original_url
-            media.bg_removed_url = media.original_url
-            media.aspect_ratio_1x1_url = media.original_url
-            media.aspect_ratio_4x5_url = media.original_url
-            media.transparent_url = None
-            media.gallery = [{"key": "original", "label": "Original", "url": media.original_url}]
-            media.processing_meta = {
-                "background_removed": False, "white_balance_applied": False,
-                "lighting_corrected": False, "shadow_added": False,
-            }
-            media.enhancement_status = "completed"
-            await db.flush()
-            return _build_media_response(media)
+        # 1. Lighting & Color Enhancement (optional — user-toggleable)
+        if body.auto_contrast:
+            enhanced_bytes = image_service.enhance_photo(raw_bytes)
+        else:
+            enhanced_bytes = raw_bytes
+        media.enhanced_url = image_service.save_image_file(enhanced_bytes, "enhanced")
 
-        config = StudioConfig(background=background)
-        pipeline = StudioEnhancementPipeline(config=config)
-        # Temporarily background-change + masking only (segmentation, crop,
-        # canvas placement) — white balance/exposure/subject enhancement/
-        # studio light, the contact shadow, and denoise/sharpen are all
-        # switched off here, not removed from the pipeline itself, to keep
-        # peak memory down on the current Railway plan. body.auto_contrast
-        # is intentionally ignored for now; flip these back to re-enable
-        # once resources allow.
-        studio_result = pipeline.run(
-            raw_bytes, backgrounds=[background],
-            apply_lighting=False, apply_shadow=False, apply_detail=False,
-        )
+        # 2. Background Removal & White Studio Isolation (free local rembg/PIL pipeline)
+        if body.remove_background:
+            bg_removed_bytes = image_service.remove_background(enhanced_bytes)
+            media.bg_removed_url = image_service.save_image_file(bg_removed_bytes, "bg_removed")
+        else:
+            media.bg_removed_url = media.enhanced_url
 
-        square_bytes = studio_export.encode_jpeg(studio_result.studio_images[background], quality=config.jpeg_quality)
-        portrait_bytes = studio_export.encode_jpeg(studio_result.portrait_image, quality=config.jpeg_quality)
-        transparent_bytes = studio_export.encode_png(studio_result.transparent)
+        # 3. Generate E-Commerce Marketplace Variants (1:1 & 4:5)
+        if body.generate_variants:
+            source_for_variants = bg_removed_bytes if body.remove_background else enhanced_bytes
+            var_1x1 = image_service.create_aspect_ratio_variant(source_for_variants, "1:1")
+            var_4x5 = image_service.create_aspect_ratio_variant(source_for_variants, "4:5")
 
-        square_url = storage_service.save_file(square_bytes, "studio_square", content_type="image/jpeg")
-        portrait_url = storage_service.save_file(portrait_bytes, "studio_portrait", content_type="image/jpeg")
-        transparent_url = storage_service.save_file(transparent_bytes, "transparent", content_type="image/png", extension="png")
+            media.aspect_ratio_1x1_url = image_service.save_image_file(var_1x1, "1x1")
+            media.aspect_ratio_4x5_url = image_service.save_image_file(var_4x5, "4x5")
 
-        media.enhanced_url = square_url
-        media.bg_removed_url = square_url
-        media.aspect_ratio_1x1_url = square_url
-        media.aspect_ratio_4x5_url = portrait_url
-        media.transparent_url = transparent_url
-        media.model_version = "v2.0-virtual-studio"
+        media.transparent_url = None
 
-        gallery = [
-            {"key": "studio_square", "label": "Studio Square", "url": square_url},
-            {"key": "studio_portrait", "label": "Studio Portrait", "url": portrait_url},
-            {"key": "transparent", "label": "Transparent Cutout", "url": transparent_url},
-        ]
-        if studio_result.thumbnail:
-            thumbnail_bytes = studio_export.encode_jpeg(studio_result.thumbnail, quality=config.jpeg_quality)
-            thumbnail_url = storage_service.save_file(thumbnail_bytes, "thumbnail", content_type="image/jpeg")
-            gallery.append({"key": "thumbnail", "label": "Thumbnail", "url": thumbnail_url})
+        # 4. Multi-shot product gallery: varied crops/backgrounds from this one
+        # photo (the local, free stand-in for "multiple angles" — see FR-3.x).
+        gallery = [{"key": "enhanced", "label": "Enhanced", "url": media.enhanced_url}]
+        if media.aspect_ratio_1x1_url:
+            gallery.append({"key": "studio_square", "label": "Studio Square", "url": media.aspect_ratio_1x1_url})
+        if media.aspect_ratio_4x5_url:
+            gallery.append({"key": "studio_portrait", "label": "Studio Portrait", "url": media.aspect_ratio_4x5_url})
+        detail_bytes = image_service.create_detail_crop(enhanced_bytes)
+        gallery.append({
+            "key": "detail",
+            "label": "Detail Shot",
+            "url": image_service.save_image_file(detail_bytes, "detail"),
+        })
         media.gallery = gallery
 
         media.processing_meta = {
-            "background_removed": True,
+            "background_removed": bool(body.remove_background),
             "white_balance_applied": False,
-            "lighting_corrected": False,
+            "lighting_corrected": bool(body.auto_contrast),
             "shadow_added": False,
         }
-
-        if studio_result.warnings:
-            media.quality_issues = list(media.quality_issues or []) + studio_result.warnings
 
         media.enhancement_status = "completed"
     except Exception as e:
