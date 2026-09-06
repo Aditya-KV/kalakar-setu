@@ -65,13 +65,27 @@ class StudioEnhancementPipeline:
     def __init__(self, config: StudioConfig | None = None):
         self.config = config or StudioConfig()
 
-    def run(self, image_bytes: bytes, backgrounds: list[str] | None = None, apply_lighting: bool = True) -> StudioResult:
-        """Runs the full studio pipeline and returns a transparent cutout,
-        one composited square image per requested background preset
-        (defaults to all three presets), and one portrait composite.
+    def run(
+        self,
+        image_bytes: bytes,
+        backgrounds: list[str] | None = None,
+        apply_lighting: bool = True,
+        apply_shadow: bool = True,
+        apply_detail: bool = True,
+    ) -> StudioResult:
+        """Runs the studio pipeline and returns a transparent cutout, one
+        composited square image per requested background preset (defaults
+        to all three presets), and one portrait composite.
+
         apply_lighting=False skips white balance / exposure / subject
-        enhancement / studio light — segmentation, crop, canvas, contact
-        shadow, and detail sharpening still run."""
+        enhancement / studio light. apply_shadow=False skips the contact
+        shadow. apply_detail=False skips post-composite denoise/sharpen.
+        Segmentation, mask refinement, edge decontamination, smart crop,
+        and canvas placement always run regardless — those three flags
+        exist so a caller can run in a stripped-down "background change and
+        masking only" mode (see app/api/routes/media.py) without touching
+        any of this module's code, e.g. to cut peak memory on a
+        resource-constrained host."""
         backgrounds = backgrounds or list(BACKGROUND_PRESETS.keys())
         timings: dict[str, float] = {}
         warnings: list[str] = []
@@ -147,14 +161,18 @@ class StudioEnhancementPipeline:
         for preset_name in backgrounds:
             bg_rgb = BACKGROUND_PRESETS.get(preset_name, BACKGROUND_PRESETS["WARM_WHITE"])
             studio_images[preset_name] = self._composite(
-                self.config.canvas_size, self.config.canvas_size, bg_rgb, transparent, bounds, mask_crop
+                self.config.canvas_size, self.config.canvas_size, bg_rgb, transparent, bounds, mask_crop,
+                apply_shadow=apply_shadow, apply_detail=apply_detail,
             )
         timings["composition"] = self._ms(t0)
 
         t0 = time.perf_counter()
         portrait_bg = BACKGROUND_PRESETS.get(self.config.background, BACKGROUND_PRESETS["WARM_WHITE"])
         portrait_w, portrait_h = self.config.portrait_size
-        portrait_image = self._composite(portrait_w, portrait_h, portrait_bg, transparent, bounds, mask_crop)
+        portrait_image = self._composite(
+            portrait_w, portrait_h, portrait_bg, transparent, bounds, mask_crop,
+            apply_shadow=apply_shadow, apply_detail=apply_detail,
+        )
         timings["portrait_composition"] = self._ms(t0)
 
         t0 = time.perf_counter()
@@ -188,21 +206,34 @@ class StudioEnhancementPipeline:
         transparent: Image.Image,
         bounds: tuple[int, int, int, int],
         mask_crop: np.ndarray,
+        apply_shadow: bool = True,
+        apply_detail: bool = True,
     ) -> Image.Image:
         """Builds one canvas at the given size/background: studio canvas ->
-        contact shadow -> product placement -> detail enhancement/denoise."""
+        (optional) contact shadow -> product placement -> (optional) detail
+        enhancement/denoise. Both extras are skippable — each is a real
+        memory/CPU cost (shadow: a canvas-sized blurred layer; detail:
+        OpenCV denoising, one of the heaviest single steps in the whole
+        pipeline) that a resource-constrained host may not be able to
+        afford alongside everything else, even though the code itself
+        stays intact for when it can."""
         canvas = create_studio_canvas(canvas_w, canvas_h, bg_rgb)
 
-        new_w, new_h, paste_x, paste_y = compute_placement(canvas_w, canvas_h, bounds, self.config.subject_coverage)
-        shadow_layer = create_contact_shadow(
-            mask_crop, (canvas_w, canvas_h), (paste_x, paste_y, new_w, new_h),
-            opacity=self.config.shadow_opacity, blur_radius=self.config.shadow_blur,
-            vertical_offset=self.config.shadow_offset_px,
-        )
-        canvas_with_shadow = canvas.convert("RGBA")
-        canvas_with_shadow.alpha_composite(shadow_layer)
+        if apply_shadow:
+            new_w, new_h, paste_x, paste_y = compute_placement(canvas_w, canvas_h, bounds, self.config.subject_coverage)
+            shadow_layer = create_contact_shadow(
+                mask_crop, (canvas_w, canvas_h), (paste_x, paste_y, new_w, new_h),
+                opacity=self.config.shadow_opacity, blur_radius=self.config.shadow_blur,
+                vertical_offset=self.config.shadow_offset_px,
+            )
+            canvas = canvas.convert("RGBA")
+            canvas.alpha_composite(shadow_layer)
+            canvas = canvas.convert("RGB")
 
-        composited = place_product(canvas_with_shadow.convert("RGB"), transparent, bounds, self.config.subject_coverage)
+        composited = place_product(canvas, transparent, bounds, self.config.subject_coverage)
+
+        if not apply_detail:
+            return composited
 
         finalized_array = finalize_composite(
             np.array(composited), sharpening_strength=self.config.sharpening_strength,

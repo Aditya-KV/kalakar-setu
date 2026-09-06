@@ -161,7 +161,17 @@ async def enhance_product_photo(
 
         config = StudioConfig(background=background)
         pipeline = StudioEnhancementPipeline(config=config)
-        studio_result = pipeline.run(raw_bytes, backgrounds=[background], apply_lighting=body.auto_contrast)
+        # Temporarily background-change + masking only (segmentation, crop,
+        # canvas placement) — white balance/exposure/subject enhancement/
+        # studio light, the contact shadow, and denoise/sharpen are all
+        # switched off here, not removed from the pipeline itself, to keep
+        # peak memory down on the current Railway plan. body.auto_contrast
+        # is intentionally ignored for now; flip these back to re-enable
+        # once resources allow.
+        studio_result = pipeline.run(
+            raw_bytes, backgrounds=[background],
+            apply_lighting=False, apply_shadow=False, apply_detail=False,
+        )
 
         square_bytes = studio_export.encode_jpeg(studio_result.studio_images[background], quality=config.jpeg_quality)
         portrait_bytes = studio_export.encode_jpeg(studio_result.portrait_image, quality=config.jpeg_quality)
@@ -191,9 +201,9 @@ async def enhance_product_photo(
 
         media.processing_meta = {
             "background_removed": True,
-            "white_balance_applied": bool(body.auto_contrast),
-            "lighting_corrected": bool(body.auto_contrast),
-            "shadow_added": True,
+            "white_balance_applied": False,
+            "lighting_corrected": False,
+            "shadow_added": False,
         }
 
         if studio_result.warnings:
