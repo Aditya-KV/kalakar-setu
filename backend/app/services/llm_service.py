@@ -170,6 +170,159 @@ def _generate_via_gemini(transcript: str, source_language: str, craft_type: str 
         return None
 
 
+def _build_price_prompt(
+    craft_type: str | None,
+    title_en: str,
+    description_en: str,
+    materials: list[str],
+    state_name: str | None,
+    district_name: str | None,
+) -> str:
+    craft_line = craft_type or "handicraft"
+    materials_line = ", ".join(materials) if materials else "not specified"
+    location_line = (
+        f"{district_name}, {state_name}, India" if district_name and state_name
+        else (state_name + ", India" if state_name else "India (exact region not specified)")
+    )
+    return f"""You are helping an Indian artisan price a handmade product fairly for direct-to-customer sale.
+
+Craft type: {craft_line}
+Materials: {materials_line}
+Title: {title_en}
+Description: {description_en}
+Artisan's region: {location_line}
+
+Estimate a fair, realistic price in Indian Rupees (INR) for ONE unit of this handmade item, as it would typically sell for directly from an artisan (not inflated export/boutique pricing, not a mass-manufactured factory price). Consider the craft type, materials, apparent complexity, and typical local cost of living/market rates for the given region if specified.
+
+Return ONLY a JSON object with exactly this shape, nothing else:
+{{
+  "suggested_price": <integer INR>,
+  "price_range_min": <integer INR>,
+  "price_range_max": <integer INR>,
+  "reasoning": {{"en": "...", "hi": "..."}},
+  "confidence": "low" | "medium" | "high"
+}}
+
+Rules:
+- suggested_price must fall within [price_range_min, price_range_max].
+- reasoning: one short sentence (in English and Hindi) explaining the main factors behind the estimate (e.g. materials, craft complexity, typical regional pricing) — plain language for a seller, not a market report.
+- confidence: "low" if the craft type/materials/description give little to go on, "high" only if they're specific and typical for a well-known craft category.
+- This is a general estimate, not real-time market data — do not claim otherwise in the reasoning.
+- Output valid JSON only — no markdown code fences, no commentary."""
+
+
+def _normalize_price(data: dict) -> dict | None:
+    """Validates the shape an LLM returned for a price estimate. Returns
+    None if the shape is unusable — the caller must not fabricate a price
+    from a malformed response."""
+    try:
+        suggested = int(data["suggested_price"])
+        price_min = int(data["price_range_min"])
+        price_max = int(data["price_range_max"])
+        reasoning = data.get("reasoning", {})
+        reasoning_en = str(reasoning.get("en", "")).strip()
+        reasoning_hi = str(reasoning.get("hi", "")).strip()
+        confidence = str(data.get("confidence", "low")).lower()
+
+        if suggested <= 0 or price_min <= 0 or price_max <= 0 or price_min > price_max:
+            return None
+        if not (price_min <= suggested <= price_max):
+            suggested = max(price_min, min(suggested, price_max))
+        if confidence not in ("low", "medium", "high"):
+            confidence = "low"
+        if not reasoning_en:
+            return None
+
+        return {
+            "suggested_price": suggested,
+            "price_range_min": price_min,
+            "price_range_max": price_max,
+            "reasoning": {"en": reasoning_en, "hi": reasoning_hi or reasoning_en},
+            "confidence": confidence,
+        }
+    except (KeyError, TypeError, ValueError) as e:
+        logger.warning(f"LLM price response had an unusable shape: {e}")
+        return None
+
+
+def _predict_price_via_groq(
+    craft_type: str | None, title_en: str, description_en: str, materials: list[str],
+    state_name: str | None, district_name: str | None,
+) -> dict | None:
+    client = _get_groq_client()
+    if client is None:
+        return None
+    try:
+        prompt = _build_price_prompt(craft_type, title_en, description_en, materials, state_name, district_name)
+        completion = client.chat.completions.create(
+            model=settings.GROQ_MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            response_format={"type": "json_object"},
+            temperature=0.3,
+        )
+        data = json.loads(completion.choices[0].message.content)
+        return _normalize_price(data)
+    except Exception as e:
+        logger.warning(f"Groq price prediction failed: {e}")
+        return None
+
+
+def _predict_price_via_gemini(
+    craft_type: str | None, title_en: str, description_en: str, materials: list[str],
+    state_name: str | None, district_name: str | None,
+) -> dict | None:
+    client = _get_gemini_client()
+    if client is None:
+        return None
+    try:
+        from google.genai import types
+
+        prompt = _build_price_prompt(craft_type, title_en, description_en, materials, state_name, district_name)
+        response = client.models.generate_content(
+            model=settings.GEMINI_MODEL,
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                response_mime_type="application/json",
+                temperature=0.3,
+            ),
+        )
+        data = json.loads(response.text)
+        return _normalize_price(data)
+    except Exception as e:
+        logger.warning(f"Gemini price prediction failed: {e}")
+        return None
+
+
+def predict_price(
+    craft_type: str | None,
+    title_en: str,
+    description_en: str,
+    materials: list[str] | None = None,
+    state_name: str | None = None,
+    district_name: str | None = None,
+) -> dict | None:
+    """
+    Estimates a fair INR price for a handmade product via whichever LLM
+    provider is configured (Groq tried first, then Gemini). This is a
+    general AI estimate based on craft type/materials/region — not
+    real-time market data. Returns None (never raises, never fabricates a
+    partial result) if no provider is configured or every configured
+    provider fails; the caller must treat that as "prediction unavailable,"
+    not silently substitute a guessed number.
+    """
+    materials = materials or []
+
+    result = _predict_price_via_groq(craft_type, title_en, description_en, materials, state_name, district_name)
+    if result:
+        return {**result, "generated_by": "groq"}
+
+    result = _predict_price_via_gemini(craft_type, title_en, description_en, materials, state_name, district_name)
+    if result:
+        return {**result, "generated_by": "gemini"}
+
+    return None
+
+
 def generate_structured_listing(
     transcript: str, source_language: str, craft_type: str | None = None
 ) -> dict | None:

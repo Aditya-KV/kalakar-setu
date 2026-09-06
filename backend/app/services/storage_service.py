@@ -27,7 +27,7 @@ def _supabase_configured() -> bool:
     return bool(settings.SUPABASE_URL and settings.SUPABASE_SERVICE_KEY)
 
 
-def save_file(file_bytes: bytes, filename_suffix: str, content_type: str = "image/jpeg") -> str:
+def save_file(file_bytes: bytes, filename_suffix: str, content_type: str = "image/jpeg", extension: str = "jpg") -> str:
     """
     Saves a file and returns its URL.
     - Supabase configured: uploads to Storage, returns the full public URL.
@@ -35,8 +35,10 @@ def save_file(file_bytes: bytes, filename_suffix: str, content_type: str = "imag
       path (served by the StaticFiles mount registered in main.py).
     Never raises for a storage failure — falls back to local disk so an
     upload never fails outright just because Supabase is briefly unreachable.
+    `extension` defaults to "jpg" for backward compatibility with existing
+    callers — pass "png" for a transparent-background export.
     """
-    filename = f"{uuid.uuid4().hex}_{filename_suffix}.jpg"
+    filename = f"{uuid.uuid4().hex}_{filename_suffix}.{extension}"
 
     if _supabase_configured():
         url = _upload_to_supabase(file_bytes, filename, content_type)

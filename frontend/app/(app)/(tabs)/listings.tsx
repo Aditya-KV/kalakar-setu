@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import Animated, { FadeInDown, ZoomIn } from 'react-native-reanimated';
-import { Package, Pencil, Share2, Plus, X, Check } from 'lucide-react-native';
+import { Package, Pencil, Share2, Plus, X, Check, Trash2 } from 'lucide-react-native';
 import { useTheme } from '../../../features/theme/context';
 import { ThemeColors } from '../../../constants/Colors';
 import { FontSize, FontWeight, Spacing, BorderRadius, Shadows } from '../../../constants/theme';
@@ -47,6 +47,7 @@ export default function ListingsScreen() {
   const [editTitle, setEditTitle] = useState('');
   const [editPrice, setEditPrice] = useState('');
   const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const fetchListings = useCallback(async () => {
     setLoading(true);
@@ -81,6 +82,31 @@ export default function ListingsScreen() {
     } catch (e) {
       // User dismissed the share sheet — nothing to do.
     }
+  };
+
+  const handleDelete = (item: Listing) => {
+    Alert.alert(
+      t('listings.deleteConfirmTitle'),
+      t('listings.deleteConfirmMessage'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('listings.delete'),
+          style: 'destructive',
+          onPress: async () => {
+            setDeletingId(item.id);
+            try {
+              await apiClient.delete(`/listings/${item.id}`);
+              setListings((prev) => prev.filter((l) => l.id !== item.id));
+            } catch (e) {
+              Alert.alert(t('listings.deleteFailed'));
+            } finally {
+              setDeletingId(null);
+            }
+          },
+        },
+      ]
+    );
   };
 
   const openEdit = (item: Listing) => {
@@ -161,11 +187,21 @@ export default function ListingsScreen() {
                   <View style={styles.cardActions}>
                     <AnimatedPressable style={styles.actionButton} onPress={() => openEdit(item)}>
                       <Pencil size={12} color={colors.textPrimary} strokeWidth={2} />
-                      <Text style={styles.actionText}>{t('listings.edit')}</Text>
+                      <Text style={styles.actionText} numberOfLines={1}>{t('listings.edit')}</Text>
                     </AnimatedPressable>
                     <AnimatedPressable style={styles.actionButton} onPress={() => handleShare(item)}>
                       <Share2 size={12} color={colors.textPrimary} strokeWidth={2} />
-                      <Text style={styles.actionText}>{t('listings.share')}</Text>
+                      <Text style={styles.actionText} numberOfLines={1}>{t('listings.share')}</Text>
+                    </AnimatedPressable>
+                    <AnimatedPressable
+                      style={[styles.actionButton, styles.deleteButton]}
+                      onPress={() => handleDelete(item)}
+                      disabled={deletingId === item.id}
+                    >
+                      <Trash2 size={12} color={colors.error} strokeWidth={2} />
+                      <Text style={[styles.actionText, { color: colors.error }]} numberOfLines={1}>
+                        {deletingId === item.id ? t('common.loading') : t('listings.delete')}
+                      </Text>
                     </AnimatedPressable>
                   </View>
                 </View>
@@ -312,15 +348,17 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   },
   cardActions: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 8,
     marginTop: Spacing.sm,
   },
   actionButton: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 4,
-    paddingVertical: 4,
-    paddingHorizontal: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 6,
     borderRadius: BorderRadius.sm,
     backgroundColor: colors.surfaceElevated,
   },
@@ -328,6 +366,11 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     fontSize: 11,
     fontWeight: FontWeight.semibold,
     color: colors.textPrimary,
+  },
+  deleteButton: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: colors.errorLight,
   },
   addFabWrapper: {
     position: 'absolute',

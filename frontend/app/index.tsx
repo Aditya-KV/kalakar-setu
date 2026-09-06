@@ -3,8 +3,17 @@ import { useAuth } from '../features/auth/hooks';
 import { useAppMode } from '../features/appMode/context';
 
 export default function Index() {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
   const { mode, isReady } = useAppMode();
+
+  // Wait for the saved session to actually be restored from storage before
+  // deciding where to route — otherwise this renders on the very first
+  // frame with isAuthenticated still false (tokens haven't loaded yet) and
+  // sends a logged-in user straight to the auth flow, which looks exactly
+  // like being logged out every time the app is reopened.
+  if (isLoading) {
+    return null;
+  }
 
   if (isAuthenticated) {
     if (user && !user.onboarding_completed) {

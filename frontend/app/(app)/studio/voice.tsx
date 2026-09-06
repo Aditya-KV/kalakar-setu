@@ -48,6 +48,7 @@ import { preserveDraftMedia } from '../../../lib/draft-media';
 import { mediaForm } from '../../../lib/media-form';
 import { productText } from '../../../lib/product-text';
 import { apiClient } from '../../../lib/api-client';
+import { useExitToHomeOnBack } from '../../../lib/exit-to-home';
 
 
 type SourceLanguage = 'hi' | 'en' | 'mr';
@@ -267,6 +268,7 @@ export default function VoiceDescriptionScreen() {
 
   const isBusy = status === 'transcribing' || status === 'structuring';
   const isRecording = status === 'recording';
+  useExitToHomeOnBack(!isBusy && !isRecording);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>

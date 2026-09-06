@@ -9,13 +9,14 @@ import {
   Image,
   Alert,
   Modal,
+  Switch,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { useTranslation } from 'react-i18next';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
-import { X, Camera, ImageIcon, RotateCcw, Check } from 'lucide-react-native';
+import { X, Camera, ImageIcon, RotateCcw, Check, Lightbulb } from 'lucide-react-native';
 import { useAuth } from '../../../features/auth/hooks';
 import { preserveDraftMedia } from '../../../lib/draft-media';
 import { mediaForm } from '../../../lib/media-form';
@@ -28,6 +29,7 @@ import { Button } from '../../../components/ui/Button';
 import { BeforeAfterSlider } from '../../../components/ui/BeforeAfterSlider';
 import { QualityAlert } from '../../../components/ui/QualityAlert';
 import { apiClient } from '../../../lib/api-client';
+import { useExitToHomeOnBack } from '../../../lib/exit-to-home';
 
 interface GalleryVariant {
   key: string;
@@ -55,10 +57,28 @@ export default function PhotoStudioScreen() {
   const [enhancedImageUri, setEnhancedImageUri] = useState<string | null>(mediaUrl(draft.gallery[0]?.url, HOST_URL));
   const [gallery, setGallery] = useState<GalleryVariant[]>(draft.gallery);
   const [isEnhancing, setIsEnhancing] = useState<boolean>(false);
+  useExitToHomeOnBack(!isEnhancing);
   const [qualityScore, setQualityScore] = useState<number | null>(null);
   const [qualityIssues, setQualityIssues] = useState<string[]>([]);
   const [mediaId, setMediaId] = useState<string | null>(draft.mediaId);
   const [lastPickedUri, setLastPickedUri] = useState<string | null>(draft.photoUri);
+  const [enhanceQuality, setEnhanceQuality] = useState<boolean>(true);
+  const [background, setBackground] = useState<'WHITE' | 'WARM_WHITE' | 'SOFT_OFF_WHITE'>('WARM_WHITE');
+  const [processingStep, setProcessingStep] = useState(0);
+
+  // Simple animated processing-state sequence — the backend doesn't report
+  // real stage-by-stage progress to the client, so this cycles through
+  // plausible stage labels rather than faking a percentage.
+  useEffect(() => {
+    if (!isEnhancing) {
+      setProcessingStep(0);
+      return;
+    }
+    const interval = setInterval(() => {
+      setProcessingStep((prev) => (prev + 1) % 5);
+    }, 1400);
+    return () => clearInterval(interval);
+  }, [isEnhancing]);
 
   // Pick photo from gallery or camera
   const handlePickImage = async (source: 'camera' | 'library') => {
@@ -101,6 +121,17 @@ export default function PhotoStudioScreen() {
     }
   };
 
+  const runEnhance = async (mediaIdToEnhance: string, uri: string, qualityOn: boolean, bg: string, controller: AbortController) => {
+    const enhanceRes = await apiClient.post(`/media/enhance/${mediaIdToEnhance}`, {
+      remove_background: true, auto_contrast: qualityOn, background: bg,
+    }, { timeout: 120000, signal: controller.signal });
+    if (controller.signal.aborted) return;
+    const updated = enhanceRes.data;
+    setEnhancedImageUri(mediaUrl(updated.bg_removed_url || updated.enhanced_url, HOST_URL) || uri);
+    setGallery(updated.gallery || []);
+    setPhotoStep(mediaIdToEnhance, updated.gallery || [], updated.original_url || uri);
+  };
+
   const uploadAndAnalyze = async (uri: string) => {
     request.current?.abort();
     const controller = new AbortController();
@@ -122,18 +153,47 @@ export default function PhotoStudioScreen() {
       setQualityIssues(media.quality_issues || []);
       // Keep the successful upload even if enhancement fails.
       setPhotoStep(media.id, [], media.original_url || uri);
-      const enhanceRes = await apiClient.post(`/media/enhance/${media.id}`, {
-        remove_background: true, auto_contrast: true,
-      }, { timeout: 120000, signal: controller.signal });
-      if (controller.signal.aborted) return;
-      const updated = enhanceRes.data;
-      setEnhancedImageUri(mediaUrl(updated.bg_removed_url || updated.enhanced_url, HOST_URL) || uri);
-      setGallery(updated.gallery || []);
-      setPhotoStep(media.id, updated.gallery || [], media.original_url || uri);
+      await runEnhance(media.id, uri, enhanceQuality, background, controller);
     } catch {
       if (controller.signal.aborted) return;
       setEnhancedImageUri(uri);
       setPhotoError(uploaded ? 'studio.enhanceFailed' : 'studio.uploadFailedMessage');
+    } finally {
+      if (!controller.signal.aborted) setIsEnhancing(false);
+    }
+  };
+
+  const handleToggleEnhanceQuality = async (value: boolean) => {
+    setEnhanceQuality(value);
+    if (!mediaId || !lastPickedUri) return;
+    request.current?.abort();
+    const controller = new AbortController();
+    request.current = controller;
+    setIsEnhancing(true);
+    setPhotoError(null);
+    try {
+      await runEnhance(mediaId, lastPickedUri, value, background, controller);
+    } catch {
+      if (controller.signal.aborted) return;
+      setPhotoError('studio.enhanceFailed');
+    } finally {
+      if (!controller.signal.aborted) setIsEnhancing(false);
+    }
+  };
+
+  const handleSelectBackground = async (value: typeof background) => {
+    setBackground(value);
+    if (!mediaId || !lastPickedUri) return;
+    request.current?.abort();
+    const controller = new AbortController();
+    request.current = controller;
+    setIsEnhancing(true);
+    setPhotoError(null);
+    try {
+      await runEnhance(mediaId, lastPickedUri, enhanceQuality, value, controller);
+    } catch {
+      if (controller.signal.aborted) return;
+      setPhotoError('studio.enhanceFailed');
     } finally {
       if (!controller.signal.aborted) setIsEnhancing(false);
     }
@@ -209,16 +269,77 @@ export default function PhotoStudioScreen() {
           </Animated.View>
         )}
 
+        {/* Photo Guidelines — shown before a photo is picked, so the tips are
+            actionable at the moment the artisan is about to shoot. */}
+        {!rawImageUri && (
+          <Animated.View entering={FadeInDown.delay(150).duration(320)} style={styles.tipsCard}>
+            <View style={styles.tipsHeaderRow}>
+              <Lightbulb size={16} color={colors.primary} strokeWidth={2} />
+              <Text style={styles.tipsTitle}>{t('studio.photoTipsTitle')}</Text>
+            </View>
+            {(['photoTip1', 'photoTip2', 'photoTip3', 'photoTip4', 'photoTip5'] as const).map((key) => (
+              <View key={key} style={styles.tipRow}>
+                <View style={styles.tipDot} />
+                <Text style={styles.tipText}>{t(`studio.${key}`)}</Text>
+              </View>
+            ))}
+          </Animated.View>
+        )}
+
         {/* Quality Analysis Warning Banner */}
         {qualityScore !== null && <QualityAlert score={qualityScore} issues={qualityIssues} />}
         <RequestFeedback error={photoError ? t(photoError) : null} onRetry={!mediaId && lastPickedUri ? () => uploadAndAnalyze(lastPickedUri) : undefined} />
+
+        {rawImageUri && (
+          <View style={styles.enhanceToggleRow}>
+            <View style={styles.enhanceToggleText}>
+              <Text style={styles.enhanceToggleLabel}>{t('studio.enhanceQualityOption')}</Text>
+              <Text style={styles.enhanceToggleSub}>{t('studio.enhanceQualityOptionSub')}</Text>
+            </View>
+            <Switch
+              value={enhanceQuality}
+              onValueChange={handleToggleEnhanceQuality}
+              disabled={isEnhancing}
+              trackColor={{ false: colors.border, true: colors.primary }}
+              thumbColor="#FFFFFF"
+            />
+          </View>
+        )}
+
+        {/* Studio Background Selector */}
+        {rawImageUri && (
+          <View style={styles.backgroundRow}>
+            <Text style={styles.backgroundLabel}>{t('studio.backgroundLabel')}</Text>
+            <View style={styles.backgroundOptions}>
+              {(['WHITE', 'WARM_WHITE', 'SOFT_OFF_WHITE'] as const).map((option) => (
+                <TouchableOpacity
+                  key={option}
+                  style={[styles.backgroundChip, background === option && styles.backgroundChipActive]}
+                  onPress={() => handleSelectBackground(option)}
+                  disabled={isEnhancing}
+                  activeOpacity={0.8}
+                >
+                  <View
+                    style={[
+                      styles.backgroundSwatch,
+                      { backgroundColor: option === 'WHITE' ? '#FFFFFF' : option === 'WARM_WHITE' ? '#FAF9F6' : '#F7F5F0' },
+                    ]}
+                  />
+                  <Text style={[styles.backgroundChipText, background === option && styles.backgroundChipTextActive]}>
+                    {t(`studio.background${option === 'WHITE' ? 'White' : option === 'WARM_WHITE' ? 'WarmWhite' : 'OffWhite'}`)}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        )}
 
         {/* Interactive Before/After Split Slider Comparison */}
         {isEnhancing ? (
           <Animated.View entering={FadeIn.duration(250)} style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={colors.primary} />
             <Text style={styles.loadingText}>
-              {t('studio.aiProcessing')}
+              {t(`studio.processingStep${processingStep + 1}`)}
             </Text>
           </Animated.View>
         ) : rawImageUri ? (
@@ -393,6 +514,115 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
     marginBottom: Spacing.md,
+  },
+  tipsCard: {
+    backgroundColor: colors.surface,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: Spacing.md,
+    marginBottom: Spacing.md,
+  },
+  tipsHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: Spacing.sm,
+  },
+  tipsTitle: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.bold,
+    color: colors.textPrimary,
+  },
+  tipRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 8,
+    marginBottom: 6,
+  },
+  tipDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: colors.primary,
+    marginTop: 7,
+  },
+  tipText: {
+    flex: 1,
+    fontSize: FontSize.xs,
+    color: colors.textSecondary,
+    lineHeight: 18,
+  },
+  backgroundRow: {
+    marginBottom: Spacing.md,
+  },
+  backgroundLabel: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.semibold,
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
+  backgroundOptions: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  backgroundChip: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  backgroundChipActive: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primaryTint,
+  },
+  backgroundSwatch: {
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  backgroundChipText: {
+    fontSize: 11,
+    fontWeight: FontWeight.semibold,
+    color: colors.textSecondary,
+  },
+  backgroundChipTextActive: {
+    color: colors.primary,
+  },
+  enhanceToggleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.surface,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+    marginBottom: Spacing.md,
+  },
+  enhanceToggleText: {
+    flex: 1,
+    marginRight: Spacing.sm,
+  },
+  enhanceToggleLabel: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.semibold,
+    color: colors.textPrimary,
+  },
+  enhanceToggleSub: {
+    fontSize: 11,
+    color: colors.textSecondary,
+    marginTop: 2,
   },
   captureCard: {
     flex: 1,

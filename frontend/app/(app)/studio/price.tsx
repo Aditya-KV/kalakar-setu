@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { X, Package, ArrowRight, Camera } from 'lucide-react-native';
+import { X, Package, ArrowRight, Camera, Sparkles } from 'lucide-react-native';
 import { useTheme } from '../../../features/theme/context';
 import { useAuth } from '../../../features/auth/hooks';
 import { useCatalogDraft } from '../../../features/catalog/context';
@@ -14,6 +14,7 @@ import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { RequestFeedback } from '../../../components/ui/RequestFeedback';
 import { apiClient } from '../../../lib/api-client';
+import { useExitToHomeOnBack } from '../../../lib/exit-to-home';
 
 import { mediaUrl, productText } from '../../../lib/product-text';
 
@@ -34,6 +35,19 @@ export default function PriceScreen() {
   const [publishing, setPublishing] = useState(false);
   const [publishError, setPublishError] = useState(false);
   const publishLock = useRef(false);
+  useExitToHomeOnBack(!publishing);
+
+  interface PriceSuggestion {
+    suggested_price: number;
+    price_range_min: number;
+    price_range_max: number;
+    reasoning: { en: string; hi: string };
+    confidence: string;
+  }
+  const [suggestion, setSuggestion] = useState<PriceSuggestion | null>(null);
+  const [predicting, setPredicting] = useState(false);
+  const [predictionUnavailable, setPredictionUnavailable] = useState(false);
+  const [predictionError, setPredictionError] = useState(false);
 
   const hasDraft = !!draft.title && !!draft.description;
   const priceNumber = parseInt(price, 10);
@@ -69,6 +83,33 @@ export default function PriceScreen() {
     } finally {
       publishLock.current = false;
       setPublishing(false);
+    }
+  };
+
+  const handlePredictPrice = async () => {
+    if (!draft.title || !draft.description) return;
+    setPredicting(true);
+    setPredictionUnavailable(false);
+    setPredictionError(false);
+    setSuggestion(null);
+    try {
+      const res = await apiClient.post('/pricing/predict', {
+        craft_type: user?.craft_types?.[0] || null,
+        title_en: draft.title.en,
+        description_en: draft.description.en,
+        materials: draft.attributes?.material || [],
+        state_code: user?.state_code || null,
+        district_code: user?.district_code || null,
+      });
+      if (res.data.available) {
+        setSuggestion(res.data);
+      } else {
+        setPredictionUnavailable(true);
+      }
+    } catch (e) {
+      setPredictionError(true);
+    } finally {
+      setPredicting(false);
     }
   };
 
@@ -125,6 +166,46 @@ export default function PriceScreen() {
             <Text style={styles.summaryTitle} numberOfLines={2}>{draft.title ? productText(draft.title, i18n.language) : ''}</Text>
             <Text style={styles.summarySubtitle} numberOfLines={1}>{t('studio.savedOnDevice')}</Text>
           </View>
+        </Animated.View>
+
+        <Animated.View entering={FadeInDown.delay(150).duration(300)} style={styles.suggestionCard}>
+          {!suggestion ? (
+            <TouchableOpacity
+              style={styles.suggestionCta}
+              onPress={handlePredictPrice}
+              disabled={predicting}
+              activeOpacity={0.8}
+            >
+              <Sparkles size={16} color={colors.primary} strokeWidth={2} />
+              <Text style={styles.suggestionCtaText}>
+                {predicting ? t('studio.priceSuggestionLoading') : t('studio.priceSuggestionCta')}
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <View>
+              <Text style={styles.suggestionRange}>
+                {t('studio.priceSuggestionRange', {
+                  min: suggestion.price_range_min.toLocaleString('en-IN'),
+                  max: suggestion.price_range_max.toLocaleString('en-IN'),
+                })}
+              </Text>
+              <Text style={styles.suggestionReasoning}>
+                {i18n.language.split('-')[0] === 'hi' ? suggestion.reasoning.hi : suggestion.reasoning.en}
+              </Text>
+              <TouchableOpacity
+                style={styles.suggestionUseButton}
+                onPress={() => setPrice(String(suggestion.suggested_price))}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.suggestionUseText}>
+                  {t('studio.priceSuggestionUse', { price: suggestion.suggested_price.toLocaleString('en-IN') })}
+                </Text>
+              </TouchableOpacity>
+              <Text style={styles.suggestionDisclaimer}>{t('studio.priceSuggestionDisclaimer')}</Text>
+            </View>
+          )}
+          {predictionUnavailable && <Text style={styles.suggestionNote}>{t('studio.priceSuggestionUnavailable')}</Text>}
+          {predictionError && <Text style={styles.suggestionNote}>{t('studio.priceSuggestionFailed')}</Text>}
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(180).duration(300)}>
@@ -198,6 +279,62 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     color: colors.textSecondary,
     marginTop: 4,
     marginBottom: Spacing.lg,
+  },
+  suggestionCard: {
+    backgroundColor: colors.surface,
+    borderRadius: BorderRadius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: Spacing.md,
+    marginBottom: Spacing.lg,
+  },
+  suggestionCta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 4,
+  },
+  suggestionCtaText: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.bold,
+    color: colors.primary,
+  },
+  suggestionRange: {
+    fontSize: FontSize.lg,
+    fontWeight: FontWeight.bold,
+    color: colors.textPrimary,
+  },
+  suggestionReasoning: {
+    fontSize: FontSize.xs,
+    color: colors.textSecondary,
+    marginTop: 4,
+    lineHeight: 18,
+  },
+  suggestionUseButton: {
+    alignSelf: 'flex-start',
+    backgroundColor: colors.primaryTint,
+    borderRadius: BorderRadius.round,
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+    marginTop: Spacing.sm,
+  },
+  suggestionUseText: {
+    fontSize: FontSize.xs,
+    fontWeight: FontWeight.bold,
+    color: colors.primary,
+  },
+  suggestionDisclaimer: {
+    fontSize: 10,
+    color: colors.textMuted,
+    marginTop: Spacing.sm,
+    fontStyle: 'italic',
+  },
+  suggestionNote: {
+    fontSize: FontSize.xs,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginTop: 6,
   },
   summaryCard: {
     flexDirection: 'row',

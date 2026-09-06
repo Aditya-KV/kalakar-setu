@@ -36,6 +36,8 @@ def analyze_image_quality(image_bytes: bytes) -> dict:
                 "is_too_dark": False,
                 "is_overexposed": False,
                 "quality_issues": ["Invalid image format"],
+                "brightness": None,
+                "blur_score": None,
             }
 
         # 1. Blur Detection using Variance of Laplacian
@@ -73,6 +75,8 @@ def analyze_image_quality(image_bytes: bytes) -> dict:
             "is_too_dark": is_too_dark,
             "is_overexposed": is_overexposed,
             "quality_issues": issues,
+            "brightness": round(float(mean_brightness), 2),
+            "blur_score": round(float(laplacian_var), 2),
         }
     except Exception as e:
         logger.error(f"Image quality analysis failed: {e}")
@@ -82,6 +86,8 @@ def analyze_image_quality(image_bytes: bytes) -> dict:
             "is_too_dark": False,
             "is_overexposed": False,
             "quality_issues": [],
+            "brightness": None,
+            "blur_score": None,
         }
 
 
@@ -120,8 +126,10 @@ def enhance_photo(image_bytes: bytes) -> bytes:
 
 def remove_background(image_bytes: bytes) -> bytes:
     """
-    Isolates product subject and replaces background with clean studio cream background (FR-3.4).
-    Uses rembg library if installed, or smart thresholding fallback.
+    Isolates product subject and replaces background with a pure white
+    studio background, highlighting the product (FR-3.4). Free local
+    fallback used when Qwen-Image-Edit isn't configured/available — uses
+    the rembg library if installed, or returns the enhanced original.
     """
     try:
         from rembg import remove
@@ -129,8 +137,8 @@ def remove_background(image_bytes: bytes) -> bytes:
         # Remove background -> RGBA with transparent background
         transparent = remove(input_image)
 
-        # Create studio background (Warm Cream #FAF7F2 matching app theme)
-        studio_bg = Image.new("RGBA", transparent.size, (250, 247, 242, 255))
+        # Pure white studio background, matching real product-photography convention.
+        studio_bg = Image.new("RGBA", transparent.size, (255, 255, 255, 255))
         # Composite subject over studio background
         composite = Image.alpha_composite(studio_bg, transparent).convert("RGB")
 

@@ -27,6 +27,12 @@ class ProductImage(Base):
     bg_removed_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     aspect_ratio_1x1_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     aspect_ratio_4x5_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    transparent_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+
+    # Which Virtual Product Studio pipeline stages actually ran/succeeded —
+    # persisted so GET /media/{id} can report the same processing summary
+    # as the enhance call that produced it, not just at request time.
+    processing_meta: Mapped[dict | None] = mapped_column(JSON, nullable=True)
 
     # Product gallery: multiple varied shots generated from the one uploaded
     # photo (different crops/backgrounds today; can include real AI-generated
@@ -39,6 +45,8 @@ class ProductImage(Base):
 
     # Quality Check Metrics (FR-3.3)
     quality_score: Mapped[float] = mapped_column(Float, default=1.0)
+    brightness: Mapped[float | None] = mapped_column(Float, nullable=True)
+    blur_score: Mapped[float | None] = mapped_column(Float, nullable=True)
     is_blurry: Mapped[bool] = mapped_column(Boolean, default=False)
     is_too_dark: Mapped[bool] = mapped_column(Boolean, default=False)
     is_overexposed: Mapped[bool] = mapped_column(Boolean, default=False)

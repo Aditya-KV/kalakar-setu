@@ -14,7 +14,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.core.config import settings
 from app.db.session import init_db, async_session_factory
-from app.api.routes import auth, profile, reference, media, catalog, listing, address, marketplace, order
+from app.api.routes import auth, profile, reference, media, catalog, listing, address, marketplace, order, pricing
 from app.integrations.ondc.router import router as ondc_router
 from app.services.reference_service import seed_reference_data
 
@@ -97,6 +97,7 @@ app.include_router(listing.router, prefix="/api/v1")
 app.include_router(address.router, prefix="/api/v1")
 app.include_router(marketplace.router, prefix="/api/v1")
 app.include_router(order.router, prefix="/api/v1")
+app.include_router(pricing.router, prefix="/api/v1")
 
 # ONDC — mounted at /ondc (not /api/v1), per ONDC_SUBSCRIBER_URL. This is
 # the one path ONDC's own network calls; see app/integrations/ondc/.
