@@ -41,16 +41,13 @@ gets technical, for anyone who wants to know how it actually works.
 
 ## 🎥 See It In Action
 
-📹 **[Watch the screen recording](docs/demo.mp4)** — a real walkthrough of the app.
-
-<!--
-  Note: since this video is committed straight into the repo (not uploaded
-  through GitHub's web editor drag-and-drop), it renders as a clickable
-  link above rather than an auto-playing inline player — clicking it opens
-  GitHub's own video viewer. If you'd rather have it auto-embed inline in
-  this README, drag docs/demo.mp4 into this file's edit box on GitHub.com
-  instead, then replace the line above with the special link it generates.
--->
+<p align="center">
+  <a href="https://youtu.be/0_EtsJJmUxI">
+    <img src="https://img.youtube.com/vi/0_EtsJJmUxI/maxresdefault.jpg" alt="Watch the Kalakar Setu demo" width="480">
+  </a>
+  <br>
+  <a href="https://youtu.be/0_EtsJJmUxI"><strong>▶️ Watch the full demo</strong></a>
+</p>
 
 <p align="center">
   <!-- Replace src with your QR code image, and href with your real download link
