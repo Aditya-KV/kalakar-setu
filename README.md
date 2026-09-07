@@ -61,6 +61,67 @@ gets technical, for anyone who wants to know how it actually works.
   &nbsp;·&nbsp; or scan the QR code above
 </p>
 
+### 🗺️ What's Actually Happening in That Video
+
+The recording follows **one real painting** — a Thanjavur-style piece on a
+bamboo scaffold — all the way from a seller's phone camera to a buyer's
+doorstep, and the payment landing back in the seller's pocket. Here's the
+full round trip:
+
+```mermaid
+flowchart TD
+    A["📲 Open the app<br/>Choose a language"]:::seller --> B["📱 Phone number<br/>+ OTP verification"]:::seller
+    B --> C["➕ Tap 'Add Product'"]:::seller
+    C --> D["📸 Photograph the painting<br/>Thanjavur-style, on a bamboo scaffold"]:::seller
+    D --> E["✨ AI cleans up the photo<br/>background removed, studio look"]:::ai
+    E --> F["📝 AI writes the<br/>product description"]:::ai
+    F --> G["💰 AI price prediction<br/>₹3,500 – ₹6,500 range<br/><b>suggests ₹4,500</b>"]:::ai
+    G --> H["🔢 Seller sets quantity"]:::seller
+    H --> I(["🚀 Live on the<br/>Kalakar Setu marketplace"]):::system
+
+    I --> J["🛍️ A buyer opens the app<br/>browses the marketplace"]:::buyer
+    J --> K["🖼️ Spots the<br/>Thanjavur painting"]:::buyer
+    K --> L["🛒 Adds it to cart"]:::buyer
+    L --> M["📍 Enters delivery address"]:::buyer
+    M --> N["✅ Places the order"]:::buyer
+
+    N --> O["📦 Seller updates<br/>the order status"]:::seller
+    O --> P(["🚚 Order delivered"]):::system
+    P --> Q["💵 Payment credited<br/>to the seller"]:::system
+    Q --> R["📊 Shows up under<br/>'Paid Sales' on the seller's home screen"]:::seller
+
+    classDef seller fill:#8B2500,stroke:#5c1800,color:#fff,font-weight:bold
+    classDef buyer fill:#0f766e,stroke:#0b544e,color:#fff,font-weight:bold
+    classDef ai fill:#d97706,stroke:#a65c04,color:#fff,font-weight:bold
+    classDef system fill:#4a5568,stroke:#2d3340,color:#fff,font-weight:bold
+```
+
+<sub>🟤 Seller actions &nbsp;·&nbsp; 🟠 AI doing the work &nbsp;·&nbsp; 🟢 Buyer actions &nbsp;·&nbsp; ⚪ Marketplace / system events</sub>
+
+**In plain words:**
+
+1. **Getting in** — the seller picks a language, types their phone number,
+   and confirms the OTP. No password to create or forget.
+2. **Meet the painting** — a single, ordinary photo of a Thanjavur-style
+   painting propped against a bamboo scaffold, taken exactly as it looks in
+   the workshop.
+3. **The AI does three jobs in a row** — it lifts the painting off that
+   busy background, writes a real product description from scratch, and
+   proposes a price. In this case it looked at the piece and suggested a
+   ₹3,500-₹6,500 range, settling on **₹4,500** as the sweet spot — the
+   seller could accept that or override it.
+4. **One tap to go live** — quantity set, and the painting is published to
+   the Kalakar Setu marketplace.
+5. **Switch hats — now we're the buyer** — browsing the marketplace, the
+   painting gets discovered, dropped into the cart, an address goes in, and
+   the order is placed.
+6. **Back to the seller** — the order shows up on their side, they mark it
+   as shipped/delivered.
+7. **The loop closes** — once delivered, the payment lands with the seller
+   and shows up right there in their **Paid Sales** figure on the home
+   screen — the same number a seller glances at every time they open the
+   app.
+
 ---
 
 ## 📖 Table of Contents
