@@ -50,14 +50,11 @@ gets technical, for anyone who wants to know how it actually works.
 </p>
 
 <p align="center">
-  <!-- Replace src with your QR code image, and href with your real download link
-       (an EAS internal-distribution link already comes with its own QR on
-       the build page — you can just reuse that image). -->
-  <a href="REPLACE-WITH-YOUR-DOWNLOAD-LINK">
-    <img src="REPLACE-WITH-YOUR-QR-CODE-IMAGE-PATH" alt="Scan to download Kalakar Setu" width="170">
+  <a href="https://expo.dev/accounts/adi-expo123s-team/projects/aditya-k-v/builds/e04845c1-e1fc-4f6f-b209-1553945ba087">
+    <img src="docs/download-qr.jpg" alt="Scan to download Kalakar Setu" width="170">
   </a>
   <br><br>
-  <a href="REPLACE-WITH-YOUR-DOWNLOAD-LINK"><strong>📲 Tap to download</strong></a>
+  <a href="https://expo.dev/accounts/adi-expo123s-team/projects/aditya-k-v/builds/e04845c1-e1fc-4f6f-b209-1553945ba087"><strong>📲 Tap to download</strong></a>
   &nbsp;·&nbsp; or scan the QR code above
 </p>
 
