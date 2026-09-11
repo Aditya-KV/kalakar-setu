@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +7,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { X, MapPin, Check, Banknote, Plus } from 'lucide-react-native';
 import { useTheme } from '../../features/theme/context';
 import { useCart } from '../../features/cart/context';
+import { useToast } from '../../features/toast/context';
 import { ThemeColors } from '../../constants/Colors';
 import { FontSize, FontWeight, Spacing, BorderRadius, Shadows } from '../../constants/theme';
 import { Button } from '../../components/ui/Button';
@@ -36,6 +37,7 @@ export default function CheckoutScreen() {
   const { colors } = useTheme();
   const styles = getStyles(colors);
   const { items, totalPrice, clearCart } = useCart();
+  const { showToast } = useToast();
 
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
@@ -118,7 +120,7 @@ export default function CheckoutScreen() {
         payment_method: 'cod',
       });
       clearCart();
-      Alert.alert(t('customer.orderPlaced'));
+      showToast(t('customer.orderPlaced'));
       router.replace('/(app)/(customer-tabs)/orders');
     } catch (e) {
       setOrderError(true);

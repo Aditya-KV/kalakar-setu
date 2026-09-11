@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Tabs } from 'expo-router';
 import { View, StyleSheet, Text, ColorValue } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Compass, ShoppingCart, Receipt, User } from 'lucide-react-native';
+import Animated, { useSharedValue, useAnimatedStyle, withSequence, withTiming, withSpring } from 'react-native-reanimated';
 import { useTheme } from '../../../features/theme/context';
 import { useCart } from '../../../features/cart/context';
 import { ThemeColors } from '../../../constants/Colors';
@@ -12,13 +13,23 @@ function CartIcon({ color, size }: { color: ColorValue; size: number }) {
   const { totalItems } = useCart();
   const { colors } = useTheme();
   const styles = getStyles(colors);
+  const scale = useSharedValue(1);
+
+  useEffect(() => {
+    if (totalItems > 0) {
+      scale.value = withSequence(withTiming(1.4, { duration: 120 }), withSpring(1, { damping: 7 }));
+    }
+  }, [totalItems]);
+
+  const badgeStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
+
   return (
     <View>
       <ShoppingCart color={color as string} size={size} />
       {totalItems > 0 && (
-        <View style={styles.badge}>
+        <Animated.View style={[styles.badge, badgeStyle]}>
           <Text style={styles.badgeText}>{totalItems > 9 ? '9+' : totalItems}</Text>
-        </View>
+        </Animated.View>
       )}
     </View>
   );

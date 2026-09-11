@@ -14,6 +14,7 @@ import { AnimatedPressable } from '../../../components/ui/AnimatedPressable';
 import { RequestFeedback } from '../../../components/ui/RequestFeedback';
 import { Button } from '../../../components/ui/Button';
 import { MorphText } from '../../../components/ui/MorphText';
+import { OverviewCardSkeleton } from '../../../components/ui/Skeleton';
 import { apiClient } from '../../../lib/api-client';
 import { sellerSummary, SellerOrder } from '../../../lib/seller-summary';
 
@@ -85,8 +86,12 @@ export default function HomeScreen() {
           ? t('dashboard.greeting', { name: user.display_name }) : t('dashboard.welcomeBack')}</Text>
         <Text style={styles.greetingSubtitle}>{t('dashboard.manageShop')}</Text>
       </View>
-      <RequestFeedback loading={loading && !overview} error={error ? t('dashboard.loadFailed') : null}
-        onRetry={() => setAttempt((value) => value + 1)} />
+      {loading && !overview ? (
+        <OverviewCardSkeleton />
+      ) : (
+        <RequestFeedback error={error ? t('dashboard.loadFailed') : null}
+          onRetry={() => setAttempt((value) => value + 1)} />
+      )}
       {hasDraft && <AnimatedPressable accessibilityRole="button" style={styles.ctaCard} onPress={openDraft}>
         <View style={styles.ctaContent}>
           <View style={styles.ctaTextContainer}>

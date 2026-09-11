@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +8,7 @@ import { X, Package, ArrowRight, Camera, Sparkles } from 'lucide-react-native';
 import { useTheme } from '../../../features/theme/context';
 import { useAuth } from '../../../features/auth/hooks';
 import { useCatalogDraft } from '../../../features/catalog/context';
+import { useToast } from '../../../features/toast/context';
 import { ThemeColors } from '../../../constants/Colors';
 import { FontSize, FontWeight, Spacing, BorderRadius, Shadows } from '../../../constants/theme';
 import { Button } from '../../../components/ui/Button';
@@ -27,6 +28,7 @@ export default function PriceScreen() {
   const styles = getStyles(colors);
   const { user } = useAuth();
   const { draft, resetDraft, updateDraft } = useCatalogDraft();
+  const { showToast } = useToast();
 
   const price = draft.price;
   const setPrice = (price: string) => updateDraft({ price });
@@ -75,8 +77,8 @@ export default function PriceScreen() {
         price: priceNumber,
         quantity_available: quantityNumber,
       });
-      try { await resetDraft(); } catch { Alert.alert(t('studio.publishedClearFailed')); }
-      Alert.alert(t('studio.publishSuccess'));
+      try { await resetDraft(); } catch { showToast(t('studio.publishedClearFailed'), 'error'); }
+      showToast(t('studio.publishSuccess'));
       // dismissTo (not replace) so studio/index and studio/voice are popped
       // off the stack too — otherwise pressing back from Listings would
       // reveal those stale creation screens instead of leaving the flow.

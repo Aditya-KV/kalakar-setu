@@ -12,6 +12,7 @@ import { AppModeProvider } from '../features/appMode/context';
 import { LocationSharingProvider } from '../features/location/context';
 import { CartProvider } from '../features/cart/context';
 import { NotificationsProvider } from '../features/notifications/context';
+import { ToastProvider } from '../features/toast/context';
 import '../lib/i18n'; // Initialize i18n
 
 function ThemedApp({ children }: { children: React.ReactNode }) {
@@ -19,7 +20,7 @@ function ThemedApp({ children }: { children: React.ReactNode }) {
   return (
     <GluestackUIProvider config={gluestackTheme} colorMode={scheme}>
       <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
-      {children}
+      <ToastProvider>{children}</ToastProvider>
     </GluestackUIProvider>
   );
 }

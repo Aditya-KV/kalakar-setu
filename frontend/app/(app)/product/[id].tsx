@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Alert, Share } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Share } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +7,7 @@ import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import { X, Package, MapPin, Minus, Plus, ShoppingCart, Share2 } from 'lucide-react-native';
 import { useTheme } from '../../../features/theme/context';
 import { useCart } from '../../../features/cart/context';
+import { useToast } from '../../../features/toast/context';
 import { ThemeColors } from '../../../constants/Colors';
 import { FontSize, FontWeight, Spacing, BorderRadius, Shadows } from '../../../constants/theme';
 import { Button } from '../../../components/ui/Button';
@@ -39,6 +40,7 @@ export default function ProductDetailScreen() {
   const { colors } = useTheme();
   const styles = getStyles(colors);
   const { addItem } = useCart();
+  const { showToast } = useToast();
 
   const [listing, setListing] = useState<ListingDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -79,7 +81,7 @@ export default function ProductDetailScreen() {
     const item = cartItemFromListing();
     if (!item) return;
     addItem(item, quantity);
-    Alert.alert(t('customer.addedToCart'));
+    showToast(t('customer.addedToCart'));
   };
 
   const handleBuyNow = () => {

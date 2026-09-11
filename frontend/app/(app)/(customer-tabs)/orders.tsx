@@ -10,6 +10,7 @@ import { ThemeColors } from '../../../constants/Colors';
 import { FontSize, FontWeight, Spacing, BorderRadius, Shadows } from '../../../constants/theme';
 import { StatusBadge } from '../../../components/ui/StatusBadge';
 import { RequestFeedback } from '../../../components/ui/RequestFeedback';
+import { OrderListSkeleton } from '../../../components/ui/Skeleton';
 import { AnimatedPressable } from '../../../components/ui/AnimatedPressable';
 import { apiClient } from '../../../lib/api-client';
 
@@ -69,8 +70,9 @@ export default function CustomerOrdersScreen() {
         <Text style={styles.headerTitle}>{t('customer.tabOrders')}</Text>
       </View>
 
-      <RequestFeedback loading={loading} error={loadError ? t('common.loadFailed') : null} onRetry={() => setAttempt((value) => value + 1)} />
-      {!loading && !loadError && orders.length === 0 ? (
+      {loading ? <OrderListSkeleton /> : <>
+      <RequestFeedback error={loadError ? t('common.loadFailed') : null} onRetry={() => setAttempt((value) => value + 1)} />
+      {!loadError && orders.length === 0 ? (
         <View style={styles.emptyState}>
           <Receipt size={40} color={colors.textMuted} strokeWidth={1.5} />
           <Text style={styles.emptyTitle}>{t('customer.emptyOrdersTitle')}</Text>
@@ -121,6 +123,7 @@ export default function CustomerOrdersScreen() {
           )}
         />
       )}
+      </>}
     </SafeAreaView>
   );
 }

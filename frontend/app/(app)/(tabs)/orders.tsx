@@ -10,6 +10,7 @@ import { ThemeColors } from '../../../constants/Colors';
 import { FontSize, FontWeight, Spacing, BorderRadius, Shadows } from '../../../constants/theme';
 import { Button } from '../../../components/ui/Button';
 import { RequestFeedback } from '../../../components/ui/RequestFeedback';
+import { OrderListSkeleton } from '../../../components/ui/Skeleton';
 import { apiClient } from '../../../lib/api-client';
 
 import { mediaUrl, productText } from '../../../lib/product-text';
@@ -90,9 +91,10 @@ export default function OrdersScreen() {
         <Text style={styles.headerSub}>{t('orders.subtitle')}</Text>
       </View>
 
-      <RequestFeedback loading={loading} error={loadError ? t('common.loadFailed') : null} onRetry={fetchOrders} />
+      {loading ? <OrderListSkeleton /> : <>
+      <RequestFeedback error={loadError ? t('common.loadFailed') : null} onRetry={fetchOrders} />
       {updateError && <RequestFeedback error={t('common.updateFailed')} />}
-      {!loading && !loadError && orders.length === 0 ? (
+      {!loadError && orders.length === 0 ? (
         <View style={styles.emptyState}>
           <Receipt size={40} color={colors.textMuted} strokeWidth={1.5} />
           <Text style={styles.emptyTitle}>{t('orders.emptyTitle')}</Text>
@@ -190,6 +192,7 @@ export default function OrdersScreen() {
           )}
         />
       )}
+      </>}
     </SafeAreaView>
   );
 }

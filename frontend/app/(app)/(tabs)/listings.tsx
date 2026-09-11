@@ -14,6 +14,7 @@ import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { getCraftIcon } from '../../../lib/craftIcons';
 import { RequestFeedback } from '../../../components/ui/RequestFeedback';
+import { useToast } from '../../../features/toast/context';
 import { apiClient } from '../../../lib/api-client';
 
 import { mediaUrl, productText } from '../../../lib/product-text';
@@ -37,6 +38,7 @@ export default function ListingsScreen() {
   const router = useRouter();
   const { colors } = useTheme();
   const styles = getStyles(colors);
+  const { showToast } = useToast();
   const showNativeTitle = i18n.language.split('-')[0] === 'hi';
 
   const [listings, setListings] = useState<Listing[]>([]);
@@ -100,7 +102,7 @@ export default function ListingsScreen() {
               await apiClient.delete(`/listings/${item.id}`);
               setListings((prev) => prev.filter((l) => l.id !== item.id));
             } catch (e) {
-              Alert.alert(t('listings.deleteFailed'));
+              showToast(t('listings.deleteFailed'), 'error');
             } finally {
               setDeletingId(null);
             }
@@ -131,7 +133,7 @@ export default function ListingsScreen() {
       fetchListings();
     } catch (e) {
       console.error('Failed to update listing:', e);
-      Alert.alert(t('common.error'));
+      showToast(t('common.error'), 'error');
     } finally {
       setSaving(false);
     }

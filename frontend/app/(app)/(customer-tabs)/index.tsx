@@ -15,6 +15,7 @@ import { getCraftIcon } from '../../../lib/craftIcons';
 import { FALLBACK_CRAFTS } from '../../../components/ui/CraftPicker';
 import { CraftType } from '../../../types';
 import { RequestFeedback } from '../../../components/ui/RequestFeedback';
+import { ProductGridSkeleton } from '../../../components/ui/Skeleton';
 import { apiClient } from '../../../lib/api-client';
 import { LeafletMap, MapMarker } from '../../../components/ui/LeafletMap';
 
@@ -256,14 +257,18 @@ export default function DiscoverScreen() {
         </Text>
       )}
 
-      <RequestFeedback loading={loading} error={loadError ? t('common.loadFailed') : null} onRetry={handleSearchSubmit} />
+      {loading ? (
+        <ProductGridSkeleton />
+      ) : (
+        <RequestFeedback error={loadError ? t('common.loadFailed') : null} onRetry={handleSearchSubmit} />
+      )}
       {!loading && !loadError && listings.length === 0 ? (
         <View style={styles.emptyState}>
           <Package size={40} color={colors.textMuted} strokeWidth={1.5} />
           <Text style={styles.emptyTitle}>{t('customer.emptyDiscoverTitle')}</Text>
           <Text style={styles.emptyMessage}>{t('customer.emptyDiscoverMessage')}</Text>
         </View>
-      ) : (
+      ) : !loading ? (
         <FlatList
           data={listings}
           keyExtractor={(item) => item.id}
@@ -307,7 +312,7 @@ export default function DiscoverScreen() {
             );
           }}
         />
-      )}
+      ) : null}
         </>
       )}
     </SafeAreaView>
