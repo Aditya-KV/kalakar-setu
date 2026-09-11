@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Alert, Share } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
-import { X, Package, MapPin, Minus, Plus, ShoppingCart } from 'lucide-react-native';
+import { X, Package, MapPin, Minus, Plus, ShoppingCart, Share2 } from 'lucide-react-native';
 import { useTheme } from '../../../features/theme/context';
 import { useCart } from '../../../features/cart/context';
 import { ThemeColors } from '../../../constants/Colors';
@@ -89,6 +89,17 @@ export default function ProductDetailScreen() {
     router.push('/(app)/checkout');
   };
 
+  const handleShare = async () => {
+    if (!listing) return;
+    try {
+      await Share.share({
+        message: `${productText(listing.title, i18n.language)} — ₹${listing.price.toLocaleString('en-IN')}\n${productText(listing.description, i18n.language)}\n\n${t('customer.shareFooter')}`,
+      });
+    } catch (e) {
+      // User dismissed the share sheet — nothing to do.
+    }
+  };
+
   if (loading) {
     return (
       <SafeAreaView style={styles.safeArea}>
@@ -126,6 +137,9 @@ export default function ProductDetailScreen() {
       <View style={styles.headerBar}>
         <AnimatedPressable accessibilityLabel={t('common.back')} onPress={() => router.back()} hitSlop={8}>
           <X size={22} color={colors.textPrimary} />
+        </AnimatedPressable>
+        <AnimatedPressable accessibilityLabel={t('listings.share')} onPress={handleShare} hitSlop={8}>
+          <Share2 size={20} color={colors.textPrimary} strokeWidth={2} />
         </AnimatedPressable>
       </View>
 
@@ -201,6 +215,9 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     backgroundColor: colors.background,
   },
   headerBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.md,
     backgroundColor: colors.surface,

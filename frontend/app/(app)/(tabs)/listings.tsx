@@ -78,7 +78,7 @@ export default function ListingsScreen() {
   const handleShare = async (item: Listing) => {
     try {
       await Share.share({
-        message: `${productText(item.title, i18n.language)} — ₹${item.price.toLocaleString('en-IN')}\n${item.description.en}`,
+        message: `${productText(item.title, i18n.language)} — ₹${item.price.toLocaleString('en-IN')}\n${item.description.en}\n\n${t('customer.shareFooter')}`,
       });
     } catch (e) {
       // User dismissed the share sheet — nothing to do.
