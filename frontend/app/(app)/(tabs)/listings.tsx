@@ -425,7 +425,7 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   },
   addFabWrapper: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 84,
     right: 20,
   },
   addFab: {

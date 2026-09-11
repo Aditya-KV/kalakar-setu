@@ -379,7 +379,7 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   },
   mapEmptyBanner: {
     position: 'absolute',
-    bottom: Spacing.lg,
+    bottom: Spacing.lg + 64,
     left: Spacing.lg,
     right: Spacing.lg,
     backgroundColor: colors.surface,

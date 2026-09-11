@@ -6,6 +6,7 @@ import { Compass, ShoppingCart, Receipt, User } from 'lucide-react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withSequence, withTiming, withSpring } from 'react-native-reanimated';
 import { useTheme } from '../../../features/theme/context';
 import { useCart } from '../../../features/cart/context';
+import { GlassView } from '../../../components/ui/GlassView';
 import { ThemeColors } from '../../../constants/Colors';
 import { FontSize, FontWeight } from '../../../constants/theme';
 
@@ -48,6 +49,7 @@ export default function CustomerTabsLayout() {
         tabBarInactiveTintColor: colors.tabIconDefault,
         tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.tabLabel,
+        tabBarBackground: () => <GlassView style={StyleSheet.absoluteFill} />,
       }}
     >
       <Tabs.Screen
@@ -84,12 +86,14 @@ export default function CustomerTabsLayout() {
 
 const getStyles = (colors: ThemeColors) => StyleSheet.create({
   tabBar: {
-    backgroundColor: colors.surface,
+    position: 'absolute',
+    backgroundColor: 'transparent',
     borderTopWidth: 1,
     borderTopColor: colors.border,
     height: 64,
     paddingBottom: 8,
     paddingTop: 8,
+    elevation: 0,
   },
   tabLabel: {
     fontSize: FontSize.xs,

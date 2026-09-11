@@ -154,6 +154,7 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   },
   listContainer: {
     padding: Spacing.lg,
+    paddingBottom: 80,
   },
   card: {
     flexDirection: 'row',
@@ -222,6 +223,7 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   },
   footer: {
     padding: Spacing.lg,
+    marginBottom: 64,
     borderTopWidth: 1,
     borderTopColor: colors.border,
     backgroundColor: colors.surface,

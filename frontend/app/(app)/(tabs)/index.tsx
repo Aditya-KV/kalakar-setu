@@ -438,7 +438,7 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   },
   voiceFabWrapper: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 84,
     right: 20,
   },
   voiceFab: {

@@ -240,6 +240,7 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   },
   listContainer: {
     padding: Spacing.lg,
+    paddingBottom: 80,
   },
   orderCard: {
     backgroundColor: colors.surface,

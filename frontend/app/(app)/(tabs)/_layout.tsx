@@ -4,6 +4,7 @@ import { StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Home, Package, Truck, User } from 'lucide-react-native';
 import { useTheme } from '../../../features/theme/context';
+import { GlassView } from '../../../components/ui/GlassView';
 import { ThemeColors } from '../../../constants/Colors';
 import { FontSize, FontWeight } from '../../../constants/theme';
 
@@ -20,6 +21,7 @@ export default function TabsLayout() {
         tabBarInactiveTintColor: colors.tabIconDefault,
         tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.tabLabel,
+        tabBarBackground: () => <GlassView style={StyleSheet.absoluteFill} />,
       }}
     >
       <Tabs.Screen
@@ -56,12 +58,14 @@ export default function TabsLayout() {
 
 const getStyles = (colors: ThemeColors) => StyleSheet.create({
   tabBar: {
-    backgroundColor: '#FFFFFF',
+    position: 'absolute',
+    backgroundColor: 'transparent',
     borderTopWidth: 1,
     borderTopColor: colors.border,
     height: 64,
     paddingBottom: 8,
     paddingTop: 8,
+    elevation: 0,
   },
   tabLabel: {
     fontSize: FontSize.xs,
