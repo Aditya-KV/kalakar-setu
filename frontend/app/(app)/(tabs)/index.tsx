@@ -13,6 +13,7 @@ import { FontSize, FontWeight, Spacing, BorderRadius, Shadows } from '../../../c
 import { AnimatedPressable } from '../../../components/ui/AnimatedPressable';
 import { RequestFeedback } from '../../../components/ui/RequestFeedback';
 import { Button } from '../../../components/ui/Button';
+import { MorphText } from '../../../components/ui/MorphText';
 import { apiClient } from '../../../lib/api-client';
 import { sellerSummary, SellerOrder } from '../../../lib/seller-summary';
 
@@ -100,22 +101,22 @@ export default function HomeScreen() {
         <View style={[styles.statsGrid, { marginTop: Spacing.md }]}>
           <View style={styles.statBox}>
             <Text style={styles.statLabel}>{t('dashboard.paidSales')}</Text>
-            <Text style={styles.statValue}>{money(overview.paidSales)}</Text>
+            <MorphText style={styles.statValue} value={money(overview.paidSales)} />
           </View>
           <View style={styles.statBox}>
             <Text style={styles.statLabel}>{t('dashboard.activeListings')}</Text>
-            <Text style={styles.statValue}>{overview.active}</Text>
+            <MorphText style={styles.statValue} value={String(overview.active)} />
           </View>
         </View>
         <View style={styles.divider} />
         <View style={styles.statsRow}>
           <View style={styles.miniStat}>
-            <Text style={styles.miniStatValue}>{overview.pending}</Text>
+            <MorphText style={styles.miniStatValue} value={String(overview.pending)} />
             <Text style={styles.miniStatLabel}>{t('dashboard.pendingOrders')}</Text>
           </View>
           <View style={styles.verticalDivider} />
           <View style={styles.miniStat}>
-            <Text style={styles.miniStatValue}>{overview.delivered}</Text>
+            <MorphText style={styles.miniStatValue} value={String(overview.delivered)} />
             <Text style={styles.miniStatLabel}>{t('orders.deliveredLabel')}</Text>
           </View>
         </View>
