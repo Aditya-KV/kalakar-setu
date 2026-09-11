@@ -14,7 +14,6 @@ import { AnimatedPressable } from '../../../components/ui/AnimatedPressable';
 import { RequestFeedback } from '../../../components/ui/RequestFeedback';
 import { Button } from '../../../components/ui/Button';
 import { MorphText } from '../../../components/ui/MorphText';
-import { SignatureGreeting } from '../../../components/ui/SignatureGreeting';
 import { apiClient } from '../../../lib/api-client';
 import { sellerSummary, SellerOrder } from '../../../lib/seller-summary';
 
@@ -82,9 +81,8 @@ export default function HomeScreen() {
       <RefreshControl refreshing={loading} onRefresh={() => setAttempt((value) => value + 1)} tintColor={colors.primary} />
     }>
       <View style={styles.greetingSection}>
-        <SignatureGreeting
-          text={user?.display_name ? t('dashboard.greeting', { name: user.display_name }) : t('dashboard.welcomeBack')}
-        />
+        <Text style={styles.greetingTitle}>{user?.display_name
+          ? t('dashboard.greeting', { name: user.display_name }) : t('dashboard.welcomeBack')}</Text>
         <Text style={styles.greetingSubtitle}>{t('dashboard.manageShop')}</Text>
       </View>
       <RequestFeedback loading={loading && !overview} error={error ? t('dashboard.loadFailed') : null}
@@ -228,6 +226,11 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   },
   greetingSection: {
     marginBottom: Spacing.lg,
+  },
+  greetingTitle: {
+    fontSize: FontSize.xxl,
+    fontWeight: FontWeight.bold,
+    color: colors.textPrimary,
   },
   greetingSubtitle: {
     fontSize: FontSize.sm,
