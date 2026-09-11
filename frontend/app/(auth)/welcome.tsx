@@ -14,6 +14,7 @@ import { Button } from '../../components/ui/Button';
 import { LanguagePicker } from '../../components/ui/LanguagePicker';
 import { LogoBadge } from '../../components/ui/LogoBadge';
 import { AnimatedPressable } from '../../components/ui/AnimatedPressable';
+import { MeshGradientBackground } from '../../components/ui/MeshGradientBackground';
 
 export default function WelcomeScreen() {
   const router = useRouter();
@@ -37,6 +38,7 @@ export default function WelcomeScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <MeshGradientBackground />
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
         {/* Header Hero */}
         <View style={styles.heroSection}>

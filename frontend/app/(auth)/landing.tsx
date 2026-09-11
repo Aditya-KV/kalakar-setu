@@ -3,12 +3,13 @@ import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import Animated, { FadeInDown, ZoomIn, FadeIn } from 'react-native-reanimated';
+import Animated, { FadeInDown, ZoomIn } from 'react-native-reanimated';
 import { useTheme } from '../../features/theme/context';
 import { ThemeColors } from '../../constants/Colors';
 import { FontSize, FontWeight, Spacing } from '../../constants/theme';
 import { Button } from '../../components/ui/Button';
 import { LogoBadge } from '../../components/ui/LogoBadge';
+import { MeshGradientBackground } from '../../components/ui/MeshGradientBackground';
 
 export default function LandingScreen() {
   const router = useRouter();
@@ -18,21 +19,7 @@ export default function LandingScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Soft decorative color fields, Headspace-style — pure shapes, no assets needed */}
-      <View pointerEvents="none" style={styles.blobLayer}>
-        <Animated.View
-          entering={FadeIn.duration(900)}
-          style={[styles.blob, styles.blobPrimary]}
-        />
-        <Animated.View
-          entering={FadeIn.delay(150).duration(900)}
-          style={[styles.blob, styles.blobAccent]}
-        />
-        <Animated.View
-          entering={FadeIn.delay(300).duration(900)}
-          style={[styles.blob, styles.blobSmall]}
-        />
-      </View>
+      <MeshGradientBackground />
 
       <View style={styles.content}>
         <View style={styles.top} />
@@ -64,38 +51,6 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: colors.background,
-  },
-  blobLayer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  blob: {
-    position: 'absolute',
-    borderRadius: 999,
-  },
-  blobPrimary: {
-    width: 280,
-    height: 280,
-    top: -80,
-    right: -90,
-    backgroundColor: colors.primaryTint,
-  },
-  blobAccent: {
-    width: 220,
-    height: 220,
-    bottom: -60,
-    left: -80,
-    backgroundColor: colors.surfaceElevated,
-  },
-  blobSmall: {
-    width: 90,
-    height: 90,
-    top: '38%',
-    left: -30,
-    backgroundColor: colors.primaryTint,
   },
   content: {
     flex: 1,
