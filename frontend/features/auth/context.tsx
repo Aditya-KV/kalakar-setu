@@ -150,6 +150,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async () => {
     try {
+      await apiClient.patch('/profile/push-token', { push_token: null });
+    } catch (e) {
+      // Ignore — a leftover token just means this device stops getting
+      // notifications once the next login overwrites it anyway.
+    }
+    try {
       await apiClient.post('/auth/logout');
     } catch (e) {
       // Ignore network errors on logout

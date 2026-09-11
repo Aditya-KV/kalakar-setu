@@ -11,6 +11,7 @@ import { CatalogDraftProvider } from '../features/catalog/context';
 import { AppModeProvider } from '../features/appMode/context';
 import { LocationSharingProvider } from '../features/location/context';
 import { CartProvider } from '../features/cart/context';
+import { NotificationsProvider } from '../features/notifications/context';
 import '../lib/i18n'; // Initialize i18n
 
 function ThemedApp({ children }: { children: React.ReactNode }) {
@@ -29,21 +30,23 @@ export default function RootLayout() {
       <ThemeProvider>
         <SafeAreaProvider>
           <AuthProvider>
-            <AppModeProvider>
-              <LocationSharingProvider>
-                <CartProvider>
-                  <CatalogDraftProvider>
-                    <ThemedApp>
-                      <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
-                        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                        <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
-                        <Stack.Screen name="(app)" options={{ headerShown: false }} />
-                      </Stack>
-                    </ThemedApp>
-                  </CatalogDraftProvider>
-                </CartProvider>
-              </LocationSharingProvider>
-            </AppModeProvider>
+            <NotificationsProvider>
+              <AppModeProvider>
+                <LocationSharingProvider>
+                  <CartProvider>
+                    <CatalogDraftProvider>
+                      <ThemedApp>
+                        <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
+                          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                          <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
+                          <Stack.Screen name="(app)" options={{ headerShown: false }} />
+                        </Stack>
+                      </ThemedApp>
+                    </CatalogDraftProvider>
+                  </CartProvider>
+                </LocationSharingProvider>
+              </AppModeProvider>
+            </NotificationsProvider>
           </AuthProvider>
         </SafeAreaProvider>
       </ThemeProvider>

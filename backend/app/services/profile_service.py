@@ -36,6 +36,19 @@ async def update_profile(db: AsyncSession, user_id: str, data: dict) -> User | N
     return user
 
 
+async def update_push_token(db: AsyncSession, user_id: str, push_token: str | None) -> User | None:
+    """Registers (or clears, if None) this device's Expo push token as the
+    one to notify — overwrites whatever was there, so a user only gets
+    notifications on their most recently active device."""
+    result = await db.execute(select(User).where(User.id == user_id))
+    user = result.scalar_one_or_none()
+    if not user:
+        return None
+    user.push_token = push_token
+    user.updated_at = datetime.now(timezone.utc)
+    return user
+
+
 async def update_onboarding(db: AsyncSession, user_id: str, data: dict) -> User | None:
     """
     Update onboarding progress and optionally set profile fields

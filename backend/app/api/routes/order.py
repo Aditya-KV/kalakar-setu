@@ -11,7 +11,9 @@ from app.api.deps import get_current_user_id
 from app.models.user import User
 from app.schemas.order import OrderCreateRequest, OrderResponse, FulfillmentUpdateRequest
 from app.schemas.location import OrderTrackingResponse
-from app.services import order_service, location_service
+from app.services import order_service, location_service, notification_service
+
+FULFILLMENT_LABELS = {1: "Received", 2: "Packed", 3: "Picked Up", 4: "Delivered"}
 
 router = APIRouter(prefix="/orders", tags=["Orders"])
 
@@ -28,6 +30,12 @@ async def checkout(
     for order in orders:
         seller = await db.get(User, order.seller_user_id)
         responses.append(order_service.to_response(order, seller))
+        await notification_service.send_push_notification(
+            seller.push_token if seller else None,
+            title="New order received!",
+            body=f"You have a new order worth ₹{order.total_price:,}.",
+            data={"type": "order", "order_id": order.id, "role": "seller"},
+        )
     return responses
 
 
@@ -77,4 +85,12 @@ async def update_fulfillment(
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
     seller = await db.get(User, order.seller_user_id)
+    buyer = await db.get(User, order.buyer_user_id)
+    status_label = FULFILLMENT_LABELS.get(order.fulfillment_status, "updated")
+    await notification_service.send_push_notification(
+        buyer.push_token if buyer else None,
+        title="Order update",
+        body=f"Your order is now {status_label}.",
+        data={"type": "order", "order_id": order.id, "role": "buyer"},
+    )
     return order_service.to_response(order, seller)

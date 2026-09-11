@@ -15,6 +15,7 @@ from app.schemas.profile import (
     OnboardingUpdateRequest,
     SellerReadinessResponse,
     DeactivateRequest,
+    PushTokenUpdateRequest,
 )
 from app.schemas.location import LocationUpdateRequest
 from app.services import profile_service, location_service
@@ -60,6 +61,20 @@ async def update_location(
     user = await location_service.update_location(
         db, user_id, body.latitude, body.longitude, body.is_sharing_location
     )
+    if not user:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    return user
+
+
+@router.patch("/push-token", response_model=ProfileResponse)
+async def update_push_token(
+    body: PushTokenUpdateRequest,
+    user_id: str = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_db),
+):
+    """Registers (or, with push_token: null, clears) this device's Expo
+    push token — called on login and whenever the token refreshes."""
+    user = await profile_service.update_push_token(db, user_id, body.push_token)
     if not user:
         raise HTTPException(status_code=404, detail="Profile not found")
     return user

@@ -59,3 +59,7 @@ class SellerReadinessResponse(BaseModel):
 
 class DeactivateRequest(BaseModel):
     reason: Optional[str] = Field(None, max_length=500)
+
+
+class PushTokenUpdateRequest(BaseModel):
+    push_token: Optional[str] = Field(None, max_length=200)

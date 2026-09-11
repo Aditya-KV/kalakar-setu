@@ -41,6 +41,12 @@ class User(Base):
     location_updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     is_sharing_location: Mapped[bool] = mapped_column(Boolean, default=False)
 
+    # Expo push notification token for this device — overwritten whenever
+    # the app registers a fresh one (a user only gets notifications on
+    # their most recently active device). Null means notifications are
+    # off (permission denied, or never registered).
+    push_token: Mapped[str | None] = mapped_column(String(200), nullable=True)
+
     # Onboarding tracking
     onboarding_step: Mapped[int] = mapped_column(Integer, default=0)
     onboarding_completed: Mapped[bool] = mapped_column(Boolean, default=False)
