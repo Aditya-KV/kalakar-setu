@@ -50,11 +50,11 @@ gets technical, for anyone who wants to know how it actually works.
 </p>
 
 <p align="center">
-  <a href="https://expo.dev/accounts/adi-expo123s-team/projects/aditya-k-v/builds/e04845c1-e1fc-4f6f-b209-1553945ba087">
+  <a href="https://expo.dev/accounts/adi-expo123s-team/projects/aditya-k-v/builds/0d5d86d2-1e9d-4dab-bda7-0fd9afb3a0d7">
     <img src="docs/download-qr.jpg" alt="Scan to download Kalakar Setu" width="170">
   </a>
   <br><br>
-  <a href="https://expo.dev/accounts/adi-expo123s-team/projects/aditya-k-v/builds/e04845c1-e1fc-4f6f-b209-1553945ba087"><strong>📲 Tap to download</strong></a>
+  <a href="https://expo.dev/accounts/adi-expo123s-team/projects/aditya-k-v/builds/0d5d86d2-1e9d-4dab-bda7-0fd9afb3a0d7"><strong>📲 Tap to download</strong></a>
   &nbsp;·&nbsp; or scan the QR code above
 </p>
 
