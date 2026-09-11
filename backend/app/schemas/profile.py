@@ -21,6 +21,7 @@ class ProfileResponse(BaseModel):
     is_active: bool
     gem_seller_id: str | None = None
     ondc_subscriber_id: str | None = None
+    is_sharing_location: bool = False
     created_at: datetime
     updated_at: datetime
 

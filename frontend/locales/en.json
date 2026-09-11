@@ -26,7 +26,12 @@
     "title": "Welcome, Kalakar!",
     "subtitle": "Choose your preferred language to begin",
     "getStarted": "Get Started",
-    "voicePrompt": "Tap any language to hear voice orientation"
+    "voicePrompt": "Tap any language to hear voice orientation",
+    "roleTitle": "I'm here to...",
+    "roleSeller": "Sell my craft",
+    "roleSellerSub": "List and sell handmade products",
+    "roleBuyer": "Buy handmade products",
+    "roleBuyerSub": "Discover and shop artisan crafts"
   },
   "auth": {
     "signInWithPhone": "Sign in with Phone",
@@ -97,7 +102,9 @@
     "resumeDraft": "Continue your product",
     "resumeDraftSub": "Your unfinished listing is saved on this device.",
     "ordersToPack": "{{count}} orders to pack",
-    "loadFailed": "Could not refresh your shop. Any totals shown are from the last successful update."
+    "loadFailed": "Could not refresh your shop. Any totals shown are from the last successful update.",
+    "shareLocationTitle": "Share My Location",
+    "shareLocationSub": "Let buyers see your live position on the map while you deliver"
   },
   "tabs": {
     "home": "Home",
@@ -176,7 +183,17 @@
     "phoneInvalid": "Enter a valid 10-digit mobile number.",
     "pincodeInvalid": "Enter a valid 6-digit pincode.",
     "stateCodeHint": "Use the state code, such as MH or KA.",
-    "saveAddressFailed": "Could not save this address. Check the details and try again."
+    "saveAddressFailed": "Could not save this address. Check the details and try again.",
+    "mapView": "Map",
+    "listView": "List",
+    "nearbySellersTitle": "Sellers near you",
+    "nearbySellersEmpty": "No sellers are sharing their live location right now.",
+    "trackOrder": "Track Order",
+    "trackingTitle": "Live Tracking",
+    "trackingWaiting": "Waiting for the seller to start delivery...",
+    "trackingDelivered": "This order has been delivered.",
+    "trackingLastUpdated": "Last updated {{time}}",
+    "locationPermissionRequired": "Location access is required to show the map."
   },
   "listings": {
     "title": "My Products",
@@ -213,7 +230,9 @@
     "appearance": "Appearance",
     "themeLight": "Light",
     "themeDark": "Dark",
-    "themeSystem": "System"
+    "themeSystem": "System",
+    "themeFollowingSystem": "Following system",
+    "themeCordHint": "Pull the cord to switch"
   },
   "studio": {
     "photoTitle": "Photo Studio",
@@ -317,6 +336,29 @@
     "discardDraft": "Start a new product",
     "discardConfirm": "Discard the unfinished product saved on this device?",
     "discard": "Discard draft",
-    "savedOnDevice": "Your progress is saved on this device."
+    "savedOnDevice": "Your progress is saved on this device.",
+    "addedPhotosTitle": "Your Photos",
+    "addedPhotosSubtitle": "Add up to {{max}} photos so buyers can see your product from different angles.",
+    "addAnotherPhoto": "Add Another Photo",
+    "maxPhotosReached": "You've added the maximum of {{max}} photos.",
+    "removePhotoLabel": "Remove photo",
+    "coverPhoto": "Cover",
+    "photosAttached_one": "{{count}} photo attached",
+    "photosAttached_other": "{{count}} photos attached"
+  },
+  "location": {
+    "permissionDenied": "Location permission is needed to share your position. Enable it in your device settings.",
+    "startFailed": "Could not get your location. Check your GPS/location settings and try again."
+  },
+  "scenes": {
+    "skip": "Skip",
+    "next": "Next",
+    "getStarted": "Get Started",
+    "morningTitle": "List your craft in minutes",
+    "morningBody": "Snap a few photos, describe it by voice, and your product is ready to sell.",
+    "middayTitle": "Reach buyers across India",
+    "middayBody": "Your products show up in a marketplace built for handmade, authentic craft.",
+    "nightTitle": "Get paid, worry-free",
+    "nightBody": "Track every order and delivery, right from the app, day or night."
   }
 }

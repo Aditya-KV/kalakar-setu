@@ -93,13 +93,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await storage.setRefreshToken(data.refresh_token);
     setTokens(newTokens);
 
-    const profileRes = await apiClient.get('/profile');
-    setUser(profileRes.data);
-    await storage.saveUser(profileRes.data);
+    let profile = (await apiClient.get('/profile')).data;
 
-    if (profileRes.data.preferred_language) {
-      setLanguageState(profileRes.data.preferred_language);
-      i18n.changeLanguage(profileRes.data.preferred_language);
+    // New accounts are created with preferred_language defaulted to "hi"
+    // server-side (see User model) — that has nothing to do with the
+    // language the person actually picked on the pre-login welcome screen.
+    // Push their active choice to the new profile instead of silently
+    // reverting to the server's default.
+    if (data.is_new_user && i18n.language && profile.preferred_language !== i18n.language) {
+      try {
+        profile = (await apiClient.put('/profile', { preferred_language: i18n.language })).data;
+      } catch (e) {
+        // Keep the server's profile if this sync fails — not worth blocking login over.
+      }
+    }
+
+    setUser(profile);
+    await storage.saveUser(profile);
+
+    if (profile.preferred_language) {
+      setLanguageState(profile.preferred_language);
+      i18n.changeLanguage(profile.preferred_language);
     }
   };
 

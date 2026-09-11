@@ -3,9 +3,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../auth/hooks';
 import { RequestFeedback } from '../../components/ui/RequestFeedback';
-import { createDraftStore, DraftListing, DraftGalleryVariant, emptyDraft, hasDraftContent } from './draft-store';
+import { createDraftStore, DraftListing, DraftGalleryVariant, DraftPhoto, emptyDraft, hasDraftContent } from './draft-store';
 
-export type { DraftListing, DraftGalleryVariant } from './draft-store';
+export type { DraftListing, DraftGalleryVariant, DraftPhoto } from './draft-store';
 const draftStore = createDraftStore(AsyncStorage);
 
 interface CatalogDraftContextType {
@@ -15,7 +15,8 @@ interface CatalogDraftContextType {
   loadError: boolean;
   retryRestore: () => void;
   updateDraft: (patch: Partial<DraftListing>) => void;
-  setPhotoStep: (mediaId: string | null, gallery: DraftGalleryVariant[], photoUri?: string | null) => void;
+  addPhoto: (photo: DraftPhoto) => void;
+  removePhoto: (index: number) => void;
   setVoiceStep: (data: Pick<DraftListing, 'title' | 'description' | 'attributes' | 'keywords'>) => void;
   resetDraft: () => Promise<void>;
 }
@@ -73,7 +74,8 @@ function AccountDraftProvider({ userId, children }: { userId: string | null; chi
 
   return <CatalogDraftContext.Provider value={{ draft, hasDraft: hasDraftContent(draft), ready, loadError,
     retryRestore: () => setAttempt((value) => value + 1), updateDraft,
-    setPhotoStep: (mediaId, gallery, photoUri) => updateDraft({ mediaId, gallery, ...(photoUri !== undefined ? { photoUri } : {}) }),
+    addPhoto: (photo) => updateDraft({ photos: [...current.current.photos, photo] }),
+    removePhoto: (index) => updateDraft({ photos: current.current.photos.filter((_, i) => i !== index) }),
     setVoiceStep: updateDraft, resetDraft }}>
     {saveError && <RequestFeedback error={t('studio.saveDraftFailed')} onRetry={() => { void persist(current.current).catch(() => undefined); }} />}
     {children}

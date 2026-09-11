@@ -1,10 +1,9 @@
 import type { ProductText } from '../../lib/product-text';
 
 export interface DraftGalleryVariant { key: string; label: string; url: string }
+export interface DraftPhoto { mediaId: string | null; photoUri: string | null; gallery: DraftGalleryVariant[] }
 export interface DraftListing {
-  mediaId: string | null;
-  photoUri: string | null;
-  gallery: DraftGalleryVariant[];
+  photos: DraftPhoto[];
   title: ProductText | null;
   description: ProductText | null;
   attributes: { material: string[]; color: string[]; technique: string[] } | null;
@@ -17,13 +16,13 @@ export interface DraftListing {
 }
 
 export const emptyDraft = (): DraftListing => ({
-  mediaId: null, photoUri: null, gallery: [], title: null, description: null,
+  photos: [], title: null, description: null,
   attributes: null, keywords: [], price: '', quantity: '1', transcript: '',
   recordingUri: null, sourceLanguage: 'hi',
 });
 
 export function hasDraftContent(draft: DraftListing) {
-  return !!(draft.mediaId || draft.photoUri || draft.title || draft.transcript || draft.recordingUri || draft.price);
+  return !!(draft.photos.length || draft.title || draft.transcript || draft.recordingUri || draft.price);
 }
 
 interface StorageAdapter {
@@ -40,13 +39,27 @@ export function createDraftStore(storage: StorageAdapter) {
       const raw = await storage.getItem(key(userId));
       if (!raw) return emptyDraft();
       const saved = JSON.parse(raw);
-      if (saved.version !== 1 || !saved.draft || !Array.isArray(saved.draft.gallery)) {
-        throw new Error('Unsupported draft');
+      if (!saved.draft) throw new Error('Unsupported draft');
+
+      if (saved.version === 2 && Array.isArray(saved.draft.photos)) {
+        return { ...emptyDraft(), ...saved.draft };
       }
-      return { ...emptyDraft(), ...saved.draft };
+
+      // Migrate a pre-multi-photo (version 1) draft, which carried a single
+      // mediaId/photoUri/gallery at the top level, into the new photos array
+      // so an in-progress draft from before this change isn't discarded.
+      if (saved.version === 1 && Array.isArray(saved.draft.gallery)) {
+        const legacy = saved.draft;
+        const photos: DraftPhoto[] = legacy.mediaId || legacy.photoUri
+          ? [{ mediaId: legacy.mediaId ?? null, photoUri: legacy.photoUri ?? null, gallery: legacy.gallery ?? [] }]
+          : [];
+        return { ...emptyDraft(), ...legacy, photos };
+      }
+
+      throw new Error('Unsupported draft');
     },
     save(userId: string, draft: DraftListing): Promise<unknown> {
-      const value = JSON.stringify({ version: 1, draft });
+      const value = JSON.stringify({ version: 2, draft });
       // Serialize writes so a slow earlier save cannot overwrite newer work.
       const next = (pending.get(userId) || Promise.resolve()).catch(() => undefined)
         .then(() => storage.setItem(key(userId), value));

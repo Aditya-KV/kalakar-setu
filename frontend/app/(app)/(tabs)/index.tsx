@@ -1,11 +1,12 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, RefreshControl, Modal } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, RefreshControl, Modal, Switch } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { User, Plus, Package, ChevronRight } from 'lucide-react-native';
+import { User, Plus, Package, ChevronRight, MapPin } from 'lucide-react-native';
 import { useAuth } from '../../../features/auth/hooks';
 import { useCatalogDraft } from '../../../features/catalog/context';
+import { useLocationSharing } from '../../../features/location/context';
 import { useTheme } from '../../../features/theme/context';
 import { ThemeColors } from '../../../constants/Colors';
 import { FontSize, FontWeight, Spacing, BorderRadius, Shadows } from '../../../constants/theme';
@@ -24,6 +25,7 @@ export default function HomeScreen() {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const { draft, hasDraft, resetDraft } = useCatalogDraft();
+  const { isSharing, starting, error: locationError, toggleSharing } = useLocationSharing();
   const { colors } = useTheme();
   const styles = getStyles(colors);
   const [overview, setOverview] = useState<Overview | null>(null);
@@ -61,7 +63,7 @@ export default function HomeScreen() {
   }, [attempt]));
 
   const openDraft = () => router.push(draft.title && draft.description
-    ? '/(app)/studio/price' : draft.mediaId || draft.transcript || draft.recordingUri
+    ? '/(app)/studio/price' : draft.photos.length > 0 || draft.transcript || draft.recordingUri
       ? '/(app)/studio/voice' : '/(app)/studio');
   const money = (value: number) => new Intl.NumberFormat(i18n.language.split('-')[0] + '-IN', {
     style: 'currency', currency: 'INR', maximumFractionDigits: 0,
@@ -118,6 +120,25 @@ export default function HomeScreen() {
           </View>
         </View>
       </View>}
+      <View style={styles.locationCard}>
+        <View style={styles.locationTextWrap}>
+          <View style={styles.locationIconWrap}>
+            <MapPin size={18} color={colors.primary} strokeWidth={2} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.locationTitle}>{t('dashboard.shareLocationTitle')}</Text>
+            <Text style={styles.locationSub}>{t('dashboard.shareLocationSub')}</Text>
+          </View>
+        </View>
+        <Switch
+          value={isSharing}
+          onValueChange={(value) => void toggleSharing(value)}
+          disabled={starting}
+          trackColor={{ false: colors.border, true: colors.primary }}
+          thumbColor="#FFFFFF"
+        />
+      </View>
+      {locationError && <Text style={styles.locationError}>{t(locationError)}</Text>}
       <Text style={styles.sectionTitle}>{t('dashboard.quickActions')}</Text>
       <AnimatedPressable accessibilityRole="button" style={styles.ctaCard} onPress={() => router.push('/(app)/(tabs)/orders')}>
         <View style={styles.ctaContent}>
@@ -295,6 +316,48 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   },
   actionsSection: {
     marginTop: Spacing.xs,
+  },
+  locationCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.surface,
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.md,
+    marginBottom: Spacing.sm,
+    borderWidth: 1,
+    borderColor: colors.border,
+    ...Shadows.card,
+  },
+  locationTextWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    gap: 10,
+    marginRight: Spacing.sm,
+  },
+  locationIconWrap: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: colors.primaryTint,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  locationTitle: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.bold,
+    color: colors.textPrimary,
+  },
+  locationSub: {
+    fontSize: 11,
+    color: colors.textSecondary,
+    marginTop: 2,
+  },
+  locationError: {
+    fontSize: FontSize.xs,
+    color: colors.error,
+    marginBottom: Spacing.md,
   },
   sectionTitle: {
     fontSize: FontSize.lg,

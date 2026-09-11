@@ -10,7 +10,8 @@ from app.db.session import get_db
 from app.api.deps import get_current_user_id
 from app.models.user import User
 from app.schemas.order import OrderCreateRequest, OrderResponse, FulfillmentUpdateRequest
-from app.services import order_service
+from app.schemas.location import OrderTrackingResponse
+from app.services import order_service, location_service
 
 router = APIRouter(prefix="/orders", tags=["Orders"])
 
@@ -48,6 +49,21 @@ async def list_orders_to_fulfill(
     """Orders this user needs to fulfill as a seller — powers the Orders tab."""
     rows = await order_service.list_selling_orders(db, user_id)
     return [order_service.to_response(order, seller) for order, seller in rows]
+
+
+@router.get("/{order_id}/tracking", response_model=OrderTrackingResponse)
+async def get_order_tracking(
+    order_id: str,
+    user_id: str = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_db),
+):
+    """Live seller position for one of the buyer's own orders — only
+    populated once the seller has marked it 'Picked Up' and is currently
+    sharing their location."""
+    tracking = await location_service.get_order_tracking(db, user_id, order_id)
+    if not tracking:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return tracking
 
 
 @router.patch("/{order_id}/fulfillment", response_model=OrderResponse)

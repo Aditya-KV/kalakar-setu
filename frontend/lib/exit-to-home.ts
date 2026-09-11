@@ -9,12 +9,14 @@ import { useNavigation, useRouter } from 'expo-router';
  * can always abort the in-progress listing from wherever they are, in one
  * action, rather than backing out step by step.
  *
- * Forward navigation and this screen's own router.replace() calls (e.g.
- * after a successful publish) are untouched — those dispatch REPLACE/PUSH
- * actions, not GO_BACK, so only genuine "leave this screen" attempts are
- * redirected. The in-progress draft itself isn't cleared by this — it's
- * already persisted separately (see features/catalog/context.tsx) and can
- * be resumed later.
+ * Uses dismissTo rather than replace so the earlier steps still on the stack
+ * (e.g. studio/index, studio/voice beneath studio/price) are actually popped
+ * off, not just covered — otherwise a later back-navigation from Home would
+ * reveal those stale screens instead of leaving the app. Forward navigation
+ * is untouched — those dispatch PUSH actions, not GO_BACK, so only genuine
+ * "leave this screen" attempts are redirected. The in-progress draft itself
+ * isn't cleared by this — it's already persisted separately (see
+ * features/catalog/context.tsx) and can be resumed later.
  */
 export function useExitToHomeOnBack(enabled: boolean = true) {
   const navigation = useNavigation();
@@ -25,7 +27,7 @@ export function useExitToHomeOnBack(enabled: boolean = true) {
     const unsubscribe = navigation.addListener('beforeRemove', (e: any) => {
       if (e.data?.action?.type !== 'GO_BACK') return;
       e.preventDefault();
-      router.replace('/(app)/(tabs)');
+      router.dismissTo('/(app)/(tabs)');
     });
     return unsubscribe;
   }, [navigation, router, enabled]);

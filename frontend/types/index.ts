@@ -15,6 +15,7 @@ export interface UserProfile {
   is_active: boolean;
   gem_seller_id?: string | null;
   ondc_subscriber_id?: string | null;
+  is_sharing_location?: boolean;
   created_at: string;
   updated_at: string;
 }

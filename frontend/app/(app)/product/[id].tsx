@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +11,7 @@ import { ThemeColors } from '../../../constants/Colors';
 import { FontSize, FontWeight, Spacing, BorderRadius, Shadows } from '../../../constants/theme';
 import { Button } from '../../../components/ui/Button';
 import { AnimatedPressable } from '../../../components/ui/AnimatedPressable';
+import { ImageCarousel } from '../../../components/ui/ImageCarousel';
 import { getCraftIcon } from '../../../lib/craftIcons';
 import { RequestFeedback } from '../../../components/ui/RequestFeedback';
 import { apiClient } from '../../../lib/api-client';
@@ -129,22 +130,11 @@ export default function ProductDetailScreen() {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {galleryImages.length > 0 ? (
-          <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
-            {galleryImages.map((variant) => (
-              <Image
-                key={variant.key}
-                source={{ uri: mediaUrl(variant.url, HOST_URL)! }}
-                style={styles.galleryImage}
-                resizeMode="cover"
-              />
-            ))}
-          </ScrollView>
-        ) : (
-          <View style={[styles.galleryImage, styles.galleryPlaceholder]}>
-            <CategoryIcon size={56} color={colors.primary} strokeWidth={1.5} />
-          </View>
-        )}
+        <ImageCarousel
+          height={340}
+          images={galleryImages.map((variant) => ({ key: variant.key, url: mediaUrl(variant.url, HOST_URL)! }))}
+          placeholder={<CategoryIcon size={56} color={colors.primary} strokeWidth={1.5} />}
+        />
 
         <Animated.View entering={FadeInDown.duration(300)} style={styles.detailBlock}>
           <Text style={styles.title}>{productText(listing.title, i18n.language)}</Text>
@@ -224,16 +214,6 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: 40,
-  },
-  galleryImage: {
-    width: 400,
-    height: 340,
-  },
-  galleryPlaceholder: {
-    backgroundColor: colors.primaryTint,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
   },
   detailBlock: {
     padding: Spacing.lg,

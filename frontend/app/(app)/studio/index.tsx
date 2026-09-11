@@ -16,7 +16,7 @@ import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { useTranslation } from 'react-i18next';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
-import { X, Camera, ImageIcon, RotateCcw, Check, Lightbulb } from 'lucide-react-native';
+import { X, Camera, ImageIcon, RotateCcw, Check, Lightbulb, Plus } from 'lucide-react-native';
 import { useAuth } from '../../../features/auth/hooks';
 import { preserveDraftMedia } from '../../../lib/draft-media';
 import { mediaForm } from '../../../lib/media-form';
@@ -40,29 +40,34 @@ interface GalleryVariant {
 import { mediaUrl } from '../../../lib/product-text';
 
 const HOST_URL = apiClient.defaults.baseURL || 'http://localhost:8000/api/v1';
+const MAX_PHOTOS = 6;
 
 export default function PhotoStudioScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const { colors } = useTheme();
   const styles = getStyles(colors);
-  const { draft, setPhotoStep } = useCatalogDraft();
+  const { draft, addPhoto, removePhoto } = useCatalogDraft();
   const { user } = useAuth();
   const [photoError, setPhotoError] = useState<string | null>(null);
   const [showPhotoWarning, setShowPhotoWarning] = useState(false);
   const request = useRef<AbortController | null>(null);
   useEffect(() => () => request.current?.abort(), []);
 
-  const [rawImageUri, setRawImageUri] = useState<string | null>(mediaUrl(draft.photoUri, HOST_URL));
-  const [enhancedImageUri, setEnhancedImageUri] = useState<string | null>(mediaUrl(draft.gallery[0]?.url, HOST_URL));
-  const [gallery, setGallery] = useState<GalleryVariant[]>(draft.gallery);
+  const photos = draft.photos;
+  const atMaxPhotos = photos.length >= MAX_PHOTOS;
+
+  const [rawImageUri, setRawImageUri] = useState<string | null>(null);
+  const [enhancedImageUri, setEnhancedImageUri] = useState<string | null>(null);
+  const [gallery, setGallery] = useState<GalleryVariant[]>([]);
   const [isEnhancing, setIsEnhancing] = useState<boolean>(false);
   useExitToHomeOnBack(!isEnhancing);
   const [qualityScore, setQualityScore] = useState<number | null>(null);
   const [qualityIssues, setQualityIssues] = useState<string[]>([]);
-  const [mediaId, setMediaId] = useState<string | null>(draft.mediaId);
-  const [lastPickedUri, setLastPickedUri] = useState<string | null>(draft.photoUri);
+  const [mediaId, setMediaId] = useState<string | null>(null);
+  const [lastPickedUri, setLastPickedUri] = useState<string | null>(null);
   const [enhanceQuality, setEnhanceQuality] = useState<boolean>(true);
+  const [originalUrl, setOriginalUrl] = useState<string | null>(null);
   const [background, setBackground] = useState<'WHITE' | 'WARM_WHITE' | 'SOFT_OFF_WHITE'>('WARM_WHITE');
   const [processingStep, setProcessingStep] = useState(0);
 
@@ -94,20 +99,17 @@ export default function PhotoStudioScreen() {
           mediaTypes: ['images'],
           quality: 0.9,
           allowsEditing: true,
-          aspect: [4, 4],
         });
       } else {
         result = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ['images'],
           quality: 0.9,
           allowsEditing: true,
-          aspect: [4, 4],
         });
       }
 
       if (!result.canceled && result.assets[0]) {
         const uri = await preserveDraftMedia(result.assets[0].uri, user!.id, 'photo');
-        setPhotoStep(null, [], uri);
         setPhotoError(null);
         setQualityScore(null);
         setRawImageUri(uri);
@@ -129,7 +131,6 @@ export default function PhotoStudioScreen() {
     const updated = enhanceRes.data;
     setEnhancedImageUri(mediaUrl(updated.bg_removed_url || updated.enhanced_url, HOST_URL) || uri);
     setGallery(updated.gallery || []);
-    setPhotoStep(mediaIdToEnhance, updated.gallery || [], updated.original_url || uri);
   };
 
   const uploadAndAnalyze = async (uri: string) => {
@@ -152,7 +153,7 @@ export default function PhotoStudioScreen() {
       setQualityScore(media.quality_score);
       setQualityIssues(media.quality_issues || []);
       // Keep the successful upload even if enhancement fails.
-      setPhotoStep(media.id, [], media.original_url || uri);
+      setOriginalUrl(media.original_url || uri);
       await runEnhance(media.id, uri, enhanceQuality, background, controller);
     } catch {
       if (controller.signal.aborted) return;
@@ -197,6 +198,25 @@ export default function PhotoStudioScreen() {
     } finally {
       if (!controller.signal.aborted) setIsEnhancing(false);
     }
+  };
+
+  const resetWorkingSlot = () => {
+    setRawImageUri(null);
+    setEnhancedImageUri(null);
+    setPhotoError(null);
+    setQualityScore(null);
+    setLastPickedUri(null);
+    setOriginalUrl(null);
+    setGallery([]);
+    setMediaId(null);
+  };
+
+  // Commits the photo currently being edited into the draft's photo list and
+  // clears the working slot so the capture cards reappear for the next shot.
+  const handleAddPhoto = () => {
+    if (!mediaId) return;
+    addPhoto({ mediaId, photoUri: originalUrl || lastPickedUri, gallery });
+    resetWorkingSlot();
   };
 
   return (
@@ -244,8 +264,40 @@ export default function PhotoStudioScreen() {
           {t('studio.enhanceTitle')}
         </Animated.Text>
 
+        {/* Photos already added to this listing */}
+        {photos.length > 0 && (
+          <Animated.View entering={FadeInDown.duration(280)} style={styles.addedPhotosSection}>
+            <Text style={styles.addedPhotosTitle}>{t('studio.addedPhotosTitle')}</Text>
+            <Text style={styles.addedPhotosSubtitle}>{t('studio.addedPhotosSubtitle', { max: MAX_PHOTOS })}</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.addedPhotosScroll}>
+              {photos.map((photo, index) => (
+                <Animated.View key={`${photo.mediaId}-${index}`} entering={FadeInDown.delay(index * 60).duration(260)} style={styles.addedPhotoCard}>
+                  <Image
+                    source={{ uri: mediaUrl(photo.gallery[0]?.url || photo.photoUri, HOST_URL)! }}
+                    style={styles.addedPhotoImage}
+                    resizeMode="cover"
+                  />
+                  <TouchableOpacity
+                    accessibilityLabel={t('studio.removePhotoLabel')}
+                    style={styles.addedPhotoRemove}
+                    onPress={() => removePhoto(index)}
+                    hitSlop={8}
+                  >
+                    <X size={12} color="#FFFFFF" strokeWidth={2.5} />
+                  </TouchableOpacity>
+                  {index === 0 && (
+                    <View style={styles.addedPhotoPrimaryBadge}>
+                      <Text style={styles.addedPhotoPrimaryText}>{t('studio.coverPhoto')}</Text>
+                    </View>
+                  )}
+                </Animated.View>
+              ))}
+            </ScrollView>
+          </Animated.View>
+        )}
+
         {/* Capture / Select Photo Buttons */}
-        {!rawImageUri && (
+        {!rawImageUri && !atMaxPhotos && (
           <Animated.View entering={FadeInDown.delay(100).duration(320)} style={styles.captureCardGroup}>
             <TouchableOpacity
               style={styles.captureCard}
@@ -266,6 +318,12 @@ export default function PhotoStudioScreen() {
               <Text style={styles.captureTitle}>{t('studio.uploadGallery')}</Text>
               <Text style={styles.captureSub}>{t('studio.uploadGallerySub')}</Text>
             </TouchableOpacity>
+          </Animated.View>
+        )}
+
+        {!rawImageUri && atMaxPhotos && (
+          <Animated.View entering={FadeInDown.duration(280)} style={styles.maxPhotosBanner}>
+            <Text style={styles.maxPhotosText}>{t('studio.maxPhotosReached', { max: MAX_PHOTOS })}</Text>
           </Animated.View>
         )}
 
@@ -379,33 +437,44 @@ export default function PhotoStudioScreen() {
           </Animated.View>
         )}
 
+        {/* Add this shot to the listing and capture another, without leaving the Photo step */}
+        {mediaId && !isEnhancing && !atMaxPhotos && (
+          <Animated.View entering={FadeInDown.duration(240)}>
+            <TouchableOpacity style={styles.addAnotherButton} onPress={handleAddPhoto} activeOpacity={0.8}>
+              <Plus size={16} color={colors.primary} strokeWidth={2.5} />
+              <Text style={styles.addAnotherText}>{t('studio.addAnotherPhoto')}</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        )}
+
         {/* Bottom Action Controls */}
         <View style={styles.actionRow}>
-          <TouchableOpacity
-            disabled={isEnhancing}
-            style={styles.retakeButton}
-            onPress={() => {
-              setRawImageUri(null);
-              setEnhancedImageUri(null);
-              setPhotoError(null);
-              setQualityScore(null);
-              setLastPickedUri(null);
-              setPhotoStep(null, [], null);
-              setGallery([]);
-              setMediaId(null);
-            }}
-            activeOpacity={0.8}
-          >
-            <RotateCcw size={16} color={colors.textPrimary} />
-            <Text style={styles.retakeText}>{t('studio.retake')}</Text>
-          </TouchableOpacity>
+          {rawImageUri && (
+            <TouchableOpacity
+              disabled={isEnhancing}
+              style={styles.retakeButton}
+              onPress={resetWorkingSlot}
+              activeOpacity={0.8}
+            >
+              <RotateCcw size={16} color={colors.textPrimary} />
+              <Text style={styles.retakeText}>{t('studio.retake')}</Text>
+            </TouchableOpacity>
+          )}
 
           <Button
-            title={t('studio.looksGood')}
+            title={mediaId ? t('studio.looksGood') : t('common.continue')}
             disabled={isEnhancing}
             onPress={() => {
-              if (!mediaId) { setShowPhotoWarning(true); return; }
-              router.push('/(app)/studio/voice');
+              if (mediaId) {
+                handleAddPhoto();
+                router.push('/(app)/studio/voice');
+                return;
+              }
+              if (photos.length > 0) {
+                router.push('/(app)/studio/voice');
+                return;
+              }
+              setShowPhotoWarning(true);
             }}
             style={{ flex: 1 }}
           />
@@ -420,7 +489,6 @@ export default function PhotoStudioScreen() {
             {lastPickedUri && <Button title={t('studio.retryUpload')} onPress={() => { setShowPhotoWarning(false); void uploadAndAnalyze(lastPickedUri); }} />}
             <Button title={t('studio.continueAnyway')} variant="outline" onPress={() => {
               setShowPhotoWarning(false);
-              setPhotoStep(null, [], null);
               router.push('/(app)/studio/voice');
             }} />
           </View>
@@ -514,6 +582,96 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
     marginBottom: Spacing.md,
+  },
+  addedPhotosSection: {
+    marginBottom: Spacing.md,
+  },
+  addedPhotosTitle: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.bold,
+    color: colors.textPrimary,
+  },
+  addedPhotosSubtitle: {
+    fontSize: FontSize.xs,
+    color: colors.textSecondary,
+    marginTop: 2,
+    marginBottom: Spacing.sm,
+  },
+  addedPhotosScroll: {
+    flexGrow: 0,
+  },
+  addedPhotoCard: {
+    width: 84,
+    height: 84,
+    borderRadius: BorderRadius.md,
+    marginRight: Spacing.sm,
+    overflow: 'hidden',
+    position: 'relative',
+    backgroundColor: colors.surfaceElevated,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  addedPhotoImage: {
+    width: '100%',
+    height: '100%',
+  },
+  addedPhotoRemove: {
+    position: 'absolute',
+    top: 4,
+    right: 4,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  addedPhotoPrimaryBadge: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingVertical: 2,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    alignItems: 'center',
+  },
+  addedPhotoPrimaryText: {
+    fontSize: 9,
+    fontWeight: FontWeight.bold,
+    color: '#FFFFFF',
+    textTransform: 'uppercase',
+  },
+  maxPhotosBanner: {
+    backgroundColor: colors.surfaceElevated,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: Spacing.md,
+    marginBottom: Spacing.md,
+    alignItems: 'center',
+  },
+  maxPhotosText: {
+    fontSize: FontSize.xs,
+    color: colors.textSecondary,
+    textAlign: 'center',
+  },
+  addAnotherButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    borderWidth: 1.5,
+    borderColor: colors.primary,
+    borderStyle: 'dashed',
+    borderRadius: BorderRadius.md,
+    paddingVertical: 12,
+    marginTop: Spacing.sm,
+    marginBottom: Spacing.sm,
+  },
+  addAnotherText: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.bold,
+    color: colors.primary,
   },
   tipsCard: {
     backgroundColor: colors.surface,

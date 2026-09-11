@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import Animated, { FadeInDown, ZoomIn, FadeIn } from 'react-native-reanimated';
 import { PartyPopper } from 'lucide-react-native';
 import { useAuth } from '../../features/auth/hooks';
+import { useAppMode } from '../../features/appMode/context';
 import { useTheme } from '../../features/theme/context';
 import { ThemeColors } from '../../constants/Colors';
 import { FontSize, FontWeight, Spacing, BorderRadius, Shadows } from '../../constants/theme';
@@ -15,11 +16,12 @@ export default function OnboardingCompleteScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { mode } = useAppMode();
   const { colors } = useTheme();
   const styles = getStyles(colors);
 
   const handleGoToApp = () => {
-    router.replace('/(app)/(tabs)');
+    router.replace(mode === 'customer' ? '/(app)/(customer-tabs)' : '/(app)/(tabs)');
   };
 
   return (

@@ -26,6 +26,7 @@ export default function AppLayout() {
       <Stack.Screen name="(customer-tabs)" />
       <Stack.Screen name="studio" options={{ animation: 'slide_from_bottom' }} />
       <Stack.Screen name="product/[id]" options={{ animation: 'slide_from_right' }} />
+      <Stack.Screen name="tracking/[id]" options={{ animation: 'slide_from_right' }} />
       <Stack.Screen name="checkout" options={{ animation: 'slide_from_bottom' }} />
     </Stack>
   );

@@ -311,3 +311,112 @@ async def test_seller_updates_fulfillment_status():
             f"/api/v1/orders/{order_id}/fulfillment", json={"fulfillment_status": 2}, headers=buyer_headers
         )
         assert forbidden_res.status_code == 404
+
+
+# --- Live location ---
+
+@pytest.mark.asyncio
+async def test_nearby_sellers_only_lists_sellers_currently_sharing_location():
+    async with _client() as ac:
+        sharing_seller = await _auth_headers(ac)
+        quiet_seller = await _auth_headers(ac)
+        buyer = await _auth_headers(ac)
+
+        await ac.patch(
+            "/api/v1/profile/location",
+            json={"latitude": 12.9716, "longitude": 77.5946, "is_sharing_location": True},
+            headers=sharing_seller,
+        )
+        # This seller has a location on file but never turned sharing on.
+        await ac.patch(
+            "/api/v1/profile/location",
+            json={"latitude": 13.0827, "longitude": 80.2707, "is_sharing_location": False},
+            headers=quiet_seller,
+        )
+
+        nearby_res = await ac.get("/api/v1/marketplace/sellers/nearby", headers=buyer)
+        assert nearby_res.status_code == 200
+        nearby = nearby_res.json()
+        assert len(nearby) == 1
+        assert nearby[0]["latitude"] == 12.9716
+
+        # Turning sharing off removes the seller from the list.
+        await ac.patch(
+            "/api/v1/profile/location",
+            json={"latitude": 12.9716, "longitude": 77.5946, "is_sharing_location": False},
+            headers=sharing_seller,
+        )
+        assert (await ac.get("/api/v1/marketplace/sellers/nearby", headers=buyer)).json() == []
+
+
+@pytest.mark.asyncio
+async def test_nearby_sellers_sorted_by_distance_when_buyer_location_given():
+    async with _client() as ac:
+        near_seller = await _auth_headers(ac)
+        far_seller = await _auth_headers(ac)
+        buyer = await _auth_headers(ac)
+
+        # Buyer is in Bengaluru; near_seller is a few km away, far_seller is in Delhi.
+        await ac.patch(
+            "/api/v1/profile/location",
+            json={"latitude": 12.98, "longitude": 77.60, "is_sharing_location": True},
+            headers=near_seller,
+        )
+        await ac.patch(
+            "/api/v1/profile/location",
+            json={"latitude": 28.7041, "longitude": 77.1025, "is_sharing_location": True},
+            headers=far_seller,
+        )
+
+        nearby = (
+            await ac.get(
+                "/api/v1/marketplace/sellers/nearby",
+                params={"lat": 12.9716, "lng": 77.5946},
+                headers=buyer,
+            )
+        ).json()
+        assert len(nearby) == 2
+        assert nearby[0]["distance_km"] < nearby[1]["distance_km"]
+
+
+@pytest.mark.asyncio
+async def test_order_tracking_only_visible_once_picked_up_and_sharing():
+    async with _client() as ac:
+        seller_headers = await _auth_headers(ac)
+        buyer_headers = await _auth_headers(ac)
+        listing_id = (await ac.post("/api/v1/listings", json=_listing_body(), headers=seller_headers)).json()["id"]
+        addr_id = (await ac.post("/api/v1/addresses", json=_address_body(), headers=buyer_headers)).json()["id"]
+        order_id = (
+            await ac.post(
+                "/api/v1/orders",
+                json={"items": [{"listing_id": listing_id, "quantity": 1}], "delivery_address_id": addr_id},
+                headers=buyer_headers,
+            )
+        ).json()[0]["id"]
+
+        # Not yet picked up — no position, even though the seller is sharing.
+        await ac.patch(
+            "/api/v1/profile/location",
+            json={"latitude": 12.9716, "longitude": 77.5946, "is_sharing_location": True},
+            headers=seller_headers,
+        )
+        before_pickup = (await ac.get(f"/api/v1/orders/{order_id}/tracking", headers=buyer_headers)).json()
+        assert before_pickup["latitude"] is None
+
+        # Picked up — position now visible.
+        await ac.patch(
+            f"/api/v1/orders/{order_id}/fulfillment", json={"fulfillment_status": 3}, headers=seller_headers
+        )
+        picked_up = (await ac.get(f"/api/v1/orders/{order_id}/tracking", headers=buyer_headers)).json()
+        assert picked_up["latitude"] == 12.9716
+
+        # Delivered — position hidden again.
+        await ac.patch(
+            f"/api/v1/orders/{order_id}/fulfillment", json={"fulfillment_status": 4}, headers=seller_headers
+        )
+        delivered = (await ac.get(f"/api/v1/orders/{order_id}/tracking", headers=buyer_headers)).json()
+        assert delivered["latitude"] is None
+
+        # Another buyer can't read this order's tracking at all.
+        other_buyer = await _auth_headers(ac)
+        assert (await ac.get(f"/api/v1/orders/{order_id}/tracking", headers=other_buyer)).status_code == 404

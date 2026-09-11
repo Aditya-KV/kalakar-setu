@@ -51,7 +51,7 @@ export default function LandingScreen() {
         <Animated.View entering={FadeInDown.delay(400).duration(400)} style={styles.footer}>
           <Button
             title={t('landing.cta')}
-            onPress={() => router.push('/(auth)/welcome')}
+            onPress={() => router.push('/(auth)/scenes')}
             size="large"
           />
         </Animated.View>

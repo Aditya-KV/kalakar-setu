@@ -9,9 +9,22 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
 from app.api.deps import get_current_user_id
 from app.schemas.marketplace import MarketplaceListingResponse
-from app.services import marketplace_service
+from app.schemas.location import NearbySeller
+from app.services import marketplace_service, location_service
 
 router = APIRouter(prefix="/marketplace", tags=["Marketplace"])
+
+
+@router.get("/sellers/nearby", response_model=list[NearbySeller])
+async def get_nearby_sellers(
+    lat: float | None = Query(None, ge=-90, le=90),
+    lng: float | None = Query(None, ge=-180, le=180),
+    user_id: str = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_db),
+):
+    """Sellers currently sharing their live location, for the Discover map.
+    Sorted nearest-first when the buyer's own position is given."""
+    return await location_service.list_nearby_sellers(db, user_id, lat, lng)
 
 
 @router.get("/listings", response_model=list[MarketplaceListingResponse])

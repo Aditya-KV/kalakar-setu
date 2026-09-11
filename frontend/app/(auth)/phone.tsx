@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../features/auth/hooks';
+import { useAppMode } from '../../features/appMode/context';
 import { useTheme } from '../../features/theme/context';
 import { ThemeColors } from '../../constants/Colors';
 import { FontSize, FontWeight, Spacing } from '../../constants/theme';
@@ -14,6 +15,7 @@ export default function PhoneScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const { verifyFirebasePhone, devBypassLogin } = useAuth();
+  const { mode } = useAppMode();
   const { colors } = useTheme();
   const styles = getStyles(colors);
 
@@ -24,7 +26,7 @@ export default function PhoneScreen() {
     if (isNewUser) {
       router.replace('/(auth)/consent');
     } else {
-      router.replace('/(app)/(tabs)');
+      router.replace(mode === 'customer' ? '/(app)/(customer-tabs)' : '/(app)/(tabs)');
     }
   };
 

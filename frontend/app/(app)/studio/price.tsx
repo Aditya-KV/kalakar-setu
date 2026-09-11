@@ -56,7 +56,7 @@ export default function PriceScreen() {
   const validQuantity = Number.isInteger(quantityNumber) && quantityNumber >= 1 && quantityNumber <= 100000;
   const canPublish = hasDraft && validPrice && validQuantity && !publishing;
 
-  const primaryImageUrl = mediaUrl(draft.gallery[0]?.url || draft.photoUri, HOST_URL);
+  const primaryImageUrl = mediaUrl(draft.photos[0]?.gallery[0]?.url || draft.photos[0]?.photoUri, HOST_URL);
 
   const handlePublish = async () => {
     if (!canPublish || !draft.title || !draft.description || publishLock.current) return;
@@ -65,7 +65,7 @@ export default function PriceScreen() {
     setPublishing(true);
     try {
       await apiClient.post('/listings', {
-        media_id: draft.mediaId,
+        media_ids: draft.photos.map((photo) => photo.mediaId).filter((id): id is string => !!id),
         title: draft.title,
         description: draft.description,
         craft_type: user?.craft_types?.[0] || null,
@@ -76,7 +76,10 @@ export default function PriceScreen() {
       });
       try { await resetDraft(); } catch { Alert.alert(t('studio.publishedClearFailed')); }
       Alert.alert(t('studio.publishSuccess'));
-      router.replace('/(app)/(tabs)/listings');
+      // dismissTo (not replace) so studio/index and studio/voice are popped
+      // off the stack too — otherwise pressing back from Listings would
+      // reveal those stale creation screens instead of leaving the flow.
+      router.dismissTo('/(app)/(tabs)/listings');
     } catch (e) {
       console.error('Publish failed:', e);
       setPublishError(true);
@@ -164,9 +167,26 @@ export default function PriceScreen() {
           )}
           <View style={styles.summaryText}>
             <Text style={styles.summaryTitle} numberOfLines={2}>{draft.title ? productText(draft.title, i18n.language) : ''}</Text>
-            <Text style={styles.summarySubtitle} numberOfLines={1}>{t('studio.savedOnDevice')}</Text>
+            <Text style={styles.summarySubtitle} numberOfLines={1}>
+              {draft.photos.length > 0 ? t('studio.photosAttached', { count: draft.photos.length }) : t('studio.savedOnDevice')}
+            </Text>
           </View>
         </Animated.View>
+
+        {draft.photos.length > 1 && (
+          <Animated.View entering={FadeInDown.delay(120).duration(300)}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.photoStrip}>
+              {draft.photos.map((photo, index) => (
+                <Image
+                  key={`${photo.mediaId}-${index}`}
+                  source={{ uri: mediaUrl(photo.gallery[0]?.url || photo.photoUri, HOST_URL)! }}
+                  style={styles.photoStripImage}
+                  resizeMode="cover"
+                />
+              ))}
+            </ScrollView>
+          </Animated.View>
+        )}
 
         <Animated.View entering={FadeInDown.delay(150).duration(300)} style={styles.suggestionCard}>
           {!suggestion ? (
@@ -360,6 +380,18 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   },
   summaryText: {
     flex: 1,
+  },
+  photoStrip: {
+    flexGrow: 0,
+    marginTop: -Spacing.sm,
+    marginBottom: Spacing.lg,
+  },
+  photoStripImage: {
+    width: 52,
+    height: 52,
+    borderRadius: BorderRadius.md,
+    marginRight: Spacing.sm,
+    backgroundColor: colors.surfaceElevated,
   },
   summaryTitle: {
     fontSize: FontSize.md,

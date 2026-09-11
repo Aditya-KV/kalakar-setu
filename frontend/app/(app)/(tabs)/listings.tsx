@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, Modal, RefreshControl, Share, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, Modal, RefreshControl, Share, Alert, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import Animated, { FadeInDown, ZoomIn } from 'react-native-reanimated';
-import { Package, Pencil, Share2, Plus, X, Check, Trash2 } from 'lucide-react-native';
+import { Package, Pencil, Share2, Plus, X, Check, Trash2, Images } from 'lucide-react-native';
 import { useTheme } from '../../../features/theme/context';
 import { ThemeColors } from '../../../constants/Colors';
 import { FontSize, FontWeight, Spacing, BorderRadius, Shadows } from '../../../constants/theme';
@@ -28,6 +28,7 @@ interface Listing {
   price: number;
   quantity_available: number;
   primary_image_url: string | null;
+  gallery: { key: string; label: string; url: string }[];
   status: string;
 }
 
@@ -165,13 +166,21 @@ export default function ListingsScreen() {
             const imageUrl = item.primary_image_url ? mediaUrl(item.primary_image_url, HOST_URL)! : null;
             return (
               <Animated.View entering={FadeInDown.delay(index * 70).duration(300)} style={styles.productCard}>
-                {imageUrl ? (
-                  <Image source={{ uri: imageUrl }} style={styles.imageContainer} resizeMode="cover" />
-                ) : (
-                  <View style={styles.imageContainer}>
-                    <CategoryIcon size={32} color={colors.primary} strokeWidth={1.8} />
-                  </View>
-                )}
+                <View>
+                  {imageUrl ? (
+                    <Image source={{ uri: imageUrl }} style={styles.imageContainer} resizeMode="cover" />
+                  ) : (
+                    <View style={styles.imageContainer}>
+                      <CategoryIcon size={32} color={colors.primary} strokeWidth={1.8} />
+                    </View>
+                  )}
+                  {item.gallery.length > 1 && (
+                    <View style={styles.photoCountBadge}>
+                      <Images size={10} color="#FFFFFF" strokeWidth={2.5} />
+                      <Text style={styles.photoCountText}>{item.gallery.length}</Text>
+                    </View>
+                  )}
+                </View>
 
                 <View style={styles.detailsContainer}>
                   <View style={styles.topRow}>
@@ -228,6 +237,18 @@ export default function ListingsScreen() {
                 <X size={20} color={colors.textPrimary} />
               </AnimatedPressable>
             </View>
+            {editingListing && editingListing.gallery.length > 0 && (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.editPhotoStrip}>
+                {editingListing.gallery.map((photo, index) => (
+                  <Image
+                    key={photo.key || index}
+                    source={{ uri: mediaUrl(photo.url, HOST_URL)! }}
+                    style={styles.editPhotoImage}
+                    resizeMode="cover"
+                  />
+                ))}
+              </ScrollView>
+            )}
             <Input label={t('onboarding.step1Title')} value={editTitle} onChangeText={setEditTitle} />
             <Input
               label={t('studio.priceLabel')}
@@ -314,6 +335,34 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: Spacing.md,
+  },
+  photoCountBadge: {
+    position: 'absolute',
+    bottom: 4,
+    right: Spacing.md,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    borderRadius: BorderRadius.round,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  photoCountText: {
+    fontSize: 10,
+    fontWeight: FontWeight.bold,
+    color: '#FFFFFF',
+  },
+  editPhotoStrip: {
+    flexGrow: 0,
+    marginBottom: Spacing.md,
+  },
+  editPhotoImage: {
+    width: 64,
+    height: 64,
+    borderRadius: BorderRadius.md,
+    marginRight: Spacing.sm,
+    backgroundColor: colors.surfaceElevated,
   },
   detailsContainer: {
     flex: 1,

@@ -43,6 +43,14 @@
         }
       ],
       "expo-audio",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Kalakar Setu uses your location to show your live position to buyers while you have \"Share My Location\" turned on, and to find sellers near you.",
+          "isAndroidBackgroundLocationEnabled": false,
+          "isIosBackgroundLocationEnabled": false
+        }
+      ],
       "@react-native-firebase/app",
       "@react-native-firebase/auth"
     ],

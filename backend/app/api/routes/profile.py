@@ -16,7 +16,8 @@ from app.schemas.profile import (
     SellerReadinessResponse,
     DeactivateRequest,
 )
-from app.services import profile_service
+from app.schemas.location import LocationUpdateRequest
+from app.services import profile_service, location_service
 
 router = APIRouter(prefix="/profile", tags=["Profile"])
 
@@ -42,6 +43,23 @@ async def update_profile(
     """Update profile fields."""
     data = body.model_dump(exclude_none=True)
     user = await profile_service.update_profile(db, user_id, data)
+    if not user:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    return user
+
+
+@router.patch("/location", response_model=ProfileResponse)
+async def update_location(
+    body: LocationUpdateRequest,
+    user_id: str = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_db),
+):
+    """Pushes the seller's current device position and online/offline
+    sharing state — called periodically by the app while "Share My
+    Location" is on."""
+    user = await location_service.update_location(
+        db, user_id, body.latitude, body.longitude, body.is_sharing_location
+    )
     if not user:
         raise HTTPException(status_code=404, detail="Profile not found")
     return user

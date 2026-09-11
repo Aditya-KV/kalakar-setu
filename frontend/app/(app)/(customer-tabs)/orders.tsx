@@ -1,15 +1,16 @@
 import React, { useCallback, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { Receipt } from 'lucide-react-native';
+import { Receipt, MapPin } from 'lucide-react-native';
 import { useTheme } from '../../../features/theme/context';
 import { ThemeColors } from '../../../constants/Colors';
 import { FontSize, FontWeight, Spacing, BorderRadius, Shadows } from '../../../constants/theme';
 import { StatusBadge } from '../../../components/ui/StatusBadge';
 import { RequestFeedback } from '../../../components/ui/RequestFeedback';
+import { AnimatedPressable } from '../../../components/ui/AnimatedPressable';
 import { apiClient } from '../../../lib/api-client';
 
 import { mediaUrl, productText } from '../../../lib/product-text';
@@ -36,6 +37,7 @@ interface Order {
 
 export default function CustomerOrdersScreen() {
   const { t, i18n } = useTranslation();
+  const router = useRouter();
   const { colors } = useTheme();
   const styles = getStyles(colors);
 
@@ -105,6 +107,16 @@ export default function CustomerOrdersScreen() {
                 <Text style={styles.paymentLabel}>{item.payment_method === 'cod' ? t('orders.codLabel') : item.payment_method}</Text>
                 <Text style={styles.totalText}>₹{item.total_price.toLocaleString('en-IN')}</Text>
               </View>
+
+              {item.fulfillment_status === 3 && (
+                <AnimatedPressable
+                  style={styles.trackButton}
+                  onPress={() => router.push(`/(app)/tracking/${item.id}` as any)}
+                >
+                  <MapPin size={14} color="#FFFFFF" strokeWidth={2} />
+                  <Text style={styles.trackButtonText}>{t('customer.trackOrder')}</Text>
+                </AnimatedPressable>
+              )}
             </Animated.View>
           )}
         />
@@ -213,5 +225,20 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     fontSize: FontSize.md,
     fontWeight: FontWeight.bold,
     color: colors.textPrimary,
+  },
+  trackButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    backgroundColor: colors.primary,
+    borderRadius: BorderRadius.md,
+    paddingVertical: 10,
+    marginTop: Spacing.sm,
+  },
+  trackButtonText: {
+    fontSize: FontSize.xs,
+    fontWeight: FontWeight.bold,
+    color: '#FFFFFF',
   },
 });

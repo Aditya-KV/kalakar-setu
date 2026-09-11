@@ -4,7 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import Animated, { FadeInDown, FadeIn, LinearTransition } from 'react-native-reanimated';
-import { Search, Package, ArrowLeftRight } from 'lucide-react-native';
+import * as Location from 'expo-location';
+import { Search, Package, ArrowLeftRight, Map as MapIcon, List as ListIcon } from 'lucide-react-native';
 import { useTheme } from '../../../features/theme/context';
 import { useAppMode } from '../../../features/appMode/context';
 import { ThemeColors } from '../../../constants/Colors';
@@ -15,10 +16,12 @@ import { FALLBACK_CRAFTS } from '../../../components/ui/CraftPicker';
 import { CraftType } from '../../../types';
 import { RequestFeedback } from '../../../components/ui/RequestFeedback';
 import { apiClient } from '../../../lib/api-client';
+import { LeafletMap, MapMarker } from '../../../components/ui/LeafletMap';
 
 import { mediaUrl, productText } from '../../../lib/product-text';
 
 const HOST_URL = apiClient.defaults.baseURL || 'http://localhost:8000/api/v1';
+const NEARBY_POLL_MS = 8000;
 
 interface MarketplaceListing {
   id: string;
@@ -28,6 +31,15 @@ interface MarketplaceListing {
   quantity_available: number;
   primary_image_url: string | null;
   seller: { id: string; name: string };
+}
+
+interface NearbySeller {
+  id: string;
+  name: string;
+  craft_types: string[];
+  latitude: number;
+  longitude: number;
+  distance_km: number | null;
 }
 
 export default function DiscoverScreen() {
@@ -46,6 +58,45 @@ export default function DiscoverScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [crafts, setCrafts] = useState<CraftType[]>(FALLBACK_CRAFTS);
   const [selectedCraft, setSelectedCraft] = useState<string | null>(null);
+
+  const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
+  const [nearbySellers, setNearbySellers] = useState<NearbySeller[]>([]);
+  const [buyerLocation, setBuyerLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [locationDenied, setLocationDenied] = useState(false);
+
+  const fetchNearbySellers = useCallback(async (coords: { lat: number; lng: number } | null) => {
+    try {
+      const res = await apiClient.get<NearbySeller[]>('/marketplace/sellers/nearby', {
+        params: coords ? { lat: coords.lat, lng: coords.lng } : {},
+      });
+      setNearbySellers(res.data);
+    } catch {
+      // A missed poll tick just keeps showing the last known pins.
+    }
+  }, []);
+
+  useEffect(() => {
+    if (viewMode !== 'map') return;
+    let cancelled = false;
+    (async () => {
+      if (!buyerLocation) {
+        try {
+          const perm = await Location.requestForegroundPermissionsAsync();
+          if (!perm.granted) {
+            if (!cancelled) setLocationDenied(true);
+          } else {
+            const current = await Location.getCurrentPositionAsync({});
+            if (!cancelled) setBuyerLocation({ lat: current.coords.latitude, lng: current.coords.longitude });
+          }
+        } catch {
+          if (!cancelled) setLocationDenied(true);
+        }
+      }
+      if (!cancelled) fetchNearbySellers(buyerLocation);
+    })();
+    const interval = setInterval(() => fetchNearbySellers(buyerLocation), NEARBY_POLL_MS);
+    return () => { cancelled = true; clearInterval(interval); };
+  }, [viewMode, buyerLocation, fetchNearbySellers]);
 
   useEffect(() => {
     apiClient
@@ -109,12 +160,48 @@ export default function DiscoverScreen() {
           <Text style={styles.headerTitle}>{t('customer.tabDiscover')}</Text>
           <Text style={styles.headerSub}>Kalakar Setu</Text>
         </View>
-        <AnimatedPressable style={styles.switchButton} onPress={() => { setMode('seller'); router.replace('/(app)/(tabs)'); }}>
-          <ArrowLeftRight size={14} color={colors.primary} strokeWidth={2} />
-          <Text style={styles.switchButtonText}>{t('customer.switchToSelling')}</Text>
-        </AnimatedPressable>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <AnimatedPressable
+            style={styles.viewToggleButton}
+            onPress={() => setViewMode(viewMode === 'list' ? 'map' : 'list')}
+          >
+            {viewMode === 'list' ? (
+              <MapIcon size={14} color={colors.primary} strokeWidth={2} />
+            ) : (
+              <ListIcon size={14} color={colors.primary} strokeWidth={2} />
+            )}
+            <Text style={styles.switchButtonText}>{viewMode === 'list' ? t('customer.mapView') : t('customer.listView')}</Text>
+          </AnimatedPressable>
+          <AnimatedPressable style={styles.switchButton} onPress={() => { setMode('seller'); router.replace('/(app)/(tabs)'); }}>
+            <ArrowLeftRight size={14} color={colors.primary} strokeWidth={2} />
+            <Text style={styles.switchButtonText}>{t('customer.switchToSelling')}</Text>
+          </AnimatedPressable>
+        </View>
       </View>
 
+      {viewMode === 'map' ? (
+        <View style={styles.mapContainer}>
+          {locationDenied && (
+            <Text style={styles.mapPermissionNote}>{t('customer.locationPermissionRequired')}</Text>
+          )}
+          <LeafletMap
+            style={{ flex: 1 }}
+            center={buyerLocation ? { lat: buyerLocation.lat, lng: buyerLocation.lng } : undefined}
+            markers={nearbySellers.map<MapMarker>((seller) => ({
+              id: seller.id,
+              lat: seller.latitude,
+              lng: seller.longitude,
+              label: seller.name,
+            }))}
+          />
+          {nearbySellers.length === 0 && (
+            <View style={styles.mapEmptyBanner}>
+              <Text style={styles.mapEmptyText}>{t('customer.nearbySellersEmpty')}</Text>
+            </View>
+          )}
+        </View>
+      ) : (
+        <>
       <View style={styles.searchRow}>
         <Search size={16} color={colors.textMuted} strokeWidth={2} />
         <TextInput
@@ -221,6 +308,8 @@ export default function DiscoverScreen() {
           }}
         />
       )}
+        </>
+      )}
     </SafeAreaView>
   );
 }
@@ -263,6 +352,42 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     fontSize: 10,
     fontWeight: FontWeight.bold,
     color: colors.primary,
+  },
+  viewToggleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: BorderRadius.round,
+    backgroundColor: colors.primaryTint,
+  },
+  mapContainer: {
+    flex: 1,
+  },
+  mapPermissionNote: {
+    fontSize: FontSize.xs,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    padding: Spacing.sm,
+    backgroundColor: colors.surfaceElevated,
+  },
+  mapEmptyBanner: {
+    position: 'absolute',
+    bottom: Spacing.lg,
+    left: Spacing.lg,
+    right: Spacing.lg,
+    backgroundColor: colors.surface,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: Spacing.md,
+    ...Shadows.card,
+  },
+  mapEmptyText: {
+    fontSize: FontSize.xs,
+    color: colors.textSecondary,
+    textAlign: 'center',
   },
   searchRow: {
     flexDirection: 'row',

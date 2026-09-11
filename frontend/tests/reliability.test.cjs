@@ -20,13 +20,31 @@ const memoryAdapter = () => {
   return { data, getItem: async (key) => data.get(key) || null, setItem: async (key, value) => { data.set(key, value); } };
 };
 
-test('draft survives a new store instance with photo, text, recording, price and stock', async () => {
+test('draft survives a new store instance with photos, text, recording, price and stock', async () => {
   const adapter = memoryAdapter();
-  const draft = { ...emptyDraft(), mediaId: 'photo-1', photoUri: '/uploads/photo.jpg',
+  const draft = { ...emptyDraft(),
+    photos: [
+      { mediaId: 'photo-1', photoUri: '/uploads/photo-1.jpg', gallery: [] },
+      { mediaId: 'photo-2', photoUri: '/uploads/photo-2.jpg', gallery: [] },
+    ],
     transcript: 'हाताने बनवलेले भांडे', sourceLanguage: 'mr', recordingUri: 'file:///documents/audio.m4a', price: '1500', quantity: '3' };
   await createDraftStore(adapter).save('artisan-a', draft);
   assert.deepEqual(await createDraftStore(adapter).load('artisan-a'), draft);
   assert.equal(hasDraftContent(draft), true);
+});
+
+test('a pre-multi-photo (v1) draft on disk is migrated into the photos array instead of being discarded', async () => {
+  const adapter = memoryAdapter();
+  adapter.data.set('kalakar_product_draft_v1:artisan-a', JSON.stringify({
+    version: 1,
+    draft: { mediaId: 'photo-1', photoUri: '/uploads/photo.jpg', gallery: [{ key: 'enhanced', label: 'Enhanced', url: '/uploads/photo-enhanced.jpg' }],
+      title: null, description: null, attributes: null, keywords: [], price: '1500', quantity: '2',
+      transcript: '', recordingUri: null, sourceLanguage: 'hi' },
+  }));
+  const restored = await createDraftStore(adapter).load('artisan-a');
+  assert.deepEqual(restored.photos, [{ mediaId: 'photo-1', photoUri: '/uploads/photo.jpg',
+    gallery: [{ key: 'enhanced', label: 'Enhanced', url: '/uploads/photo-enhanced.jpg' }] }]);
+  assert.equal(restored.price, '1500');
 });
 
 test('drafts are isolated by account and reset does not clear another account', async () => {
