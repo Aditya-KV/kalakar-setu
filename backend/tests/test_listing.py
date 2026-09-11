@@ -6,6 +6,8 @@ import pytest
 from datetime import datetime, timezone
 from httpx import AsyncClient, ASGITransport
 from app.main import app
+from app.db.session import async_session_factory
+from app.models.media import ProductImage
 
 
 def _client() -> AsyncClient:
@@ -125,6 +127,54 @@ async def test_listing_stats_counts_active_listings():
         data = stats_after.json()
         assert data["active_listings"] == 2
         assert data["total_listings"] == 2
+
+
+async def _create_product_image(user_id: str, url: str) -> str:
+    async with async_session_factory() as session:
+        image = ProductImage(user_id=user_id, original_url=url, bg_removed_url=url)
+        session.add(image)
+        await session.commit()
+        return image.id
+
+
+@pytest.mark.asyncio
+async def test_create_listing_with_multiple_photos():
+    async with _client() as ac:
+        headers = await _auth_headers(ac)
+        user_id = (await ac.get("/api/v1/profile", headers=headers)).json()["id"]
+
+        media_id_1 = await _create_product_image(user_id, "/uploads/photo-1.jpg")
+        media_id_2 = await _create_product_image(user_id, "/uploads/photo-2.jpg")
+
+        create_res = await ac.post(
+            "/api/v1/listings",
+            json=_sample_listing_body(media_ids=[media_id_1, media_id_2]),
+            headers=headers,
+        )
+        assert create_res.status_code == 200
+        created = create_res.json()
+        assert [g["url"] for g in created["gallery"]] == ["/uploads/photo-1.jpg", "/uploads/photo-2.jpg"]
+        assert created["primary_image_url"] == "/uploads/photo-1.jpg"
+
+
+@pytest.mark.asyncio
+async def test_create_listing_skips_photos_owned_by_another_user():
+    async with _client() as ac:
+        headers = await _auth_headers(ac)
+        other_headers = await _auth_headers(ac)
+        other_user_id = (await ac.get("/api/v1/profile", headers=other_headers)).json()["id"]
+
+        foreign_media_id = await _create_product_image(other_user_id, "/uploads/not-yours.jpg")
+
+        create_res = await ac.post(
+            "/api/v1/listings",
+            json=_sample_listing_body(media_ids=[foreign_media_id]),
+            headers=headers,
+        )
+        assert create_res.status_code == 200
+        created = create_res.json()
+        assert created["gallery"] == []
+        assert created["primary_image_url"] is None
 
 
 @pytest.mark.asyncio

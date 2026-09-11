@@ -13,21 +13,28 @@ from app.schemas.listing import ListingCreateRequest, ListingUpdateRequest, List
 
 
 async def create_listing(db: AsyncSession, user_id: str, body: ListingCreateRequest) -> Listing:
-    """Creates a published listing, pulling the photo gallery from the given
-    media_id if it belongs to this user. A missing/invalid media_id still
-    creates the listing (no photos) rather than failing the whole publish."""
-    primary_image_url = None
+    """Creates a published listing, pulling one representative photo per
+    given media_id (in the order the artisan added them) into the listing's
+    gallery, skipping any that don't exist or don't belong to this user.
+    Missing/invalid media_ids still create the listing (fewer/no photos)
+    rather than failing the whole publish."""
     gallery: list = []
+    first_media_id: str | None = None
 
-    if body.media_id:
-        media = await db.get(ProductImage, body.media_id)
-        if media and media.user_id == user_id:
-            gallery = media.gallery or []
-            primary_image_url = media.bg_removed_url or media.enhanced_url or media.original_url
+    for media_id in body.media_ids:
+        media = await db.get(ProductImage, media_id)
+        if not media or media.user_id != user_id:
+            continue
+        photo_url = media.bg_removed_url or media.enhanced_url or media.original_url
+        gallery.append({"key": media.id, "label": "", "url": photo_url})
+        if first_media_id is None:
+            first_media_id = media.id
+
+    primary_image_url = gallery[0]["url"] if gallery else None
 
     listing = Listing(
         user_id=user_id,
-        media_id=body.media_id if gallery else None,
+        media_id=first_media_id,
         title_en=body.title.en,
         title_hi=body.title.hi,
         title_mr=body.title.mr,

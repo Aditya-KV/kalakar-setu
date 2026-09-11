@@ -25,7 +25,7 @@ class GalleryVariant(BaseModel):
 
 
 class ListingCreateRequest(BaseModel):
-    media_id: str | None = None
+    media_ids: list[str] = []
     title: BilingualText
     description: BilingualText
     craft_type: str | None = None
