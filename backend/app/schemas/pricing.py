@@ -20,6 +20,13 @@ class PriceReasoning(BaseModel):
     hi: str
 
 
+class ReferencePrices(BaseModel):
+    median: int
+    min: int
+    max: int
+    sample_size: int
+
+
 class PricePredictionResponse(BaseModel):
     available: bool
     suggested_price: Optional[int] = None
@@ -28,3 +35,7 @@ class PricePredictionResponse(BaseModel):
     reasoning: Optional[PriceReasoning] = None
     confidence: Optional[str] = None
     generated_by: Optional[str] = None
+    # Real seller listing prices found online for this craft category, when
+    # available — None when no live reference data was found (the estimate
+    # is then from general AI knowledge alone).
+    reference_prices: Optional[ReferencePrices] = None

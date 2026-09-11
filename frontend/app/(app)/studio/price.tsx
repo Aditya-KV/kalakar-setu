@@ -43,6 +43,7 @@ export default function PriceScreen() {
     price_range_max: number;
     reasoning: { en: string; hi: string };
     confidence: string;
+    reference_prices?: { median: number; min: number; max: number; sample_size: number } | null;
   }
   const [suggestion, setSuggestion] = useState<PriceSuggestion | null>(null);
   const [predicting, setPredicting] = useState(false);
@@ -68,7 +69,7 @@ export default function PriceScreen() {
         media_ids: draft.photos.map((photo) => photo.mediaId).filter((id): id is string => !!id),
         title: draft.title,
         description: draft.description,
-        craft_type: user?.craft_types?.[0] || null,
+        craft_type: draft.craftType || user?.craft_types?.[0] || null,
         attributes: draft.attributes || { material: [], color: [], technique: [] },
         keywords: draft.keywords,
         price: priceNumber,
@@ -97,7 +98,7 @@ export default function PriceScreen() {
     setSuggestion(null);
     try {
       const res = await apiClient.post('/pricing/predict', {
-        craft_type: user?.craft_types?.[0] || null,
+        craft_type: draft.craftType || user?.craft_types?.[0] || null,
         title_en: draft.title.en,
         description_en: draft.description.en,
         materials: draft.attributes?.material || [],
@@ -170,6 +171,13 @@ export default function PriceScreen() {
             <Text style={styles.summarySubtitle} numberOfLines={1}>
               {draft.photos.length > 0 ? t('studio.photosAttached', { count: draft.photos.length }) : t('studio.savedOnDevice')}
             </Text>
+            {draft.craftType && (
+              <View style={styles.craftTypeBadge}>
+                <Text style={styles.craftTypeBadgeText} numberOfLines={1}>
+                  {draft.craftType.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}
+                </Text>
+              </View>
+            )}
           </View>
         </Animated.View>
 
@@ -212,6 +220,17 @@ export default function PriceScreen() {
               <Text style={styles.suggestionReasoning}>
                 {i18n.language.split('-')[0] === 'hi' ? suggestion.reasoning.hi : suggestion.reasoning.en}
               </Text>
+              {suggestion.reference_prices && (
+                <View style={styles.referencePricesBadge}>
+                  <Text style={styles.referencePricesText}>
+                    {t('studio.priceGroundedIn', {
+                      count: suggestion.reference_prices.sample_size,
+                      min: suggestion.reference_prices.min.toLocaleString('en-IN'),
+                      max: suggestion.reference_prices.max.toLocaleString('en-IN'),
+                    })}
+                  </Text>
+                </View>
+              )}
               <TouchableOpacity
                 style={styles.suggestionUseButton}
                 onPress={() => setPrice(String(suggestion.suggested_price))}
@@ -331,6 +350,19 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     marginTop: 4,
     lineHeight: 18,
   },
+  referencePricesBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: colors.surfaceElevated,
+    borderRadius: BorderRadius.sm,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    marginTop: 6,
+  },
+  referencePricesText: {
+    fontSize: 10,
+    fontWeight: FontWeight.semibold,
+    color: colors.textSecondary,
+  },
   suggestionUseButton: {
     alignSelf: 'flex-start',
     backgroundColor: colors.primaryTint,
@@ -380,6 +412,19 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   },
   summaryText: {
     flex: 1,
+  },
+  craftTypeBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: colors.primaryTint,
+    borderRadius: BorderRadius.round,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    marginTop: 6,
+  },
+  craftTypeBadgeText: {
+    fontSize: FontSize.xs,
+    fontWeight: FontWeight.bold,
+    color: colors.primary,
   },
   photoStrip: {
     flexGrow: 0,

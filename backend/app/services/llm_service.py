@@ -30,22 +30,30 @@ SOURCE_LANGUAGE_NAMES = {
 REQUIRED_ATTRIBUTE_GROUPS = ("material", "color", "technique")
 
 
+KNOWN_CRAFT_CATEGORIES = (
+    "pottery", "weaving", "embroidery", "woodwork", "metalwork", "painting",
+    "bamboo", "leather", "stone", "block_print", "jewelry", "papier_mache",
+)
+
+
 def _build_prompt(transcript: str, source_language: str, craft_type: str | None) -> str:
     language_name = SOURCE_LANGUAGE_NAMES.get(source_language, source_language)
-    craft_line = craft_type or "not specified"
+    seller_craft_line = craft_type or "not specified"
+    known_categories = ", ".join(KNOWN_CRAFT_CATEGORIES)
     return f"""You are structuring a spoken product description from an Indian artisan into an e-commerce catalog listing.
 
 The artisan spoke in {language_name}. Raw transcript (verbatim, may contain speech-recognition errors):
 "{transcript}"
 
-Craft type: {craft_line}
+The seller's own registered craft specialty (for context only — the item being described in THIS transcript may be a completely different craft, so do not just copy this): {seller_craft_line}
 
 Return ONLY a JSON object with exactly this shape, nothing else:
 {{
   "title": {{"en": "...", "hi": "...", "mr": "..."}},
   "description": {{"en": "...", "hi": "...", "mr": "..."}},
   "attributes": {{"material": ["..."], "color": ["..."], "technique": ["..."]}},
-  "keywords": ["..."]
+  "keywords": ["..."],
+  "craft_type": "..."
 }}
 
 Rules:
@@ -53,6 +61,7 @@ Rules:
 - description: a polished 2-4 sentence marketplace description in English, Hindi, and Marathi, based only on what the artisan actually said — you may rephrase for clarity and marketplace appeal, but do not add materials, colors, techniques, prices, or claims that are not present in or clearly implied by the transcript.
 - attributes: list only material/color/technique words actually mentioned or clearly implied by the transcript. Use empty arrays for anything not mentioned — never guess.
 - keywords: 5-10 relevant English search keywords, deduplicated, lowercase.
+- craft_type: your own best-guess classification of THIS specific item, based only on what the transcript describes it as being made of/how it's made — never from the seller's registered specialty above. Use one of these common categories when it genuinely fits: {known_categories}. If the item clearly doesn't fit any of them (e.g. a musical instrument, a toy, a candle, glasswork), invent a short new lowercase_with_underscores English category that fits it instead — do not force it into one of the listed ones. If the transcript gives no real indication of what kind of craft it is, use an empty string.
 - If the transcript is too short or unclear to extract a field confidently, use an empty string or empty array for that field rather than inventing content.
 - Output valid JSON only — no markdown code fences, no commentary."""
 
@@ -69,6 +78,8 @@ def _normalize(data: dict) -> dict | None:
             for group in REQUIRED_ATTRIBUTE_GROUPS
         }
         keywords = [str(k).strip() for k in data.get("keywords", []) if str(k).strip()]
+        craft_type_raw = str(data.get("craft_type") or "").strip().lower().replace(" ", "_")
+        craft_type = craft_type_raw or None
 
         title_en = str(title["en"]).strip()
         title_hi = str(title["hi"]).strip()
@@ -90,6 +101,7 @@ def _normalize(data: dict) -> dict | None:
             "description": normalized_description,
             "attributes": attributes,
             "keywords": keywords,
+            "craft_type": craft_type,
         }
     except (KeyError, TypeError, ValueError) as e:
         logger.warning(f"LLM response had an unusable shape: {e}")
@@ -177,6 +189,7 @@ def _build_price_prompt(
     materials: list[str],
     state_name: str | None,
     district_name: str | None,
+    reference_prices: dict | None,
 ) -> str:
     craft_line = craft_type or "handicraft"
     materials_line = ", ".join(materials) if materials else "not specified"
@@ -184,6 +197,16 @@ def _build_price_prompt(
         f"{district_name}, {state_name}, India" if district_name and state_name
         else (state_name + ", India" if state_name else "India (exact region not specified)")
     )
+    if reference_prices:
+        reference_line = (
+            f"Real listing prices found online just now for this craft category "
+            f"({reference_prices['sample_size']} similar items on an Indian wholesale/handicraft "
+            f"marketplace): ranging from ₹{reference_prices['min']} to ₹{reference_prices['max']}, "
+            f"median ₹{reference_prices['median']}. Use this as real market grounding — weigh it "
+            f"heavily alongside the item's own specifics, rather than estimating from category knowledge alone."
+        )
+    else:
+        reference_line = "No real-time reference listings were found for this category — estimate from general category/market knowledge."
     return f"""You are helping an Indian artisan price a handmade product fairly for direct-to-customer sale.
 
 Craft type: {craft_line}
@@ -192,7 +215,9 @@ Title: {title_en}
 Description: {description_en}
 Artisan's region: {location_line}
 
-Estimate a fair, realistic price in Indian Rupees (INR) for ONE unit of this handmade item, as it would typically sell for directly from an artisan (not inflated export/boutique pricing, not a mass-manufactured factory price). Consider the craft type, materials, apparent complexity, and typical local cost of living/market rates for the given region if specified.
+{reference_line}
+
+Estimate a fair, realistic price in Indian Rupees (INR) for ONE unit of this handmade item, as it would typically sell for directly from an artisan (not inflated export/boutique pricing, not a mass-manufactured factory price). Consider the craft type, materials, apparent complexity, the reference listings above (if any), and typical local cost of living/market rates for the given region if specified.
 
 Return ONLY a JSON object with exactly this shape, nothing else:
 {{
@@ -205,9 +230,9 @@ Return ONLY a JSON object with exactly this shape, nothing else:
 
 Rules:
 - suggested_price must fall within [price_range_min, price_range_max].
-- reasoning: one short sentence (in English and Hindi) explaining the main factors behind the estimate (e.g. materials, craft complexity, typical regional pricing) — plain language for a seller, not a market report.
-- confidence: "low" if the craft type/materials/description give little to go on, "high" only if they're specific and typical for a well-known craft category.
-- This is a general estimate, not real-time market data — do not claim otherwise in the reasoning.
+- reasoning: one short sentence (in English and Hindi) explaining the main factors behind the estimate (e.g. materials, craft complexity, similar listing prices, typical regional pricing) — plain language for a seller, not a market report.
+- confidence: "low" if the craft type/materials/description give little to go on, "medium" if reasonable but ungrounded, "high" only when real reference listings were provided above and this item is typical for that category.
+- If reference listings were provided above, do not claim "not real-time market data" in the reasoning — it partially is. If none were provided, make clear this is a general estimate.
 - Output valid JSON only — no markdown code fences, no commentary."""
 
 
@@ -247,13 +272,13 @@ def _normalize_price(data: dict) -> dict | None:
 
 def _predict_price_via_groq(
     craft_type: str | None, title_en: str, description_en: str, materials: list[str],
-    state_name: str | None, district_name: str | None,
+    state_name: str | None, district_name: str | None, reference_prices: dict | None,
 ) -> dict | None:
     client = _get_groq_client()
     if client is None:
         return None
     try:
-        prompt = _build_price_prompt(craft_type, title_en, description_en, materials, state_name, district_name)
+        prompt = _build_price_prompt(craft_type, title_en, description_en, materials, state_name, district_name, reference_prices)
         completion = client.chat.completions.create(
             model=settings.GROQ_MODEL,
             messages=[{"role": "user", "content": prompt}],
@@ -269,7 +294,7 @@ def _predict_price_via_groq(
 
 def _predict_price_via_gemini(
     craft_type: str | None, title_en: str, description_en: str, materials: list[str],
-    state_name: str | None, district_name: str | None,
+    state_name: str | None, district_name: str | None, reference_prices: dict | None,
 ) -> dict | None:
     client = _get_gemini_client()
     if client is None:
@@ -277,7 +302,7 @@ def _predict_price_via_gemini(
     try:
         from google.genai import types
 
-        prompt = _build_price_prompt(craft_type, title_en, description_en, materials, state_name, district_name)
+        prompt = _build_price_prompt(craft_type, title_en, description_en, materials, state_name, district_name, reference_prices)
         response = client.models.generate_content(
             model=settings.GEMINI_MODEL,
             contents=prompt,
@@ -303,22 +328,32 @@ def predict_price(
 ) -> dict | None:
     """
     Estimates a fair INR price for a handmade product via whichever LLM
-    provider is configured (Groq tried first, then Gemini). This is a
-    general AI estimate based on craft type/materials/region — not
-    real-time market data. Returns None (never raises, never fabricates a
-    partial result) if no provider is configured or every configured
-    provider fails; the caller must treat that as "prediction unavailable,"
-    not silently substitute a guessed number.
+    provider is configured (Groq tried first, then Gemini). When the craft
+    category is one we have a live reference-price mapping for (see
+    price_research_service), real listing prices scraped from an Indian
+    handicraft marketplace are folded into the prompt so the estimate is
+    grounded in actual market data rather than category knowledge alone —
+    otherwise it's a general AI estimate. Returns None (never raises, never
+    fabricates a partial result) if no provider is configured or every
+    configured provider fails; the caller must treat that as "prediction
+    unavailable," not silently substitute a guessed number.
     """
     materials = materials or []
 
-    result = _predict_price_via_groq(craft_type, title_en, description_en, materials, state_name, district_name)
-    if result:
-        return {**result, "generated_by": "groq"}
+    from app.services import price_research_service
+    reference_prices = price_research_service.find_reference_prices(craft_type)
 
-    result = _predict_price_via_gemini(craft_type, title_en, description_en, materials, state_name, district_name)
+    result = _predict_price_via_groq(
+        craft_type, title_en, description_en, materials, state_name, district_name, reference_prices
+    )
     if result:
-        return {**result, "generated_by": "gemini"}
+        return {**result, "generated_by": "groq", "reference_prices": reference_prices}
+
+    result = _predict_price_via_gemini(
+        craft_type, title_en, description_en, materials, state_name, district_name, reference_prices
+    )
+    if result:
+        return {**result, "generated_by": "gemini", "reference_prices": reference_prices}
 
     return None
 

@@ -37,6 +37,10 @@ class StructureResponse(BaseModel):
     description: BilingualText
     attributes: ProductAttributes
     keywords: list[str] = []
+    # Best-guess craft category inferred from the transcript itself (not
+    # limited to a fixed list — a new/uncommon craft is returned as-is).
+    # None when the transcript gives too little to go on.
+    craft_type: str | None = None
     # "gemini" when the AI-structured pipeline produced this listing,
     # "keyword_fallback" when it fell back to the deterministic pipeline
     # (no API key configured, or the Gemini call failed).

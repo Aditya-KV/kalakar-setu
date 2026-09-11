@@ -305,6 +305,7 @@
     "priceSuggestionLoading": "Estimating a fair price...",
     "priceSuggestionRange": "₹{{min}} – ₹{{max}}",
     "priceSuggestionUse": "Use ₹{{price}}",
+    "priceGroundedIn": "Based on {{count}} similar listings found online (₹{{min}} – ₹{{max}})",
     "priceSuggestionDisclaimer": "AI estimate based on craft type, materials, and your region — not real-time market data.",
     "priceSuggestionUnavailable": "Price suggestion isn't available right now — you can still set your own price.",
     "priceSuggestionFailed": "Couldn't get a price suggestion. You can still set your own price.",

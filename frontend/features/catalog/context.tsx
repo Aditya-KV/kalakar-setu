@@ -17,7 +17,7 @@ interface CatalogDraftContextType {
   updateDraft: (patch: Partial<DraftListing>) => void;
   addPhoto: (photo: DraftPhoto) => void;
   removePhoto: (index: number) => void;
-  setVoiceStep: (data: Pick<DraftListing, 'title' | 'description' | 'attributes' | 'keywords'>) => void;
+  setVoiceStep: (data: Pick<DraftListing, 'title' | 'description' | 'attributes' | 'keywords' | 'craftType'>) => void;
   resetDraft: () => Promise<void>;
 }
 

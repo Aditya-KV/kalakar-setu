@@ -305,6 +305,7 @@
     "priceSuggestionLoading": "उचित कीमत का अनुमान लगाया जा रहा है...",
     "priceSuggestionRange": "₹{{min}} – ₹{{max}}",
     "priceSuggestionUse": "₹{{price}} उपयोग करें",
+    "priceGroundedIn": "ऑनलाइन मिली {{count}} समान वस्तुओं पर आधारित (₹{{min}} – ₹{{max}})",
     "priceSuggestionDisclaimer": "यह AI का अनुमान है — शिल्प प्रकार, सामग्री और आपके क्षेत्र पर आधारित, वास्तविक बाज़ार डेटा नहीं।",
     "priceSuggestionUnavailable": "अभी मूल्य सुझाव उपलब्ध नहीं है — आप अपनी कीमत खुद तय कर सकते हैं।",
     "priceSuggestionFailed": "मूल्य सुझाव नहीं मिल सका। आप अपनी कीमत खुद तय कर सकते हैं।",

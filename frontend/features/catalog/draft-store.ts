@@ -6,6 +6,10 @@ export interface DraftListing {
   photos: DraftPhoto[];
   title: ProductText | null;
   description: ProductText | null;
+  // Best-guess craft category inferred from the voice description (not
+  // limited to a fixed list). Falls back to the seller's own registered
+  // craft at publish time only when this is still null.
+  craftType: string | null;
   attributes: { material: string[]; color: string[]; technique: string[] } | null;
   keywords: string[];
   price: string;
@@ -16,7 +20,7 @@ export interface DraftListing {
 }
 
 export const emptyDraft = (): DraftListing => ({
-  photos: [], title: null, description: null,
+  photos: [], title: null, description: null, craftType: null,
   attributes: null, keywords: [], price: '', quantity: '1', transcript: '',
   recordingUri: null, sourceLanguage: 'hi',
 });

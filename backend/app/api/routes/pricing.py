@@ -61,4 +61,5 @@ async def predict_price(
         reasoning=prediction["reasoning"],
         confidence=prediction["confidence"],
         generated_by=prediction["generated_by"],
+        reference_prices=prediction.get("reference_prices"),
     )

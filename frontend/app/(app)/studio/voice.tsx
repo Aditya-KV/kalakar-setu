@@ -72,6 +72,7 @@ interface StructuredListing {
   description: { en: string; hi: string; mr?: string | null };
   attributes: { material: string[]; color: string[]; technique: string[] };
   keywords: string[];
+  craft_type?: string | null;
   generated_by?: string;
 }
 
@@ -245,6 +246,7 @@ export default function VoiceDescriptionScreen() {
         description: res.data.description,
         attributes: res.data.attributes,
         keywords: res.data.keywords,
+        craftType: res.data.craft_type || null,
       });
       setStatus('result');
     } catch (e) {
@@ -256,7 +258,7 @@ export default function VoiceDescriptionScreen() {
   };
 
   const handleRetry = () => {
-    updateDraft({ title: null, description: null, attributes: null, keywords: [], recordingUri: null });
+    updateDraft({ title: null, description: null, attributes: null, keywords: [], craftType: null, recordingUri: null });
     setTranscriptData(null);
     setEditedTranscript('');
     setManualText('');
