@@ -43,6 +43,13 @@ interface NearbySeller {
   distance_km: number | null;
 }
 
+interface ClusterSummary {
+  id: string;
+  name: string;
+  craft_type: string;
+  state_code: string;
+}
+
 export default function DiscoverScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
@@ -107,6 +114,17 @@ export default function DiscoverScreen() {
       })
       .catch(() => {
         // Offline or unreachable — keep the fallback list.
+      });
+  }, []);
+
+  const [clusters, setClusters] = useState<ClusterSummary[]>([]);
+
+  useEffect(() => {
+    apiClient
+      .get('/reference/clusters')
+      .then((res) => setClusters(res.data))
+      .catch(() => {
+        // Offline or unreachable — browse row simply doesn't render.
       });
   }, []);
 
@@ -250,6 +268,31 @@ export default function DiscoverScreen() {
           })}
         </ScrollView>
       </Animated.View>
+
+      {clusters.length > 0 && (
+        <Animated.View entering={FadeIn.duration(220)}>
+          <Text style={styles.clusterSectionTitle}>{t('customer.craftClustersTitle')}</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.clusterRow}
+          >
+            {clusters.map((item) => {
+              const ClusterIcon = getCraftIcon(item.craft_type);
+              return (
+                <AnimatedPressable
+                  key={item.id}
+                  style={styles.clusterCard}
+                  onPress={() => router.push(`/(app)/cluster/${item.id}` as any)}
+                >
+                  <ClusterIcon size={18} color={colors.primary} strokeWidth={2} />
+                  <Text style={styles.clusterCardText} numberOfLines={2}>{item.name}</Text>
+                </AnimatedPressable>
+              );
+            })}
+          </ScrollView>
+        </Animated.View>
+      )}
 
       {!loading && listings.length > 0 && (
         <Text style={styles.resultsCount}>
@@ -437,6 +480,39 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   },
   chipTextActive: {
     color: colors.textOnPrimary,
+  },
+  clusterSectionTitle: {
+    fontSize: FontSize.xs,
+    fontWeight: FontWeight.bold,
+    color: colors.textSecondary,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    paddingHorizontal: Spacing.lg,
+    marginTop: Spacing.xs,
+    marginBottom: 6,
+  },
+  clusterRow: {
+    flexDirection: 'row',
+    gap: 8,
+    paddingHorizontal: Spacing.lg,
+    paddingBottom: Spacing.sm,
+  },
+  clusterCard: {
+    width: 130,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    padding: Spacing.sm,
+    borderRadius: BorderRadius.md,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  clusterCardText: {
+    flex: 1,
+    fontSize: 11,
+    fontWeight: FontWeight.semibold,
+    color: colors.textPrimary,
   },
   resultsCount: {
     fontSize: FontSize.xs,

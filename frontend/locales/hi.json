@@ -195,7 +195,13 @@
     "trackingWaiting": "विक्रेता के डिलीवरी शुरू करने का इंतज़ार है...",
     "trackingDelivered": "यह ऑर्डर डिलीवर हो चुका है।",
     "trackingLastUpdated": "अंतिम बार अपडेट किया गया {{time}}",
-    "locationPermissionRequired": "मैप दिखाने के लिए लोकेशन एक्सेस आवश्यक है।"
+    "locationPermissionRequired": "मैप दिखाने के लिए लोकेशन एक्सेस आवश्यक है।",
+    "craftClustersTitle": "शिल्प समूह",
+    "clusterMembersCount_one": "{{count}} विक्रेता",
+    "clusterMembersCount_other": "{{count}} विक्रेता",
+    "clusterListingsTitle": "इस समूह से",
+    "clusterMembersTitle": "इस समूह के कारीगर",
+    "clusterEmptyListings": "इस समूह से अभी कोई सूची नहीं है।"
   },
   "listings": {
     "title": "मेरे उत्पाद",
@@ -227,6 +233,7 @@
     "logout": "लॉग आउट करें",
     "deactivate": "खाता निष्क्रिय करें",
     "deactivateConfirm": "क्या आप वाकई अपना खाता निष्क्रिय करना चाहते हैं?",
+    "myClusterTitle": "आपका शिल्प समूह",
     "storyTitle": "मेरी कहानी",
     "storyBody": "हर वस्तु मेरे पूर्वजों की कहानियाँ समेटे है। मैं मिट्टी और प्राकृतिक रंगों को कपड़े पर जीवंत करता हूँ।",
     "appearance": "रूप",

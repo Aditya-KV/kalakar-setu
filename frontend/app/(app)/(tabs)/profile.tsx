@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import Animated, { FadeInDown, ZoomIn } from 'react-native-reanimated';
-import { User, Camera, Check, Clock, MapPin, Sun, Moon, MonitorSmartphone, ArrowLeftRight } from 'lucide-react-native';
+import { User, Camera, Check, Clock, MapPin, Sun, Moon, MonitorSmartphone, ArrowLeftRight, Users } from 'lucide-react-native';
 import { useAuth } from '../../../features/auth/hooks';
 import { useTheme } from '../../../features/theme/context';
 import { useAppMode } from '../../../features/appMode/context';
@@ -14,6 +14,13 @@ import { Button } from '../../../components/ui/Button';
 import { AnimatedPressable } from '../../../components/ui/AnimatedPressable';
 import { apiClient } from '../../../lib/api-client';
 import { SellerReadiness } from '../../../types';
+
+interface ClusterSummary {
+  id: string;
+  name: string;
+  story: string;
+  member_craft_names: string[] | null;
+}
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -35,6 +42,7 @@ export default function ProfileScreen() {
   ];
 
   const [readiness, setReadiness] = useState<SellerReadiness | null>(null);
+  const [cluster, setCluster] = useState<ClusterSummary | null>(null);
 
   useEffect(() => {
     const fetchReadiness = async () => {
@@ -47,6 +55,17 @@ export default function ProfileScreen() {
     };
     fetchReadiness();
   }, []);
+
+  useEffect(() => {
+    if (!user?.cluster_id) {
+      setCluster(null);
+      return;
+    }
+    apiClient
+      .get(`/reference/clusters/${user.cluster_id}`)
+      .then((res) => setCluster(res.data))
+      .catch(() => setCluster(null));
+  }, [user?.cluster_id]);
 
   const handleLogout = () => {
     Alert.alert(t('profile.logout'), t('profile.deactivateConfirm'), [
@@ -135,6 +154,18 @@ export default function ProfileScreen() {
             ))}
           </View>
         </Animated.View>
+
+        {/* Craft Cluster (auto-assigned from craft + location) */}
+        {cluster && (
+          <Animated.View entering={FadeInDown.delay(130).duration(320)} style={styles.clusterCard}>
+            <View style={styles.clusterHeaderRow}>
+              <Users size={16} color={colors.primary} strokeWidth={2} />
+              <Text style={styles.readinessTitle}>{t('profile.myClusterTitle')}</Text>
+            </View>
+            <Text style={styles.clusterName}>{cluster.name}</Text>
+            <Text style={styles.clusterStory} numberOfLines={4}>{cluster.story}</Text>
+          </Animated.View>
+        )}
 
         {/* Switch to Customer/Buying mode */}
         <Animated.View entering={FadeInDown.delay(150).duration(320)}>
@@ -310,6 +341,31 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   checkTextPending: {
     fontSize: FontSize.xs,
     color: colors.textSecondary,
+  },
+  clusterCard: {
+    backgroundColor: colors.primaryTint,
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.lg,
+    marginBottom: Spacing.lg,
+    borderWidth: 1,
+    borderColor: colors.primaryLight,
+  },
+  clusterHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: Spacing.xs,
+  },
+  clusterName: {
+    fontSize: FontSize.md,
+    fontWeight: FontWeight.bold,
+    color: colors.primary,
+    marginBottom: 4,
+  },
+  clusterStory: {
+    fontSize: FontSize.xs,
+    color: colors.textSecondary,
+    lineHeight: 18,
   },
   switchCard: {
     flexDirection: 'row',

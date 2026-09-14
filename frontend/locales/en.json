@@ -195,7 +195,13 @@
     "trackingWaiting": "Waiting for the seller to start delivery...",
     "trackingDelivered": "This order has been delivered.",
     "trackingLastUpdated": "Last updated {{time}}",
-    "locationPermissionRequired": "Location access is required to show the map."
+    "locationPermissionRequired": "Location access is required to show the map.",
+    "craftClustersTitle": "Craft Clusters",
+    "clusterMembersCount_one": "{{count}} seller",
+    "clusterMembersCount_other": "{{count}} sellers",
+    "clusterListingsTitle": "From this cluster",
+    "clusterMembersTitle": "Artisans in this cluster",
+    "clusterEmptyListings": "No listings from this cluster yet."
   },
   "listings": {
     "title": "My Products",
@@ -229,6 +235,7 @@
     "deactivateConfirm": "Are you sure you want to deactivate your account?",
     "storyTitle": "My Story",
     "storyBody": "Every piece carries the stories of my ancestors. I bring clay and natural dyes to life on fabric.",
+    "myClusterTitle": "Your Craft Cluster",
     "appearance": "Appearance",
     "themeLight": "Light",
     "themeDark": "Dark",

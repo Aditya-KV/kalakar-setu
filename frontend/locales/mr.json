@@ -195,7 +195,13 @@
     "trackingWaiting": "विक्रेता डिलिव्हरी सुरू करण्याची वाट पाहत आहे...",
     "trackingDelivered": "ही ऑर्डर डिलिव्हर झाली आहे.",
     "trackingLastUpdated": "शेवटचे अपडेट {{time}}",
-    "locationPermissionRequired": "नकाशा दाखवण्यासाठी लोकेशन अ‍ॅक्सेस आवश्यक आहे."
+    "locationPermissionRequired": "नकाशा दाखवण्यासाठी लोकेशन अ‍ॅक्सेस आवश्यक आहे.",
+    "craftClustersTitle": "कला समूह",
+    "clusterMembersCount_one": "{{count}} विक्रेता",
+    "clusterMembersCount_other": "{{count}} विक्रेते",
+    "clusterListingsTitle": "या समूहातील",
+    "clusterMembersTitle": "या समूहातील कारागीर",
+    "clusterEmptyListings": "या समूहाकडून अजून कोणतीही यादी नाही."
   },
   "listings": {
     "title": "माझी उत्पादने",
@@ -227,6 +233,7 @@
     "logout": "लॉग आउट करा",
     "deactivate": "खाते निष्क्रिय करा",
     "deactivateConfirm": "तुम्हाला खरोखर तुमचे खाते निष्क्रिय करायचे आहे का?",
+    "myClusterTitle": "तुमचा कला समूह",
     "storyTitle": "माझी कथा",
     "storyBody": "प्रत्येक वस्तू माझ्या पूर्वजांच्या कथा सांगते. मी माती आणि नैसर्गिक रंगांना कापडावर जिवंत करतो.",
     "appearance": "रूप",

@@ -10,6 +10,7 @@ export interface UserProfile {
   craft_types: string[];
   state_code: string | null;
   district_code: string | null;
+  cluster_id?: string | null;
   onboarding_step: number;
   onboarding_completed: boolean;
   is_active: boolean;

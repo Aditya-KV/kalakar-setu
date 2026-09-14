@@ -16,6 +16,7 @@ class ProfileResponse(BaseModel):
     craft_types: list[str]
     state_code: str | None
     district_code: str | None
+    cluster_id: str | None = None
     onboarding_step: int
     onboarding_completed: bool
     is_active: bool
