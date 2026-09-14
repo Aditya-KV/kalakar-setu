@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.user import User
 from app.models.consent import ConsentRecord
+from app.services import cluster_service
 
 
 async def get_profile(db: AsyncSession, user_id: str) -> User | None:
@@ -28,9 +29,15 @@ async def update_profile(db: AsyncSession, user_id: str, data: dict) -> User | N
         "display_name", "preferred_language", "craft_types",
         "state_code", "district_code"
     }
+    location_or_craft_changed = False
     for key, value in data.items():
         if key in allowed_fields and value is not None:
             setattr(user, key, value)
+            if key in ("craft_types", "state_code"):
+                location_or_craft_changed = True
+
+    if location_or_craft_changed:
+        await cluster_service.assign_cluster(db, user)
 
     user.updated_at = datetime.now(timezone.utc)
     return user
@@ -69,9 +76,15 @@ async def update_onboarding(db: AsyncSession, user_id: str, data: dict) -> User 
         "display_name", "preferred_language", "craft_types",
         "state_code", "district_code"
     }
+    location_or_craft_changed = False
     for key, value in data.items():
         if key in profile_fields and value is not None:
             setattr(user, key, value)
+            if key in ("craft_types", "state_code"):
+                location_or_craft_changed = True
+
+    if location_or_craft_changed:
+        await cluster_service.assign_cluster(db, user)
 
     # Mark completed if flagged
     if data.get("completed"):

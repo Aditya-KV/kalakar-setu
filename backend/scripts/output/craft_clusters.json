@@ -1,0 +1,1693 @@
+[
+  {
+    "craft_type": "bamboo",
+    "state_code": "UP",
+    "name": "Uttar Pradesh Bamboo & Cane Cluster",
+    "story": "A community of bamboo & cane artisans in Uttar Pradesh, known for Bareilly Cane and Bamboo.",
+    "member_craft_names": [
+      "Bareilly Cane and Bamboo"
+    ],
+    "source_items": [
+      {
+        "name": "Bareilly Cane and Bamboo",
+        "wiki_url": "https://en.wikipedia.org/wiki/Bareilly_Cane_and_Bamboo?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "block_print",
+    "state_code": "GJ",
+    "name": "Gujarat Block Printing Cluster",
+    "story": "A community of block printing artisans in Gujarat, known for Ahmedabad Sodagari Block Print, Kutch Ajrakh.",
+    "member_craft_names": [
+      "Ahmedabad Sodagari Block Print",
+      "Kutch Ajrakh"
+    ],
+    "source_items": [
+      {
+        "name": "Ahmedabad Sodagari Block Print",
+        "wiki_url": "https://en.wikipedia.org/wiki/Ahmedabad_Sodagari_Block_Print?action=edit&redlink=1"
+      },
+      {
+        "name": "Kutch Ajrakh",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kutch_Ajrakh?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "block_print",
+    "state_code": "MP",
+    "name": "Madhya Pradesh Block Printing Cluster",
+    "story": "The origins of the Bagh print are uncertain, but it is believed that the practice is over 1,000 years old, with the techniques having been handed down through family practice from generation to generation. It is possible that the craft traveled with settlers from. The origins of the Bagh print are uncertain, but it is believed that the practice is over 1,000 years old, with the techniques having been handed down through family practice from generation to generation. It is possible that the craft traveled with settlers from.",
+    "member_craft_names": [
+      "Bagh Prints of Madhya Pradesh",
+      "Bagh Prints of Madhya Pradesh"
+    ],
+    "source_items": [
+      {
+        "name": "Bagh Prints of Madhya Pradesh",
+        "wiki_url": "https://en.wikipedia.org/wiki/Bagh_Prints_of_Madhya_Pradesh"
+      },
+      {
+        "name": "Bagh Prints of Madhya Pradesh",
+        "wiki_url": "https://en.wikipedia.org/wiki/Bagh_Prints_of_Madhya_Pradesh"
+      }
+    ]
+  },
+  {
+    "craft_type": "block_print",
+    "state_code": "RJ",
+    "name": "Rajasthan Block Printing Cluster",
+    "story": "The tradition of Bagru printing is closely tied to the region of Bagru and its local community, the Chippas. The art form is deeply rooted in local culture and has been practiced by generations of artisans. These artisans utilize hand-carved wooden blocks to print intricate designs on cotton fabrics, a technique that has been passed down through the centuries.",
+    "member_craft_names": [
+      "Sanganeri hand block printing",
+      "Bagru Hand Block Print"
+    ],
+    "source_items": [
+      {
+        "name": "Sanganeri hand block printing",
+        "wiki_url": "https://en.wikipedia.org/wiki/Block_printing_in_India"
+      },
+      {
+        "name": "Bagru Hand Block Print",
+        "wiki_url": "https://en.wikipedia.org/wiki/Bagru_print"
+      }
+    ]
+  },
+  {
+    "craft_type": "block_print",
+    "state_code": "UP",
+    "name": "Uttar Pradesh Block Printing Cluster",
+    "story": "A community of block printing artisans in Uttar Pradesh, known for Banaras Hand Block Print, Pilkhuwa Hand Block Print.",
+    "member_craft_names": [
+      "Banaras Hand Block Print",
+      "Pilkhuwa Hand Block Print"
+    ],
+    "source_items": [
+      {
+        "name": "Banaras Hand Block Print",
+        "wiki_url": "https://en.wikipedia.org/wiki/Banaras_Hand_Block_Print?action=edit&redlink=1"
+      },
+      {
+        "name": "Pilkhuwa Hand Block Print",
+        "wiki_url": "https://en.wikipedia.org/wiki/Pilkhuwa_Hand_Block_Print?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "embroidery",
+    "state_code": "BR",
+    "name": "Bihar Embroidery Cluster",
+    "story": "The Sujani embroidery work of Bihar is protected under the Geographical Indications of Goods (Registration & Protection) Act (GI Act) 1999 of the. The Sujani embroidery work of Bihar is protected under the Geographical Indications of Goods (Registration & Protection) Act (GI Act) 1999 of the.",
+    "member_craft_names": [
+      "Sujini embroidery work of Bihar",
+      "Sujini Embroidery Work of Bihar"
+    ],
+    "source_items": [
+      {
+        "name": "Sujini embroidery work of Bihar",
+        "wiki_url": "https://en.wikipedia.org/wiki/Sujini_embroidery_work_of_Bihar"
+      },
+      {
+        "name": "Sujini Embroidery Work of Bihar",
+        "wiki_url": "https://en.wikipedia.org/wiki/Sujini_embroidery_work_of_Bihar"
+      }
+    ]
+  },
+  {
+    "craft_type": "embroidery",
+    "state_code": "GJ",
+    "name": "Gujarat Embroidery Cluster",
+    "story": "This embroidery product of Kutch has been registered for protection under the List of. This embroidery product of Kutch has been registered for protection under the List of.",
+    "member_craft_names": [
+      "Kutch Embroidery",
+      "Kutch Embroidery",
+      "Gujarat Suf Embroidery"
+    ],
+    "source_items": [
+      {
+        "name": "Kutch Embroidery",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kutch_Embroidery"
+      },
+      {
+        "name": "Kutch Embroidery",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kutch_Embroidery"
+      },
+      {
+        "name": "Gujarat Suf Embroidery",
+        "wiki_url": "https://en.wikipedia.org/wiki/Gujarat_Suf_Embroidery?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "embroidery",
+    "state_code": "KA",
+    "name": "Karnataka Embroidery Cluster",
+    "story": "Kasuti work involves embroidering very intricate patterns like. The group is known by different names in different parts of the country, including Gor Banjara, Baladiya, Gor, Gour Rajput, Rajput Banjara, Ladaniya, Labana, Nayak,.",
+    "member_craft_names": [
+      "Kasuti embroidery",
+      "Sandur Lambani Embroidery"
+    ],
+    "source_items": [
+      {
+        "name": "Kasuti embroidery",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kasuti_embroidery"
+      },
+      {
+        "name": "Sandur Lambani Embroidery",
+        "wiki_url": "https://en.wikipedia.org/wiki/Sandur_Lambani_Embroidery"
+      }
+    ]
+  },
+  {
+    "craft_type": "embroidery",
+    "state_code": "OR",
+    "name": "Odisha Embroidery Cluster",
+    "story": "A community of embroidery artisans in Odisha, known for Kapadaganda: Dungaria Kondh Embroidery Shawl.",
+    "member_craft_names": [
+      "Kapadaganda: Dungaria Kondh Embroidery Shawl"
+    ],
+    "source_items": [
+      {
+        "name": "Kapadaganda: Dungaria Kondh Embroidery Shawl",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kapadaganda:_Dungaria_Kondh_Embroidery_Shawl?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "embroidery",
+    "state_code": "PB",
+    "name": "Punjab Embroidery Cluster",
+    "story": "Traditional phulkaris are large items of cloth and in the broad sense include chope, tilpatr, neelak, and bagh.",
+    "member_craft_names": [
+      "Phulkari"
+    ],
+    "source_items": [
+      {
+        "name": "Phulkari",
+        "wiki_url": "https://en.wikipedia.org/wiki/Phulkari"
+      }
+    ]
+  },
+  {
+    "craft_type": "embroidery",
+    "state_code": "TN",
+    "name": "Tamil Nadu Embroidery Cluster",
+    "story": "This art heritage is practiced by the Toda tribals based in the Nilgiris (literally meaning 'neelam', the \"Blue Hills\") located in an elevation range of.",
+    "member_craft_names": [
+      "Toda Embroidery"
+    ],
+    "source_items": [
+      {
+        "name": "Toda Embroidery",
+        "wiki_url": "https://en.wikipedia.org/wiki/Toda_Embroidery"
+      }
+    ]
+  },
+  {
+    "craft_type": "embroidery",
+    "state_code": "UP",
+    "name": "Uttar Pradesh Embroidery Cluster",
+    "story": "A community of embroidery artisans in Uttar Pradesh, known for Lucknow Zardozi, Banaras Zardozi, Tharu Embroidery.",
+    "member_craft_names": [
+      "Lucknow Zardozi",
+      "Banaras Zardozi",
+      "Tharu Embroidery"
+    ],
+    "source_items": [
+      {
+        "name": "Lucknow Zardozi",
+        "wiki_url": "https://en.wikipedia.org/wiki/Lucknow_Zardozi?action=edit&redlink=1"
+      },
+      {
+        "name": "Banaras Zardozi",
+        "wiki_url": "https://en.wikipedia.org/wiki/Banaras_Zardozi?action=edit&redlink=1"
+      },
+      {
+        "name": "Tharu Embroidery",
+        "wiki_url": "https://en.wikipedia.org/wiki/Tharu_Embroidery?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "embroidery",
+    "state_code": "WB",
+    "name": "West Bengal Embroidery Cluster",
+    "story": "The colourful patterns and designs that are embroidered resulted in the name \"Nakshi Kantha,\".",
+    "member_craft_names": [
+      "Nakshi Kantha"
+    ],
+    "source_items": [
+      {
+        "name": "Nakshi Kantha",
+        "wiki_url": "https://en.wikipedia.org/wiki/Nakshi_Kantha"
+      }
+    ]
+  },
+  {
+    "craft_type": "jewelry",
+    "state_code": "TG",
+    "name": "Telangana Jewelry & Ornaments Cluster",
+    "story": "Karimnagar Silver Filigree received Intellectual property rights protection or.",
+    "member_craft_names": [
+      "Silver Filigree of Karimnagar"
+    ],
+    "source_items": [
+      {
+        "name": "Silver Filigree of Karimnagar",
+        "wiki_url": "https://en.wikipedia.org/wiki/Silver_Filigree_of_Karimnagar"
+      }
+    ]
+  },
+  {
+    "craft_type": "jewelry",
+    "state_code": "TN",
+    "name": "Tamil Nadu Jewelry & Ornaments Cluster",
+    "story": "The jewellery is made from gold interspersed with precious stones. A special type of red and green colored stone called \"Kuchu kal\" is used for making the jewellery. The history dates back to the reign of. The jewellery is made from gold interspersed with precious stones. A special type of red and green colored stone called \"Kuchu kal\" is used for making the jewellery. The history dates back to the reign of.",
+    "member_craft_names": [
+      "Temple Jewellery of Nagercoil",
+      "Temple Jewellery of Nagercoil"
+    ],
+    "source_items": [
+      {
+        "name": "Temple Jewellery of Nagercoil",
+        "wiki_url": "https://en.wikipedia.org/wiki/Temple_Jewellery_of_Nagercoil"
+      },
+      {
+        "name": "Temple Jewellery of Nagercoil",
+        "wiki_url": "https://en.wikipedia.org/wiki/Temple_Jewellery_of_Nagercoil"
+      }
+    ]
+  },
+  {
+    "craft_type": "jewelry",
+    "state_code": "WB",
+    "name": "West Bengal Jewelry & Ornaments Cluster",
+    "story": "A community of jewelry & ornaments artisans in West Bengal, known for Kolkatti Jewellery.",
+    "member_craft_names": [
+      "Kolkatti Jewellery"
+    ],
+    "source_items": [
+      {
+        "name": "Kolkatti Jewellery",
+        "wiki_url": null
+      }
+    ]
+  },
+  {
+    "craft_type": "leather",
+    "state_code": "AP",
+    "name": "Andhra Pradesh Leather Craft Cluster",
+    "story": "This ancient custom, which for centuries before radio, film, and television provided knowledge of.",
+    "member_craft_names": [
+      "Andhra Pradesh leather puppetry"
+    ],
+    "source_items": [
+      {
+        "name": "Andhra Pradesh leather puppetry",
+        "wiki_url": "https://en.wikipedia.org/wiki/Tholu_bommalata"
+      }
+    ]
+  },
+  {
+    "craft_type": "leather",
+    "state_code": "MH",
+    "name": "Maharashtra Leather Craft Cluster",
+    "story": "History has recorded that it was started and designed by the Saudagar family in 1920. The first model which was designed earlier was much thinner than what is available currently and was also known as \"Chappal with ears\" or \"Kanwali\" for it had two side flaps. The upper portion of the footwear was intricately designed.",
+    "member_craft_names": [
+      "Kolhapuri Chappal"
+    ],
+    "source_items": [
+      {
+        "name": "Kolhapuri Chappal",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kolhapuri_Chappal"
+      }
+    ]
+  },
+  {
+    "craft_type": "leather",
+    "state_code": "MP",
+    "name": "Madhya Pradesh Leather Craft Cluster",
+    "story": "A community of leather craft artisans in Madhya Pradesh, known for Leather Toys of Indore, Leather Toys of Indore.",
+    "member_craft_names": [
+      "Leather Toys of Indore",
+      "Leather Toys of Indore"
+    ],
+    "source_items": [
+      {
+        "name": "Leather Toys of Indore",
+        "wiki_url": "https://en.wikipedia.org/wiki/Leather_Toys_of_Indore?action=edit&redlink=1"
+      },
+      {
+        "name": "Leather Toys of Indore",
+        "wiki_url": "https://en.wikipedia.org/wiki/Leather_Toys_of_Indore?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "leather",
+    "state_code": "WB",
+    "name": "West Bengal Leather Craft Cluster",
+    "story": "This product has been registered for protection under the List of.",
+    "member_craft_names": [
+      "Santiniketan Leather Goods"
+    ],
+    "source_items": [
+      {
+        "name": "Santiniketan Leather Goods",
+        "wiki_url": "https://en.wikipedia.org/wiki/Santiniketan_Leather_Goods"
+      }
+    ]
+  },
+  {
+    "craft_type": "metalwork",
+    "state_code": "AP",
+    "name": "Andhra Pradesh Metalwork & Brass Cluster",
+    "story": "A community of metalwork & brass artisans in Andhra Pradesh, known for Budithi Bell and Brass Craft.",
+    "member_craft_names": [
+      "Budithi Bell and Brass Craft"
+    ],
+    "source_items": [
+      {
+        "name": "Budithi Bell and Brass Craft",
+        "wiki_url": "https://en.wikipedia.org/wiki/Budithi_Bell_and_Brass_Craft"
+      }
+    ]
+  },
+  {
+    "craft_type": "metalwork",
+    "state_code": "AS",
+    "name": "Assam Metalwork & Brass Cluster",
+    "story": "The bell metal tradition of Sarthebari has ancient origins and is believed to date back several centuries. Historical references indicate that bell metal objects from Assam were produced as early as the 7th century during the reign of King.",
+    "member_craft_names": [
+      "Sarthebari Metal Craft"
+    ],
+    "source_items": [
+      {
+        "name": "Sarthebari Metal Craft",
+        "wiki_url": "https://en.wikipedia.org/wiki/Sarthebari_Metal_Craft"
+      }
+    ]
+  },
+  {
+    "craft_type": "metalwork",
+    "state_code": "CT",
+    "name": "Chhattisgarh Metalwork & Brass Cluster",
+    "story": "There are two main processes of lost wax casting: solid casting and hollow casting. While the former is predominant in the. There are two main processes of lost wax casting: solid casting and hollow casting. While the former is predominant in the.",
+    "member_craft_names": [
+      "Bastar Dhokra",
+      "Bastar Dhokra (Logo)"
+    ],
+    "source_items": [
+      {
+        "name": "Bastar Dhokra",
+        "wiki_url": "https://en.wikipedia.org/wiki/Bastar_Dhokra"
+      },
+      {
+        "name": "Bastar Dhokra (Logo)",
+        "wiki_url": "https://en.wikipedia.org/wiki/Bastar_Dhokra"
+      }
+    ]
+  },
+  {
+    "craft_type": "metalwork",
+    "state_code": "KA",
+    "name": "Karnataka Metalwork & Brass Cluster",
+    "story": "The origin of Bidriware is usually attributed to the Bahamani sultans who ruled Bidar in the 14th–15th centuries. Bidriware techniques and style are influenced by.",
+    "member_craft_names": [
+      "Bidriware",
+      "Karnataka Bronzeware",
+      "Karnataka Bronzeware"
+    ],
+    "source_items": [
+      {
+        "name": "Bidriware",
+        "wiki_url": "https://en.wikipedia.org/wiki/Bidriware"
+      },
+      {
+        "name": "Karnataka Bronzeware",
+        "wiki_url": "https://en.wikipedia.org/wiki/Karnataka_Bronzeware?action=edit&redlink=1"
+      },
+      {
+        "name": "Karnataka Bronzeware",
+        "wiki_url": "https://en.wikipedia.org/wiki/Karnataka_Bronzeware?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "metalwork",
+    "state_code": "KL",
+    "name": "Kerala Metalwork & Brass Cluster",
+    "story": "Coconut shell craft is also practiced in many countries around the world such as.",
+    "member_craft_names": [
+      "Brass Broidered Coconut Shell Crafts of Kerala",
+      "Brass Broidered Coconut Shell Craft of Kerala"
+    ],
+    "source_items": [
+      {
+        "name": "Brass Broidered Coconut Shell Crafts of Kerala",
+        "wiki_url": "https://en.wikipedia.org/wiki/Brass_Broidered_Coconut_Shell_Crafts_of_Kerala"
+      },
+      {
+        "name": "Brass Broidered Coconut Shell Craft of Kerala",
+        "wiki_url": "https://en.wikipedia.org/wiki/Brass_Broidered_Coconut_Shell_Craft_of_Kerala?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "metalwork",
+    "state_code": "MP",
+    "name": "Madhya Pradesh Metalwork & Brass Cluster",
+    "story": "A community of metalwork & brass artisans in Madhya Pradesh, known for Bell Metal Ware of Datia and Tikamgarh, Bell Metal Ware of Datia and Tikamgarh, Wrought Iron Crafts of Dindori.",
+    "member_craft_names": [
+      "Bell Metal Ware of Datia and Tikamgarh",
+      "Bell Metal Ware of Datia and Tikamgarh",
+      "Wrought Iron Crafts of Dindori"
+    ],
+    "source_items": [
+      {
+        "name": "Bell Metal Ware of Datia and Tikamgarh",
+        "wiki_url": "https://en.wikipedia.org/wiki/Bell_Metal_Ware_of_Datia_and_Tikamgarh?action=edit&redlink=1"
+      },
+      {
+        "name": "Bell Metal Ware of Datia and Tikamgarh",
+        "wiki_url": "https://en.wikipedia.org/wiki/Bell_Metal_Ware_of_Datia_and_Tikamgarh?action=edit&redlink=1"
+      },
+      {
+        "name": "Wrought Iron Crafts of Dindori",
+        "wiki_url": "https://en.wikipedia.org/wiki/Wrought_Iron_Crafts_of_Dindori?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "metalwork",
+    "state_code": "RJ",
+    "name": "Rajasthan Metalwork & Brass Cluster",
+    "story": "A community of metalwork & brass artisans in Rajasthan, known for Udaipur Koftgari Metal Craft.",
+    "member_craft_names": [
+      "Udaipur Koftgari Metal Craft"
+    ],
+    "source_items": [
+      {
+        "name": "Udaipur Koftgari Metal Craft",
+        "wiki_url": "https://en.wikipedia.org/wiki/Koftgiri?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "metalwork",
+    "state_code": "TG",
+    "name": "Telangana Metalwork & Brass Cluster",
+    "story": "A community of metalwork & brass artisans in Telangana, known for Pembarthi Metal Craft, Adilabad Dokra.",
+    "member_craft_names": [
+      "Pembarthi Metal Craft",
+      "Adilabad Dokra"
+    ],
+    "source_items": [
+      {
+        "name": "Pembarthi Metal Craft",
+        "wiki_url": "https://en.wikipedia.org/wiki/Pembarthi_Metal_Craft"
+      },
+      {
+        "name": "Adilabad Dokra",
+        "wiki_url": "https://en.wikipedia.org/wiki/Adilabad_Dokra?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "metalwork",
+    "state_code": "TN",
+    "name": "Tamil Nadu Metalwork & Brass Cluster",
+    "story": "The icons vary from small decorative pieces to large temple sculptures measuring 1.8 to 3.7 m (6 to 12 ft) in height. The icons vary from small decorative pieces to large temple sculptures measuring 1.8 to 3.7 m (6 to 12 ft) in height.",
+    "member_craft_names": [
+      "Swamimalai Bronze Icons",
+      "Swamimalai Bronze Icons"
+    ],
+    "source_items": [
+      {
+        "name": "Swamimalai Bronze Icons",
+        "wiki_url": "https://en.wikipedia.org/wiki/Swamimalai_Bronze_Icons"
+      },
+      {
+        "name": "Swamimalai Bronze Icons",
+        "wiki_url": "https://en.wikipedia.org/wiki/Swamimalai_Bronze_Icons"
+      }
+    ]
+  },
+  {
+    "craft_type": "metalwork",
+    "state_code": "UP",
+    "name": "Uttar Pradesh Metalwork & Brass Cluster",
+    "story": "A community of metalwork & brass artisans in Uttar Pradesh, known for Moradabad Metal Craft, Bakhira Brassware.",
+    "member_craft_names": [
+      "Moradabad Metal Craft",
+      "Bakhira Brassware"
+    ],
+    "source_items": [
+      {
+        "name": "Moradabad Metal Craft",
+        "wiki_url": "https://en.wikipedia.org/wiki/Moradabad_Metal_Craft?action=edit&redlink=1"
+      },
+      {
+        "name": "Bakhira Brassware",
+        "wiki_url": "https://en.wikipedia.org/wiki/Bakhira_Brassware?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "metalwork",
+    "state_code": "WB",
+    "name": "West Bengal Metalwork & Brass Cluster",
+    "story": "There are two main processes of lost wax casting: solid casting and hollow casting. While the former is predominant in the.",
+    "member_craft_names": [
+      "Bengal Dokra"
+    ],
+    "source_items": [
+      {
+        "name": "Bengal Dokra",
+        "wiki_url": "https://en.wikipedia.org/wiki/Dhokra"
+      }
+    ]
+  },
+  {
+    "craft_type": "painting",
+    "state_code": "AP",
+    "name": "Andhra Pradesh Painting & Art Cluster",
+    "story": "The Srikalahasti style of Kalamkari is one of the two styles of Kalamkari works present in India, with the other being,. The Machilipatnam style of Kalamkari is one of the two styles of.",
+    "member_craft_names": [
+      "Srikalahasthi Kalamkari",
+      "Machilipatnam Kalamkari"
+    ],
+    "source_items": [
+      {
+        "name": "Srikalahasthi Kalamkari",
+        "wiki_url": "https://en.wikipedia.org/wiki/Srikalahasthi_Kalamkari"
+      },
+      {
+        "name": "Machilipatnam Kalamkari",
+        "wiki_url": "https://en.wikipedia.org/wiki/Machilipatnam_Kalamkari"
+      }
+    ]
+  },
+  {
+    "craft_type": "painting",
+    "state_code": "AS",
+    "name": "Assam Painting & Art Cluster",
+    "story": "A community of painting & art artisans in Assam, known for Assam Majuli Manuscript Painting.",
+    "member_craft_names": [
+      "Assam Majuli Manuscript Painting"
+    ],
+    "source_items": [
+      {
+        "name": "Assam Majuli Manuscript Painting",
+        "wiki_url": "https://en.wikipedia.org/wiki/Assam_Majuli_Manuscript_Painting?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "painting",
+    "state_code": "BR",
+    "name": "Bihar Painting & Art Cluster",
+    "story": "Traditionally, painting was one of the skills that was passed down from generation to generation in the families of the Mithila Region, mainly by women.",
+    "member_craft_names": [
+      "Madhubani paintings"
+    ],
+    "source_items": [
+      {
+        "name": "Madhubani paintings",
+        "wiki_url": "https://en.wikipedia.org/wiki/Madhubani_art"
+      }
+    ]
+  },
+  {
+    "craft_type": "painting",
+    "state_code": "HP",
+    "name": "Himachal Pradesh Painting & Art Cluster",
+    "story": "Pahari paintings, as the name suggests, were paintings executed in the hilly regions of India, in the sub-Himalayan state of Himachal Pradesh.",
+    "member_craft_names": [
+      "Kangra Paintings"
+    ],
+    "source_items": [
+      {
+        "name": "Kangra Paintings",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kangra_painting"
+      }
+    ]
+  },
+  {
+    "craft_type": "painting",
+    "state_code": "JH",
+    "name": "Jharkhand Painting & Art Cluster",
+    "story": "A community of painting & art artisans in Jharkhand, known for Sohrai – Khovar Painting.",
+    "member_craft_names": [
+      "Sohrai – Khovar Painting"
+    ],
+    "source_items": [
+      {
+        "name": "Sohrai – Khovar Painting",
+        "wiki_url": "https://en.wikipedia.org/wiki/Sohrai_–_Khovar_Painting?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "painting",
+    "state_code": "JK",
+    "name": "Jammu & Kashmir Painting & Art Cluster",
+    "story": "Basohli emerged as a great centre of Pahari paintings. According to well known Dr. Herman Goltz, \"Basohli painting are among the great achievements of Indians\". Their central inspiration is.",
+    "member_craft_names": [
+      "Basohli Painting"
+    ],
+    "source_items": [
+      {
+        "name": "Basohli Painting",
+        "wiki_url": "https://en.wikipedia.org/wiki/Basohli_Painting"
+      }
+    ]
+  },
+  {
+    "craft_type": "painting",
+    "state_code": "KA",
+    "name": "Karnataka Painting & Art Cluster",
+    "story": "Mysore paintings are known for their elegance, muted colours, and attention to detail. The themes for most of these paintings are.",
+    "member_craft_names": [
+      "Mysore Traditional Paintings"
+    ],
+    "source_items": [
+      {
+        "name": "Mysore Traditional Paintings",
+        "wiki_url": "https://en.wikipedia.org/wiki/Mysore_Traditional_Paintings"
+      }
+    ]
+  },
+  {
+    "craft_type": "painting",
+    "state_code": "MH",
+    "name": "Maharashtra Painting & Art Cluster",
+    "story": "Male gods are unusual among the Warli and are frequently related to spirits that have taken human shape. The central motif in the ritual painting is surrounded by scenes portraying hunting, fishing, farming, trees and animals.",
+    "member_craft_names": [
+      "Warli Painting"
+    ],
+    "source_items": [
+      {
+        "name": "Warli Painting",
+        "wiki_url": "https://en.wikipedia.org/wiki/Warli_Painting"
+      }
+    ]
+  },
+  {
+    "craft_type": "painting",
+    "state_code": "MP",
+    "name": "Madhya Pradesh Painting & Art Cluster",
+    "story": "A community of painting & art artisans in Madhya Pradesh, known for Gond Painting of Madhya Pradesh.",
+    "member_craft_names": [
+      "Gond Painting of Madhya Pradesh"
+    ],
+    "source_items": [
+      {
+        "name": "Gond Painting of Madhya Pradesh",
+        "wiki_url": "https://en.wikipedia.org/wiki/Gond_Painting_of_Madhya_Pradesh?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "painting",
+    "state_code": "OR",
+    "name": "Odisha Painting & Art Cluster",
+    "story": "Pattachitra is a traditional painting of Odisha, India. Originating at puri. Pattachitra is a traditional painting of Odisha, India. Originating at puri.",
+    "member_craft_names": [
+      "Orissa Pattachitra",
+      "Orissa Pattachitra (Logo)",
+      "Painting of Lanjia Saura, Odisha"
+    ],
+    "source_items": [
+      {
+        "name": "Orissa Pattachitra",
+        "wiki_url": "https://en.wikipedia.org/wiki/Pattachitra"
+      },
+      {
+        "name": "Orissa Pattachitra (Logo)",
+        "wiki_url": "https://en.wikipedia.org/wiki/Pattachitra"
+      },
+      {
+        "name": "Painting of Lanjia Saura, Odisha",
+        "wiki_url": "https://en.wikipedia.org/wiki/Painting_of_Lanjia_Saura,_Odisha?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "painting",
+    "state_code": "RJ",
+    "name": "Rajasthan Painting & Art Cluster",
+    "story": "Pichhwai are intricate paintings which portray various aspects of Lord Krishna's life. This art has become an undivided part of the Nathdwara culture.",
+    "member_craft_names": [
+      "Nathdwara Pichhwai Painting"
+    ],
+    "source_items": [
+      {
+        "name": "Nathdwara Pichhwai Painting",
+        "wiki_url": "https://en.wikipedia.org/wiki/Nathdwara_painting"
+      }
+    ]
+  },
+  {
+    "craft_type": "painting",
+    "state_code": "TG",
+    "name": "Telangana Painting & Art Cluster",
+    "story": "This art form has derived its name from the place of its origin, Nirmal. This art was practiced in the 14th century by a group of artisans who are known as Naqash. The. Charanachitras, Mankhas, Yamapatas were ancient form of paintings executed on textile-scrolls and dealt with themes of a narrative-didactive nature of storytelling which finds mentions in Hindu, Jain and Buddhist texts.",
+    "member_craft_names": [
+      "Nirmal paintings",
+      "Cheriyal Paintings"
+    ],
+    "source_items": [
+      {
+        "name": "Nirmal paintings",
+        "wiki_url": "https://en.wikipedia.org/wiki/Nirmal_paintings"
+      },
+      {
+        "name": "Cheriyal Paintings",
+        "wiki_url": "https://en.wikipedia.org/wiki/Cheriyal_Paintings"
+      }
+    ]
+  },
+  {
+    "craft_type": "painting",
+    "state_code": "TN",
+    "name": "Tamil Nadu Painting & Art Cluster",
+    "story": "Thanjavur paintings were made in various sizes depending upon the function, the subject and the choice of the patron. Large paintings of deities and the Maratha rulers, their courtiers and nobility, were painted and installed to serve as architectural accents in the Maratha palaces and buildings. To quote Dallapiccola – \".",
+    "member_craft_names": [
+      "Thanjavur Paintings",
+      "Karuppur Kalamkari Paintings"
+    ],
+    "source_items": [
+      {
+        "name": "Thanjavur Paintings",
+        "wiki_url": "https://en.wikipedia.org/wiki/Thanjavur_Paintings"
+      },
+      {
+        "name": "Karuppur Kalamkari Paintings",
+        "wiki_url": "https://en.wikipedia.org/wiki/Karuppur_Kalamkari_Paintings?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "painting",
+    "state_code": "UP",
+    "name": "Uttar Pradesh Painting & Art Cluster",
+    "story": "A community of painting & art artisans in Uttar Pradesh, known for Banaras Mural Painting.",
+    "member_craft_names": [
+      "Banaras Mural Painting"
+    ],
+    "source_items": [
+      {
+        "name": "Banaras Mural Painting",
+        "wiki_url": "https://en.wikipedia.org/wiki/Banaras_Mural_Painting?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "painting",
+    "state_code": "WB",
+    "name": "West Bengal Painting & Art Cluster",
+    "story": "Pattachitra is a traditional painting of Odisha, India. Originating at puri.",
+    "member_craft_names": [
+      "Bengal Patachitra"
+    ],
+    "source_items": [
+      {
+        "name": "Bengal Patachitra",
+        "wiki_url": "https://en.wikipedia.org/wiki/Patachitra"
+      }
+    ]
+  },
+  {
+    "craft_type": "pottery",
+    "state_code": "AS",
+    "name": "Assam Pottery & Ceramics Cluster",
+    "story": "To object to proposed deletion, an editor may take responsibility for the content and assume the.",
+    "member_craft_names": [
+      "Assam Asharikandi Terracotta Craft"
+    ],
+    "source_items": [
+      {
+        "name": "Assam Asharikandi Terracotta Craft",
+        "wiki_url": "https://en.wikipedia.org/wiki/Assam_Asharikandi_Terracotta_Craft"
+      }
+    ]
+  },
+  {
+    "craft_type": "pottery",
+    "state_code": "ML",
+    "name": "Meghalaya Pottery & Ceramics Cluster",
+    "story": "A community of pottery & ceramics artisans in Meghalaya, known for Meghalaya Lyrnai Pottery.",
+    "member_craft_names": [
+      "Meghalaya Lyrnai Pottery"
+    ],
+    "source_items": [
+      {
+        "name": "Meghalaya Lyrnai Pottery",
+        "wiki_url": "https://en.wikipedia.org/wiki/Meghalaya_Lyrnai_Pottery?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "pottery",
+    "state_code": "RJ",
+    "name": "Rajasthan Pottery & Ceramics Cluster",
+    "story": "Jaipur blue pottery has been strongly influenced by the Persian ceramic style but it has developed its own designs and motifs. Inspired more from nature, the pottery is adorned profusely with animals, birds and flowers with a hint of Persian geometric design in the compositions. Jaipur blue pottery has been strongly influenced by the Persian ceramic style but it has developed its own designs and motifs. Inspired more from nature, the pottery is adorned profusely with animals, birds and flowers with a hint of Persian geometric design in the compositions.",
+    "member_craft_names": [
+      "Blue Pottery of Jaipur",
+      "Blue Pottery of Jaipur",
+      "Pokaran Pottery"
+    ],
+    "source_items": [
+      {
+        "name": "Blue Pottery of Jaipur",
+        "wiki_url": "https://en.wikipedia.org/wiki/Blue_Pottery_of_Jaipur"
+      },
+      {
+        "name": "Blue Pottery of Jaipur",
+        "wiki_url": "https://en.wikipedia.org/wiki/Blue_Pottery_of_Jaipur"
+      },
+      {
+        "name": "Pokaran Pottery",
+        "wiki_url": "https://en.wikipedia.org/wiki/Pokaran_Pottery?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "pottery",
+    "state_code": "TN",
+    "name": "Tamil Nadu Pottery & Ceramics Cluster",
+    "story": "A community of pottery & ceramics artisans in Tamil Nadu, known for Manamadurai Pottery.",
+    "member_craft_names": [
+      "Manamadurai Pottery"
+    ],
+    "source_items": [
+      {
+        "name": "Manamadurai Pottery",
+        "wiki_url": "https://en.wikipedia.org/wiki/Manamadurai_Pottery?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "pottery",
+    "state_code": "UP",
+    "name": "Uttar Pradesh Pottery & Ceramics Cluster",
+    "story": "A community of pottery & ceramics artisans in Uttar Pradesh, known for Khurja Pottery, Nizamabad Black Pottery, Gorakhpur Terracotta.",
+    "member_craft_names": [
+      "Khurja Pottery",
+      "Nizamabad Black Pottery",
+      "Gorakhpur Terracotta",
+      "Chunar Glaze Pottery"
+    ],
+    "source_items": [
+      {
+        "name": "Khurja Pottery",
+        "wiki_url": "https://en.wikipedia.org/wiki/Khurja_Pottery?action=edit&redlink=1"
+      },
+      {
+        "name": "Nizamabad Black Pottery",
+        "wiki_url": "https://en.wikipedia.org/wiki/Nizamabad_Black_Pottery?action=edit&redlink=1"
+      },
+      {
+        "name": "Gorakhpur Terracotta",
+        "wiki_url": "https://en.wikipedia.org/wiki/Gorakhpur_Terracotta?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "pottery",
+    "state_code": "WB",
+    "name": "West Bengal Pottery & Ceramics Cluster",
+    "story": "In India, terracotta traditions are found from the earliest times. The outskirts of many an Indian village have a.",
+    "member_craft_names": [
+      "Bankura Panchmura Terracotta Craft"
+    ],
+    "source_items": [
+      {
+        "name": "Bankura Panchmura Terracotta Craft",
+        "wiki_url": "https://en.wikipedia.org/wiki/Bankura_horse"
+      }
+    ]
+  },
+  {
+    "craft_type": "stone",
+    "state_code": "AP",
+    "name": "Andhra Pradesh Stone Carving Cluster",
+    "story": "A community of stone carving artisans in Andhra Pradesh, known for Durgi Stone Carvings, Allagadda Stone Carving.",
+    "member_craft_names": [
+      "Durgi Stone Carvings",
+      "Allagadda Stone Carving"
+    ],
+    "source_items": [
+      {
+        "name": "Durgi Stone Carvings",
+        "wiki_url": "https://en.wikipedia.org/wiki/Durgi_Stone_Carvings?action=edit&redlink=1"
+      },
+      {
+        "name": "Allagadda Stone Carving",
+        "wiki_url": "https://en.wikipedia.org/wiki/Allagadda_Stone_Carving?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "stone",
+    "state_code": "MP",
+    "name": "Madhya Pradesh Stone Carving Cluster",
+    "story": "A community of stone carving artisans in Madhya Pradesh, known for Jabalpur Stone Craft.",
+    "member_craft_names": [
+      "Jabalpur Stone Craft"
+    ],
+    "source_items": [
+      {
+        "name": "Jabalpur Stone Craft",
+        "wiki_url": "https://en.wikipedia.org/wiki/Jabalpur_Stone_Craft?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "stone",
+    "state_code": "OR",
+    "name": "Odisha Stone Carving Cluster",
+    "story": "An outline of sorts is first drawn on the cut-to-size stone. Once the outline is engraved, the final figure is brought out by removing the unwanted portions. For the harder stones, this is done by chiseling out the extra material. With softer stones, it is done by scraping out the extra material with a sharp flat-edged iron tool. Hammers and chisels of various sizes are used (e.g., the.",
+    "member_craft_names": [
+      "Konark stone carving"
+    ],
+    "source_items": [
+      {
+        "name": "Konark stone carving",
+        "wiki_url": "https://en.wikipedia.org/wiki/Konark_stone_carving"
+      }
+    ]
+  },
+  {
+    "craft_type": "stone",
+    "state_code": "TN",
+    "name": "Tamil Nadu Stone Carving Cluster",
+    "story": "A community of stone carving artisans in Tamil Nadu, known for Myladi Stone Carvings.",
+    "member_craft_names": [
+      "Myladi Stone Carvings"
+    ],
+    "source_items": [
+      {
+        "name": "Myladi Stone Carvings",
+        "wiki_url": "https://en.wikipedia.org/wiki/Myladi_Stone_Carvings?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "AP",
+    "name": "Andhra Pradesh Weaving & Textiles Cluster",
+    "story": "The Uppada Jamdani saree is a beautiful textile that has been weaved in [South India] for centuries. The fabric has a silk-like texture and is lightweight, making it perfect for designing sarees, gowns, scarves, etc. The history behind the Uppada fabric can be traced back to the. The history of the sari dates back to the early 1700s during the rule of Venkatagiri. They were encouraged by the. The occupation of weaving is as old as 400 years as per some inscriptions found at this region. There was a migratory period for the weavers during the rule of.",
+    "member_craft_names": [
+      "Uppada Jamdani sarees",
+      "Venkatagiri Sarees",
+      "Mangalagiri sarees and fabrics",
+      "Dharmavaram handloom pattu sarees and paavadas"
+    ],
+    "source_items": [
+      {
+        "name": "Uppada Jamdani sarees",
+        "wiki_url": "https://en.wikipedia.org/wiki/Uppada_Jamdani_sarees"
+      },
+      {
+        "name": "Venkatagiri Sarees",
+        "wiki_url": "https://en.wikipedia.org/wiki/Venkatagiri_Sarees"
+      },
+      {
+        "name": "Mangalagiri sarees and fabrics",
+        "wiki_url": "https://en.wikipedia.org/wiki/Mangalagiri_sarees_and_fabrics"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "AR",
+    "name": "Arunachal Pradesh Weaving & Textiles Cluster",
+    "story": "A community of weaving & textiles artisans in Arunachal Pradesh, known for Idu Mishmi Textiles, Arunachal Pradesh Tangsa Textile Product, Arunachal Pradesh Handmade Carpet.",
+    "member_craft_names": [
+      "Idu Mishmi Textiles",
+      "Arunachal Pradesh Tangsa Textile Product",
+      "Arunachal Pradesh Handmade Carpet",
+      "Arunachal Pradesh Apatani Textile",
+      "Arunachal Pradesh Monpa Textile",
+      "Arunachal Pradesh Nyishi Textile",
+      "Arunachal Pradesh Adi Textile",
+      "Arunachal Pradesh Galo Textile",
+      "Arunachal Pradesh Tai Khamti Textile",
+      "Assam Mishing Handloom Products"
+    ],
+    "source_items": [
+      {
+        "name": "Idu Mishmi Textiles",
+        "wiki_url": "https://en.wikipedia.org/wiki/Idu_Mishmi_Textiles?action=edit&redlink=1"
+      },
+      {
+        "name": "Arunachal Pradesh Tangsa Textile Product",
+        "wiki_url": "https://en.wikipedia.org/wiki/Arunachal_Pradesh_Tangsa_Textile_Product?action=edit&redlink=1"
+      },
+      {
+        "name": "Arunachal Pradesh Handmade Carpet",
+        "wiki_url": "https://en.wikipedia.org/wiki/Arunachal_Pradesh_Handmade_Carpet?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "AS",
+    "name": "Assam Weaving & Textiles Cluster",
+    "story": "Sericulture in Assam is an ancient industry without a precise time of origin. Assam was well known for the production of high quality silk since ancient times. The craft of weaving goes along with the production of silk. It grew to such sophistication in Assam that it was known all over India and abroad. The first reference to Assam silk was probably in Valmiki's. Sericulture in Assam is an ancient industry without a precise time of origin. Assam was well known for the production of high quality silk since ancient times. The craft of weaving goes along with the production of silk. It grew to such sophistication in Assam that it was known all over India and abroad. The first reference to Assam silk was probably in Valmiki's.",
+    "member_craft_names": [
+      "Muga silk of Assam",
+      "Muga Silk of Assam (Logo)",
+      "Bodo Eri Silk"
+    ],
+    "source_items": [
+      {
+        "name": "Muga silk of Assam",
+        "wiki_url": "https://en.wikipedia.org/wiki/Muga_Silk"
+      },
+      {
+        "name": "Muga Silk of Assam (Logo)",
+        "wiki_url": "https://en.wikipedia.org/wiki/Muga_Silk"
+      },
+      {
+        "name": "Bodo Eri Silk",
+        "wiki_url": "https://en.wikipedia.org/wiki/Bodo_Eri_Silk?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "BR",
+    "name": "Bihar Weaving & Textiles Cluster",
+    "story": "A community of weaving & textiles artisans in Bihar, known for Bhagalpur silk.",
+    "member_craft_names": [
+      "Bhagalpur silk"
+    ],
+    "source_items": [
+      {
+        "name": "Bhagalpur silk",
+        "wiki_url": "https://en.wikipedia.org/wiki/Bhagalpur_sari"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "CT",
+    "name": "Chhattisgarh Weaving & Textiles Cluster",
+    "story": "A community of weaving & textiles artisans in Chhattisgarh, known for Champa silk saree and fabrics.",
+    "member_craft_names": [
+      "Champa silk saree and fabrics"
+    ],
+    "source_items": [
+      {
+        "name": "Champa silk saree and fabrics",
+        "wiki_url": "https://en.wikipedia.org/wiki/Champa_silk_saree_and_fabrics?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "GJ",
+    "name": "Gujarat Weaving & Textiles Cluster",
+    "story": "The textile is usually used as shawl and wraparound skirt by women of the. The production of the dhabla was historically linked to a regional barter system involving the Rabari herders, the Vankar weavers, and Rabari women dyers. The Rabaris supplied raw fleece from indigenous sheep and goats, while the Vankars processed, spun, and wove the wool.",
+    "member_craft_names": [
+      "Tangaliya Shawl",
+      "Kachchh Shawls",
+      "Bharuch Sujani Weaving"
+    ],
+    "source_items": [
+      {
+        "name": "Tangaliya Shawl",
+        "wiki_url": "https://en.wikipedia.org/wiki/Tangaliya_Shawl"
+      },
+      {
+        "name": "Kachchh Shawls",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kachchh_Shawls"
+      },
+      {
+        "name": "Bharuch Sujani Weaving",
+        "wiki_url": "https://en.wikipedia.org/wiki/Bharuch_Sujani_Weaving?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "HP",
+    "name": "Himachal Pradesh Weaving & Textiles Cluster",
+    "story": "Typical Kullu shawls have geometrical designs on both ends. The shawls may also have floral designs, which may run all over. Each design may have up to eight colors. Most traditional colors are often bright colors, used to emphasize the shawl and make it more appealing, however, there are instances where the shawl is made with a more dull color, such as. In October 2010, the shawl was registered by the Indian government under the provisions of the Geographical Indications of Goods Act, 1999 which prohibited unauthorized production of the shawl which would invite. Typical Kullu shawls have geometrical designs on both ends. The shawls may also have floral designs, which may run all over. Each design may have up to eight colors. Most traditional colors are often bright colors, used to emphasize the shawl and make it more appealing, however, there are instances where the shawl is made with a more dull color, such as.",
+    "member_craft_names": [
+      "Kullu Shawl",
+      "Kinnauri Shawl",
+      "Kullu Shawl (Logo)"
+    ],
+    "source_items": [
+      {
+        "name": "Kullu Shawl",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kullu_Shawl"
+      },
+      {
+        "name": "Kinnauri Shawl",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kinnauri_Shawl"
+      },
+      {
+        "name": "Kullu Shawl (Logo)",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kullu_Shawl"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "JK",
+    "name": "Jammu & Kashmir Weaving & Textiles Cluster",
+    "story": "While the name 'Kani' comes from the area where these particular artisans come from, Kanihama, the word 'Kani' - in Kashmiri - also means a small wooden oblong spool. Samples of wool fibres recovered from corroded copper artifacts from.",
+    "member_craft_names": [
+      "Kani Shawl",
+      "Kashmir Pashmina",
+      "Kashmiri Hand Knotted Carpet",
+      "Basohli Pashmina Woolen Products"
+    ],
+    "source_items": [
+      {
+        "name": "Kani Shawl",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kani_Shawl"
+      },
+      {
+        "name": "Kashmir Pashmina",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kashmir_Pashmina"
+      },
+      {
+        "name": "Kashmiri Hand Knotted Carpet",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kashmiri_Hand_Knotted_Carpet?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "KA",
+    "name": "Karnataka Weaving & Textiles Cluster",
+    "story": "Mysore silk is produced by the Karnataka Silk Industries Corporation Limited (KSIC). The factory was founded in 1912 by Sri Nalvadi Krishnaraja Wodeyar, the Maharaja of Mysore. The peculiar characteristic of the sari is joining the body warp with the pallu warp which is locally called as TOPE TENI. This technique is used exclusively at Ilkal. If anyone requires Ilkal sari one must prepare a warp for every sari. Warp threads for body are prepared separately. Similarly pallu warp is prepared separately either with art silk or pure silk depending upon the quality required. Navalgund, where the hand-made Navalgund durries are made, is located within the geographical coordinates of.",
+    "member_craft_names": [
+      "Mysore silk",
+      "Ilkal sarees",
+      "Navalgund Durries",
+      "Molakalmuru sarees",
+      "Navalgund Durries",
+      "Udupi sarees",
+      "Mysore Silk"
+    ],
+    "source_items": [
+      {
+        "name": "Mysore silk",
+        "wiki_url": "https://en.wikipedia.org/wiki/Mysore_silk"
+      },
+      {
+        "name": "Ilkal sarees",
+        "wiki_url": "https://en.wikipedia.org/wiki/Ilkal_sari"
+      },
+      {
+        "name": "Navalgund Durries",
+        "wiki_url": "https://en.wikipedia.org/wiki/Navalgund_Durries"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "KL",
+    "name": "Kerala Weaving & Textiles Cluster",
+    "story": "This weaving tradition traces its origin to the 18th century. It was started by members of the. In 1972, Kuthampully Handloom Industrial Cooperative Society was registered with 102 members. Kannada people is almost living in kuthampully . Their caste were Devanga origin at Bangalore and Mysore. Now it has 814 members with own building in Kuthampully. In September 2011, the Kuthampully saree got exclusive.",
+    "member_craft_names": [
+      "Balaramapuram sarees and fine cotton fabrics",
+      "Kasaragod sarees",
+      "Kuthampully sarees"
+    ],
+    "source_items": [
+      {
+        "name": "Balaramapuram sarees and fine cotton fabrics",
+        "wiki_url": "https://en.wikipedia.org/wiki/Balaramapuram_sarees_and_fine_cotton_fabrics?action=edit&redlink=1"
+      },
+      {
+        "name": "Kasaragod sarees",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kasaragod_saree"
+      },
+      {
+        "name": "Kuthampully sarees",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kuthampully_saree"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "MH",
+    "name": "Maharashtra Weaving & Textiles Cluster",
+    "story": "Paithani was also known as \"Pratishthani\" as it was originated in the ancient city of Pratishthan (presently known as Paithan). Paithani sari flourished in the.",
+    "member_craft_names": [
+      "Paithani sarees and fabrics",
+      "Karvath Kati sarees and fabrics"
+    ],
+    "source_items": [
+      {
+        "name": "Paithani sarees and fabrics",
+        "wiki_url": "https://en.wikipedia.org/wiki/Paithani"
+      },
+      {
+        "name": "Karvath Kati sarees and fabrics",
+        "wiki_url": "https://en.wikipedia.org/wiki/Karvath_Kati_sarees_and_fabrics?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "ML",
+    "name": "Meghalaya Weaving & Textiles Cluster",
+    "story": "A community of weaving & textiles artisans in Meghalaya, known for Meghalaya Garo Textile.",
+    "member_craft_names": [
+      "Meghalaya Garo Textile"
+    ],
+    "source_items": [
+      {
+        "name": "Meghalaya Garo Textile",
+        "wiki_url": "https://en.wikipedia.org/wiki/Meghalaya_Garo_Textile?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "MP",
+    "name": "Madhya Pradesh Weaving & Textiles Cluster",
+    "story": "The weaving culture of Chanderi emerged between the 2nd and 7th centuries. It is situated on the boundary of two cultural regions of the state,. Mostly unchanged since its original version, which is clearly AI-generated. For example, source 2 does not even contain the name \".",
+    "member_craft_names": [
+      "Chanderi sarees",
+      "Maheshwari Saree",
+      "Gwalior Handmade Carpet",
+      "Waraseoni handloom saree and fabrics"
+    ],
+    "source_items": [
+      {
+        "name": "Chanderi sarees",
+        "wiki_url": "https://en.wikipedia.org/wiki/Chanderi_sari"
+      },
+      {
+        "name": "Maheshwari Saree",
+        "wiki_url": "https://en.wikipedia.org/wiki/Maheshwari_Saree"
+      },
+      {
+        "name": "Gwalior Handmade Carpet",
+        "wiki_url": "https://en.wikipedia.org/wiki/Gwalior_Handmade_Carpet?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "NL",
+    "name": "Nagaland Weaving & Textiles Cluster",
+    "story": "A community of weaving & textiles artisans in Nagaland, known for Chakshesang Shawl.",
+    "member_craft_names": [
+      "Chakshesang Shawl"
+    ],
+    "source_items": [
+      {
+        "name": "Chakshesang Shawl",
+        "wiki_url": "https://en.wikipedia.org/wiki/Chakshesang_Shawl?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "OR",
+    "name": "Odisha Weaving & Textiles Cluster",
+    "story": "Kotpad handloom fabric is the first item from Odisha that received the. This silk has been registered for protection under the Geographical indication of the Trade Related Intellectual Property Rights (TRIPS) agreement. In 2007, it was listed as \"Odisha Ikat\" under the GI Act 1999 of the Government of India, with registration confirmed by the Controller General of Patents Designs and Trademarks under Classes 23, 24 and 25 as Yarn and Threads Tied and Dyed for Textile use, Textile and Tex…. Khandua is traditionally red or orange in color. The red color is prepared naturally from the.",
+    "member_craft_names": [
+      "Kotpad Handloom fabrics",
+      "Orissa Ikat",
+      "Khandua saree and fabrics",
+      "Gopalpur Tussar Fabrics",
+      "Dhalapathar Parda & Fabrics",
+      "Sambalpuri bandha saree and fabrics",
+      "Bomkai saree and fabrics",
+      "Habaspuri saree and fabrics",
+      "Berhampur Patta (phoda kumbha) saree and joda"
+    ],
+    "source_items": [
+      {
+        "name": "Kotpad Handloom fabrics",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kotpad_Handloom_fabrics"
+      },
+      {
+        "name": "Orissa Ikat",
+        "wiki_url": "https://en.wikipedia.org/wiki/Orissa_Ikat"
+      },
+      {
+        "name": "Khandua saree and fabrics",
+        "wiki_url": "https://en.wikipedia.org/wiki/Khandua"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "TG",
+    "name": "Telangana Weaving & Textiles Cluster",
+    "story": "The weaving survives in a few villages like Pochampally, Koyalgudam, Choutuppala, Siripuram, Bhuvanagiri, Puttapaka and Gattuppala and few villages around them mostly in Nalgonda district. Pochampally Ikat uniqueness lies in the transfer of intricate design and colouring onto warp and weft threads first and then weave them together globally known as.",
+    "member_craft_names": [
+      "Pochampally sari",
+      "Gadwal sarees",
+      "Narayanpet handloom sarees",
+      "Pochampally Ikat",
+      "Warangal Durries"
+    ],
+    "source_items": [
+      {
+        "name": "Pochampally sari",
+        "wiki_url": "https://en.wikipedia.org/wiki/Pochampally_sari"
+      },
+      {
+        "name": "Gadwal sarees",
+        "wiki_url": "https://en.wikipedia.org/wiki/Gadwal_sarees?action=edit&redlink=1"
+      },
+      {
+        "name": "Narayanpet handloom sarees",
+        "wiki_url": "https://en.wikipedia.org/wiki/Narayanpet_handloom_sarees?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "TN",
+    "name": "Tamil Nadu Weaving & Textiles Cluster",
+    "story": "The history of hand loom and spinning mills dates back to pre-independence period in Salem. But till the 1960s there were fewer than 5 spinning mills. Private handloom weaving started thriving in the region along with the large scale cooperative sector handloom weaving and marketing units. Small scale hand dying units were started around the region to support the industry. As of 2008, an estimated 5,000 families were involved in sari production. Kora cotton sarees weaved from traditional hand-looms face competition from cheaper cotton sarees weaved through.",
+    "member_craft_names": [
+      "Salem fabric",
+      "Kancheepuram Silk",
+      "Kovai Kora cotton sarees",
+      "Arani Silk",
+      "Thirubuvanam silk sarees",
+      "Kandangi saree",
+      "Negamam cotton saree",
+      "Chedibutta saree"
+    ],
+    "source_items": [
+      {
+        "name": "Salem fabric",
+        "wiki_url": "https://en.wikipedia.org/wiki/Textile_industry_in_Salem"
+      },
+      {
+        "name": "Kancheepuram Silk",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kancheepuram_Silk"
+      },
+      {
+        "name": "Kovai Kora cotton sarees",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kovai_Cora_cotton"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "TR",
+    "name": "Tripura Weaving & Textiles Cluster",
+    "story": "It is primarily woven by women using a loin loom, Risa is known for its vibrant colors and intricate designs.",
+    "member_craft_names": [
+      "Tripura Risa Textile"
+    ],
+    "source_items": [
+      {
+        "name": "Tripura Risa Textile",
+        "wiki_url": "https://en.wikipedia.org/wiki/Tripura_Risa_Textile"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "UK",
+    "name": "Uttarakhand Weaving & Textiles Cluster",
+    "story": "A community of weaving & textiles artisans in Uttarakhand, known for Uttarakhand Bichhu Buti Fabrics.",
+    "member_craft_names": [
+      "Uttarakhand Bichhu Buti Fabrics"
+    ],
+    "source_items": [
+      {
+        "name": "Uttarakhand Bichhu Buti Fabrics",
+        "wiki_url": "https://en.wikipedia.org/wiki/Uttarakhand_Bichhu_Buti_Fabrics?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "UP",
+    "name": "Uttar Pradesh Weaving & Textiles Cluster",
+    "story": "Their special characteristics include intricate intertwining floral and foliate motifs,.",
+    "member_craft_names": [
+      "Banaras brocades and sarees",
+      "Hand Made Carpet of Bhadohi",
+      "Agra Durrie",
+      "Banaras brocades and sarees (logo)",
+      "Mau saree",
+      "Barabanki Handloom Product"
+    ],
+    "source_items": [
+      {
+        "name": "Banaras brocades and sarees",
+        "wiki_url": "https://en.wikipedia.org/wiki/Banaras_brocades_and_sarees"
+      },
+      {
+        "name": "Hand Made Carpet of Bhadohi",
+        "wiki_url": "https://en.wikipedia.org/wiki/Hand_Made_Carpet_of_Bhadohi?action=edit&redlink=1"
+      },
+      {
+        "name": "Agra Durrie",
+        "wiki_url": "https://en.wikipedia.org/wiki/Agra_Durrie?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "weaving",
+    "state_code": "WB",
+    "name": "West Bengal Weaving & Textiles Cluster",
+    "story": "The specialty of Shantipur Sari is that it is marketed in a simple traditional fold form known as. In the first half of twentieth century, Subho Thakur, a famous artist, felt the need to recultivate the rich tradition of Baluchari craft. Though Bishnupur was always famous for its silk, he invited Akshay Kumar Das, a master weaver of Bishnupur, to his center to learn the technique of jacquard weaving.",
+    "member_craft_names": [
+      "Santipore saree",
+      "Baluchari Saree",
+      "Dhaniakhali Saree",
+      "Tangail saree of Bengal",
+      "Garad saree",
+      "Korial saree"
+    ],
+    "source_items": [
+      {
+        "name": "Santipore saree",
+        "wiki_url": "https://en.wikipedia.org/wiki/Shantipuri_sari"
+      },
+      {
+        "name": "Baluchari Saree",
+        "wiki_url": "https://en.wikipedia.org/wiki/Baluchari_Saree"
+      },
+      {
+        "name": "Dhaniakhali Saree",
+        "wiki_url": "https://en.wikipedia.org/wiki/Dhaniakhali_Saree"
+      }
+    ]
+  },
+  {
+    "craft_type": "woodwork",
+    "state_code": "AP",
+    "name": "Andhra Pradesh Woodwork & Carving Cluster",
+    "story": "A community of woodwork & carving artisans in Andhra Pradesh, known for Udayagiri Wooden Cutlery, Etikoppaka Toys.",
+    "member_craft_names": [
+      "Udayagiri Wooden Cutlery",
+      "Etikoppaka Toys"
+    ],
+    "source_items": [
+      {
+        "name": "Udayagiri Wooden Cutlery",
+        "wiki_url": "https://en.wikipedia.org/wiki/Udayagiri_Wooden_Cutlery?action=edit&redlink=1"
+      },
+      {
+        "name": "Etikoppaka Toys",
+        "wiki_url": "https://en.wikipedia.org/wiki/Etikoppaka_Toys?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "woodwork",
+    "state_code": "AR",
+    "name": "Arunachal Pradesh Woodwork & Carving Cluster",
+    "story": "A community of woodwork & carving artisans in Arunachal Pradesh, known for Arunachal Pradesh Wancho Wooden Craft.",
+    "member_craft_names": [
+      "Arunachal Pradesh Wancho Wooden Craft"
+    ],
+    "source_items": [
+      {
+        "name": "Arunachal Pradesh Wancho Wooden Craft",
+        "wiki_url": "https://en.wikipedia.org/wiki/Arunachal_Pradesh_Wancho_Wooden_Craft?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "woodwork",
+    "state_code": "CT",
+    "name": "Chhattisgarh Woodwork & Carving Cluster",
+    "story": "Chhattisgarh, especially Bastar people have excellent skills in variety of craft work including.",
+    "member_craft_names": [
+      "Bastar Wooden Craft"
+    ],
+    "source_items": [
+      {
+        "name": "Bastar Wooden Craft",
+        "wiki_url": "https://en.wikipedia.org/wiki/Bastar_Wooden_Craft"
+      }
+    ]
+  },
+  {
+    "craft_type": "woodwork",
+    "state_code": "JK",
+    "name": "Jammu & Kashmir Woodwork & Carving Cluster",
+    "story": "A community of woodwork & carving artisans in Jammu & Kashmir, known for Kashmir Walnut Wood Carving, Rajouri Chikri Wood Craft.",
+    "member_craft_names": [
+      "Kashmir Walnut Wood Carving",
+      "Rajouri Chikri Wood Craft"
+    ],
+    "source_items": [
+      {
+        "name": "Kashmir Walnut Wood Carving",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kashmir_Walnut_Wood_Carving"
+      },
+      {
+        "name": "Rajouri Chikri Wood Craft",
+        "wiki_url": "https://en.wikipedia.org/wiki/Rajouri_Chikri_Wood_Craft?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "woodwork",
+    "state_code": "KA",
+    "name": "Karnataka Woodwork & Carving Cluster",
+    "story": "The greater prominence of the Channapatna toys can be traced to patronage from. The Karnataka State Handicraft Development Corporation Ltd proposed the registration of Mysuru Rosewood Inlay under the Geographical Indications of Goods Act, 1999, to the Office of the Controller-General of Patents, Designs and Trademarks,. The town is famous for toys and religious idols. Recently, this craft has been granted.",
+    "member_craft_names": [
+      "Channapatna toys and dolls",
+      "Mysore Rosewood Inlay",
+      "Kinhal toys"
+    ],
+    "source_items": [
+      {
+        "name": "Channapatna toys and dolls",
+        "wiki_url": "https://en.wikipedia.org/wiki/Channapatna_toys"
+      },
+      {
+        "name": "Mysore Rosewood Inlay",
+        "wiki_url": "https://en.wikipedia.org/wiki/Mysore_Rosewood_Inlay"
+      },
+      {
+        "name": "Kinhal toys",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kinnal_Craft"
+      }
+    ]
+  },
+  {
+    "craft_type": "woodwork",
+    "state_code": "MH",
+    "name": "Maharashtra Woodwork & Carving Cluster",
+    "story": "A community of woodwork & carving artisans in Maharashtra, known for Sawantwadi Wooden Craft.",
+    "member_craft_names": [
+      "Sawantwadi Wooden Craft"
+    ],
+    "source_items": [
+      {
+        "name": "Sawantwadi Wooden Craft",
+        "wiki_url": "https://en.wikipedia.org/wiki/Sawantwadi_Wooden_Craft?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "woodwork",
+    "state_code": "TG",
+    "name": "Telangana Woodwork & Carving Cluster",
+    "story": "Nirmal Art, encompassing a 400-year-old tradition of making soft wood toys and paintings, occupies a place of pride in the world of handicrafts. The finely carved figures and dainty paintings are still being used to decorate drawing rooms in thousands of homes across the country. Nirmal district in Telangana was once famous as a production centre of as diverse things as cannons and toys.",
+    "member_craft_names": [
+      "Nirmal toys and craft"
+    ],
+    "source_items": [
+      {
+        "name": "Nirmal toys and craft",
+        "wiki_url": "https://en.wikipedia.org/wiki/Nirmal_toys"
+      }
+    ]
+  },
+  {
+    "craft_type": "woodwork",
+    "state_code": "TN",
+    "name": "Tamil Nadu Woodwork & Carving Cluster",
+    "story": "A community of woodwork & carving artisans in Tamil Nadu, known for Arumbavur Wood Carvings, Kallakurichi Wood Carving.",
+    "member_craft_names": [
+      "Arumbavur Wood Carvings",
+      "Kallakurichi Wood Carving"
+    ],
+    "source_items": [
+      {
+        "name": "Arumbavur Wood Carvings",
+        "wiki_url": "https://en.wikipedia.org/wiki/Arumbavur_Wood_Carvings?action=edit&redlink=1"
+      },
+      {
+        "name": "Kallakurichi Wood Carving",
+        "wiki_url": "https://en.wikipedia.org/wiki/Kallakurichi_Wood_Carving?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "woodwork",
+    "state_code": "UK",
+    "name": "Uttarakhand Woodwork & Carving Cluster",
+    "story": "A community of woodwork & carving artisans in Uttarakhand, known for Chamoli Wooden Ramman Mask.",
+    "member_craft_names": [
+      "Chamoli Wooden Ramman Mask"
+    ],
+    "source_items": [
+      {
+        "name": "Chamoli Wooden Ramman Mask",
+        "wiki_url": "https://en.wikipedia.org/wiki/Chamoli_Wooden_Ramman_Mask?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "woodwork",
+    "state_code": "UP",
+    "name": "Uttar Pradesh Woodwork & Carving Cluster",
+    "story": "A community of woodwork & carving artisans in Uttar Pradesh, known for Saharanpur Wood Craft, Varanasi Wooden Lacquerware and Toys, Banaras Wood Carving.",
+    "member_craft_names": [
+      "Saharanpur Wood Craft",
+      "Varanasi Wooden Lacquerware and Toys",
+      "Banaras Wood Carving",
+      "Nagina Wood Craft",
+      "Chitrakoot Wooden Craft and Toys"
+    ],
+    "source_items": [
+      {
+        "name": "Saharanpur Wood Craft",
+        "wiki_url": "https://en.wikipedia.org/wiki/Saharanpur_Wood_Craft?action=edit&redlink=1"
+      },
+      {
+        "name": "Varanasi Wooden Lacquerware and Toys",
+        "wiki_url": "https://en.wikipedia.org/wiki/Varanasi_Wooden_Lacquerware_and_Toys?action=edit&redlink=1"
+      },
+      {
+        "name": "Banaras Wood Carving",
+        "wiki_url": "https://en.wikipedia.org/wiki/Banaras_Wood_Carving?action=edit&redlink=1"
+      }
+    ]
+  },
+  {
+    "craft_type": "woodwork",
+    "state_code": "WB",
+    "name": "West Bengal Woodwork & Carving Cluster",
+    "story": "A community of woodwork & carving artisans in West Bengal, known for Wooden Mask of Kushmandi.",
+    "member_craft_names": [
+      "Wooden Mask of Kushmandi"
+    ],
+    "source_items": [
+      {
+        "name": "Wooden Mask of Kushmandi",
+        "wiki_url": "https://en.wikipedia.org/wiki/Wooden_Mask_of_Kushmandi"
+      }
+    ]
+  }
+]

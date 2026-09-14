@@ -33,3 +33,24 @@ class LanguageResponse(BaseModel):
     name_en: str
     name_native: str
     model_config = {"from_attributes": True}
+
+
+class ClusterResponse(BaseModel):
+    id: str
+    name: str
+    craft_type: str
+    state_code: str
+    story: str
+    member_craft_names: list[str] | None
+    model_config = {"from_attributes": True}
+
+
+class ClusterMemberResponse(BaseModel):
+    id: str
+    display_name: str | None
+    district_code: str | None
+    model_config = {"from_attributes": True}
+
+
+class ClusterDetailResponse(ClusterResponse):
+    members: list[ClusterMemberResponse]

@@ -5,7 +5,7 @@ Primary artisan/seller account.
 
 import uuid
 from datetime import datetime, timezone
-from sqlalchemy import String, Boolean, Integer, Float, DateTime, JSON
+from sqlalchemy import String, Boolean, Integer, Float, DateTime, JSON, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from app.db.session import Base
 
@@ -28,6 +28,13 @@ class User(Base):
     # Location
     state_code: Mapped[str | None] = mapped_column(String(5), nullable=True)
     district_code: Mapped[str | None] = mapped_column(String(10), nullable=True)
+
+    # Auto-assigned from craft_types + state_code whenever either changes
+    # (see cluster_service.assign_cluster). Null means no matching craft
+    # community was found — the seller stays a normal, standalone seller.
+    cluster_id: Mapped[str | None] = mapped_column(
+        String(36), ForeignKey("clusters.id"), nullable=True
+    )
 
     # Live location sharing (Uber-style "online" pin) — foreground-only,
     # pushed by the seller's device while is_sharing_location is on. Buyers
